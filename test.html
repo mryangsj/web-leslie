@@ -1,182 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-  *{
-    margin: 0;
-    padding: 0;
-  }
-  .right_mic_pro{
-    color: #766643;
-    flex-direction: column;  /* 设置为水平排列 */
-    text-align: center;
-    font-weight: bolder;
-}
+    * {
+      margin: 0;
+      padding: 0;
+    }
 
-.decoration{
-  position: relative;
-  height: 30px;
-  width: 100%;
-}
-.decoration::before,
-.decoration::after {
-  content: "";
-  position: absolute;
-  bottom: 60%;
-  width: 24%;
-  border-bottom: 2px solid #423826; /* 横线的样式 */
-}
+    .right_mic_pro {
+      color: #766643;
+      flex-direction: column;
+      /* 设置为水平排列 */
+      text-align: center;
+      font-weight: bolder;
+    }
 
-.decoration::before {
-  left: 40px;
-}
+    .decoration {
+      position: relative;
+      height: 30px;
+      width: 100%;
+    }
 
-.decoration::after {
-  right: 40px;
-}
+    .decoration::before,
+    .decoration::after {
+      content: "";
+      position: absolute;
+      bottom: 60%;
+      width: 24%;
+      border-bottom: 2px solid #423826;
+      /* 横线的样式 */
+    }
 
- .knob_container {
+    .decoration::before {
+      left: 40px;
+    }
+
+    .decoration::after {
+      right: 40px;
+    }
+
+    .knob_container {
       display: flex;
       justify-content: flex-start;
       margin: 25px 0px 10px 0px;
       position: relative;
-      
+
     }
-    
-  .knob {
-    width: 75px;
-    height: 75px;
-    background-color: #2D2C2C;
-    border-radius: 50%;
-    margin: 0 40px;
-    position: relative;
-    /* cursor: pointer;
+
+    .knob {
+      width: 75px;
+      height: 75px;
+      background-color: #2D2C2C;
+      border-radius: 50%;
+      margin: 0 40px;
+      position: relative;
+      /* cursor: pointer;
     transform-origin: 50% 100%;
     transform: rotate(0deg);
     transition: transform 0.2s ease-in-out; */
-    /* position: relative; */
-  }
-  
+      /* position: relative; */
+    }
 
-.knob::before {
-  content: "";
-  position: absolute;
-  border: 1px solid whitesmoke;
-  width: 1px;
-  height: 5px;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform-origin: 0 50%;
-}
 
-.knob::before {
-  transform: rotate(30deg);
-}
+    .knob::before {
+      content: "";
+      position: absolute;
+      border: 1px solid whitesmoke;
+      width: 1px;
+      height: 5px;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform-origin: 0 50%;
+    }
 
-.knob::after {
-  content: "";
-  position: absolute;
-  border: 1px solid whitesmoke;
-  width: 1px;
-  height: 5px;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform-origin: 0 50%;
-}
+    .knob::before {
+      transform: rotate(30deg);
+    }
 
-.knob::after {
-  transform: rotate(60deg);
-}
+    .knob::after {
+      content: "";
+      position: absolute;
+      border: 1px solid whitesmoke;
+      width: 1px;
+      height: 5px;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform-origin: 0 50%;
+    }
 
-  
-  .pointer {
-    position: absolute;
-    width: 2px;
-    height: 35px;
-    background-color: whitesmoke;
-    transform-origin: 0% 0%; 
-    left: 50%;
-    top: 50%;
-    transform: rotate(0deg);
-  }
+    .knob::after {
+      transform: rotate(60deg);
+    }
 
-  .slider {
-    position: absolute;
-    margin: 0 40px;
-    width: 75px;
-    height: 150px; /* 设置为与 knob-container 相同高度 */
-    background-color: rgba(255, 0, 0, 0.5); /*rgba(255, 0, 0, 0.5)*/
-    top: -30%;
-    left: 0;
-    transform: translateX(0);
-    cursor: pointer;
-  }
 
-.knob_container_text{
-    width: 75px;
-    margin: 0 40px 10px 40px;
-    font-size: 10px;
-    font-weight: lighter;
-}</style>
+    .pointer {
+      position: absolute;
+      width: 2px;
+      height: 35px;
+      background-color: whitesmoke;
+      transform-origin: 0% 0%;
+      left: 50%;
+      top: 50%;
+      transform: rotate(0deg);
+    }
+
+    .slider {
+      position: absolute;
+      margin: 0 40px;
+      width: 75px;
+      height: 150px;
+      /* 设置为与 knob-container 相同高度 */
+      background-color: rgba(255, 0, 0, 0.5);
+      /*rgba(255, 0, 0, 0.5)*/
+      top: -30%;
+      left: 0;
+      transform: translateX(0);
+      cursor: pointer;
+    }
+
+    .knob_container_text {
+      width: 75px;
+      margin: 0 40px 10px 40px;
+      font-size: 10px;
+      font-weight: lighter;
+    }
+  </style>
 </head>
+
 <body style="background-color: blanchedalmond;">
   <div class="right_mic_pro">
     <div class="knob_container">
-      <div class="knob" id="knob1"><div id="pointer1" class="pointer"></div></div>
+      <div class="knob" id="knob1">
+        <div id="pointer1" class="pointer"></div>
+      </div>
       <div id="slider1" class="slider"></div>
-      <div class="knob" id="knob2"><div id="pointer2" class="pointer"></div></div>
+      <div class="knob" id="knob2">
+        <div id="pointer2" class="pointer"></div>
+      </div>
       <div id="slider2" class="slider" style="margin-left: 195px;"></div>
-      <div class="knob" id="knob3"><div id="pointer3" class="pointer"></div></div>
+      <div class="knob" id="knob3">
+        <div id="pointer3" class="pointer"></div>
+      </div>
       <div id="slider3" class="slider" style="margin-left: 350px;"></div>
-    </div> 
+    </div>
   </div>
   <script>function handleSliderMovement(knob, pointer, slider) {
-    let isDragging = false;
-    let knobCenterX; // 提供 knob 的水平中心位置
-    let initialPointerAngle; // 记录指针的初始角度
-  
-    slider.addEventListener('mousedown', (event) => {
-      isDragging = true;
-      // 记录初始角度
-      const rect = knob.getBoundingClientRect();
-      knobCenterX = rect.left + rect.width / 2;
-      const knobCenterY = rect.top + rect.height / 2;
-      initialPointerAngle = getPointerAngle(knobCenterY, knobCenterX, pointer);
-    });
-  
-    window.addEventListener('mouseup', () => {
-      isDragging = false;
-    });
-  
-    window.addEventListener('mousemove', (event) => {
-      if (isDragging) {
+      let isDragging = false;
+      let knobCenterX; // 提供 knob 的水平中心位置
+      let initialPointerAngle; // 记录指针的初始角度
+
+      slider.addEventListener('mousedown', (event) => {
+        isDragging = true;
+        // 记录初始角度
         const rect = knob.getBoundingClientRect();
+        knobCenterX = rect.left + rect.width / 2;
         const knobCenterY = rect.top + rect.height / 2;
-  
-        // 计算滑块的相对位置，与指针旋转角度关联
-        const sliderRelativePosition = knobCenterY - event.clientY;
-        const sliderNormalizedPosition = Math.min(Math.max(sliderRelativePosition / (rect.height - slider.clientHeight), 0), 1);
-  
-        // 限制滑块的位置范围
-        const sliderPosition = Math.min(Math.max(sliderRelativePosition, 0), rect.height - slider.clientHeight);
-  
-        // 计算对应的指针旋转角度
-        const angle = Math.max(Math.min(initialPointerAngle - (sliderNormalizedPosition * 330), 330), 0);
-        pointer.style.transform = `rotate(${angle}deg)`;
-  
-        // 计算对应的 normalizedValue
-        const normalizedValue = 1 - sliderNormalizedPosition;
-        console.log(normalizedValue);
-      }
-    });
-  }
+        initialPointerAngle = getPointerAngle(knobCenterY, knobCenterX, pointer);
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      window.addEventListener('mousemove', (event) => {
+        if (isDragging) {
+          const rect = knob.getBoundingClientRect();
+          const knobCenterY = rect.top + rect.height / 2;
+
+          // 计算滑块的相对位置，与指针旋转角度关联
+          const sliderRelativePosition = knobCenterY - event.clientY;
+          const sliderNormalizedPosition = Math.min(Math.max(sliderRelativePosition / (rect.height - slider.clientHeight), 0), 1);
+
+          // 限制滑块的位置范围
+          const sliderPosition = Math.min(Math.max(sliderRelativePosition, 0), rect.height - slider.clientHeight);
+
+          // 计算对应的指针旋转角度
+          const angle = Math.max(Math.min(initialPointerAngle - (sliderNormalizedPosition * 330), 330), 0);
+          pointer.style.transform = `rotate(${angle}deg)`;
+
+          // 计算对应的 normalizedValue
+          const normalizedValue = 1 - sliderNormalizedPosition;
+          console.log(normalizedValue);
+        }
+      });
+    }
   </script>
 </body>
+
 </html>
 
 
@@ -472,7 +488,7 @@
   handleSliderMovement(knob, pointer, slider);
   handleSliderMovement(knob1, pointer1, slider1); -->
 
-    <!-- // let allowMouseMove = false;
+<!-- // let allowMouseMove = false;
     // let counter = 0;
 
     // knob.addEventListener('click', () => {
@@ -764,7 +780,7 @@
     <div class="right-aligned-area">
       <div class="inner-content">
         Your content goes here -->
-      <!-- </div>
+<!-- </div>
     </div>
   </div>
   <div class="bottom-layer_1"></div>
