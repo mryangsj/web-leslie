@@ -1,15 +1,15 @@
 class Knob {
   constructor(width = 100, height = 100, knobName) {
     //-----------------------------------------------------------------------------------------
-    //创建knob节点
+    // 创建knob节点
     this.knob = document.createElement(`div`);
     document.body.insertBefore(this.knob, document.body.children[0]);
 
-    //设置knob基本属性
+    // 设置knob基本属性
     this.knob.className = `knob`;
     this.knob.id = this.knob.className + `_${knobName}`;
 
-    //设置knob基本样式
+    // 设置knob基本样式
     this.setKnobSize(width, height);
     this.knob.style.borderRadius = `50%`;
     this.knob.style.border = `1px solid black`;
@@ -17,16 +17,16 @@ class Knob {
     this.knob.style.position = `absolute`;
 
     //-----------------------------------------------------------------------------------------
-    //创建indicator
+    // 创建indicator
     this.indicator = document.createElement(`div`);
     this.knob.insertBefore(this.indicator, this.knob.children[0]);
 
-    //设置indicator基本属性
+    // 设置indicator基本属性
     this.indicator.className = `knob_indicator`;
     this.indicator.id = this.indicator.className + `_${knobName}`;
 
-    //设置indicator基本样式
-    this.setIndicatorSize(0.9);
+    // 设置indicator基本样式
+    this.setIndicatorSize(0.92);
     this.indicator.style.borderRadius = `50%`;
     this.indicator.style.backgroundColor = `skyblue`;
     this.indicator.style.position = `absolute`;
@@ -37,7 +37,7 @@ class Knob {
     this.indicator.style.cursor = "grab";
 
     //-----------------------------------------------------------------------------------------
-    //创建pointer和pointerCenter
+    // 创建pointer和pointerCenter
     this.pointer = document.createElement(`div`);
     this.indicator.insertBefore(this.pointer, this.indicator.children[0]);
     this.pointerCenter = document.createElement(`div`);
@@ -50,7 +50,7 @@ class Knob {
     this.pointerCenter.className = `knob_indicator_pointerCenter`;
     this.pointer.id = this.pointer.className + `_${knobName}`;
 
-    //设置pointer基本样式
+    // 设置pointer基本样式
     this.setPointerSize(4);
     this.pointer.style.backgroundColor = `black`;
     this.pointerCenter.style.backgroundColor = `black`;
@@ -65,6 +65,24 @@ class Knob {
     this.pointerCenter.style.left = `50%`;
     this.pointerCenter.style.top = `50%`;
     this.pointerCenter.style.transform = `translate(-50%, -50%)`;
+
+    //-----------------------------------------------------------------------------------------
+    // 创建标签节点
+    this.label = document.createElement(`span`);
+    this.indicator.insertAdjacentElement("afterend", this.label);
+
+    // 设置label基本属性
+    this.label.className = `knob_label`;
+    this.label.id = this.label.className + `_${knobName}`;
+
+
+    // 设置label基本样式
+    this.label.innerHTML = `Volume`;
+    this.label.style.position = `absolute`;
+    this.label.style.bottom = `-30%`;
+    this.label.style.left = `50%`;
+    this.label.style.transform = `translate(-50%, 0)`;
+    this.label.style.fontSize = `${this.width * 0.18}px`;
 
     //-----------------------------------------------------------------------------------------
     this.setValueRange(0.00, 1.00);
@@ -93,6 +111,11 @@ class Knob {
       console.log("db!")
       this.setIndicatorDeg(this.defaultDeg);
     })
+
+    // 阻止右键菜单
+    this.knob.addEventListener('contextmenu', e => {
+      e.preventDefault(); // 阻止默认的右键菜单弹出
+    }, false);
 
     //-----------------------------------------------------------------------------------------
     return this.knob;
@@ -133,15 +156,22 @@ class Knob {
   }
 
   setIndicatorDeg(targetDeg) {
-    this.currentIndicatorDeg = targetDeg % 360;
+    this.currentIndicatorDeg = targetDeg % 360.0;
     this.indicator.style.transform = `translate(-50%, -50%) rotate(${targetDeg}deg)`;
   }
 
   mouseMoveOnIndicatorEventResponse(e) {
+    // 固定鼠标并隐藏
     this.indicator.requestPointerLock();
-    let nextDeg = this.currentIndicatorDeg + (-e.movementY);
+
+    // 设置非线性增量，indicator的增量与鼠标Y轴移动速度关联
+    let nextDeg = this.currentIndicatorDeg + (-e.movementY) * 0.25;
+
+    // 判断是否已达indicator的边界
     nextDeg = nextDeg <= this.indicatorHeadDeg ? this.indicatorHeadDeg : nextDeg;
     nextDeg = nextDeg >= this.indicatorEndDeg ? this.indicatorEndDeg : nextDeg;
+
+    // 设置indicator的真实角度
     this.setIndicatorDeg(nextDeg);
   }
 
