@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dragable Knob</title>
+
+  <style>
+    .knob {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100px;
+      height: 100px;
+      /* border-radius: 50%; */
+      background-color: pink;
+      cursor: grab;
+      transform-origin: 50% 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .knob .knob_circle {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background-color: skyblue;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .knob .knob_circle .knob_line {
+      position: relative;
+      top: 50%;
+      width: 50%;
+      height: 2px;
+      background-color: black;
+      transform-origin: 100% 50%;
+      transform: translate(0, -50%) rotate(90deg);
+    }
+
+    .dragging {
+      cursor: none;
+      background-color: skyblue;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="knob" id="knob_volume" data-isDraging="false">
+    <div class="knob_circle" id="knob_volume_circle" data-rotation="0" data-value="0">
+      <div class="knob_line"></div>
+    </div>
+
+    <div class="knob_text" id="knob_volume_text" data-value="0.00">0.00</div>
+
+  </div>
+
+  <script>
+    const knob = document.querySelector("#knob_volume");
+    const knob_circle = document.querySelector("#knob_volume_circle");
+    let isMouseDown = false;
+    let isDragging = false;
+
+    // 值转角
+    // (<= 0.0) -> -135°
+    // (>=1.0)  -> 135°
+    const valueToDeg = x => {
+      if (x <= 0.0) return -135.0;
+      else if (x >= 1.0) return 135.0;
+      else return 270 * x - 135;
+    };
+
+    // 角转值
+    // (<=-135°) -> 0.0
+    // (>=135°)  -> 1.0
+    const degToValue = x => {
+      if (x <= -135.0) return 0.0;
+      else if (x >= 135.0) return 1.0;
+      else return x / 270 + 0.5;
+    };
+
+    // 用户点击旋钮
+    knob.addEventListener('mousedown', (e) => {
+      knob.requestPointerLock();
+
+      // 用户移动鼠标
+      knob.addEventListener('mousemove', onMouseMoving);
+
+      // 用户释放旋钮
+      knob.addEventListener('mouseup', onMouseUp);
+    });
+
+    function onMouseMoving(e) {
+      // console.log(e.movementY);
+      const currentDeg = Number(knob_circle.dataset.rotation) % 360;
+      const nextDeg = currentDeg + (-e.movementY);
+      console.log(nextDeg);
+      knob_circle.style.transform = `rotate(${nextDeg}deg)`;
+      knob_circle.dataset.rotation = `${nextDeg}`;
+    }
+
+    function onMouseUp(e) {
+      console.log("release.");
+      document.exitPointerLock();
+      knob.removeEventListener("mousemove", onMouseMoving);
+    }
+
+
+
+  </script>
+</body>
+
+</html>
