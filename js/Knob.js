@@ -1,9 +1,9 @@
 class Knob {
-  constructor(width = 100, height, knobName = `New Knob`, degStart = -135, degEnd = 135, valueStart = -64, valueEnd = 12, defaultValue = -12, numberDecimals = 1, suffix = `dB`) {
+  constructor(width = 100, height, knobName = `New Knob`, degStart = -150, degEnd = 150, valueStart = -64, valueEnd = 12, defaultValue = -12, numberDecimals = 1, suffix = `dB`) {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     this.widthFrame = width;
-    this.heightFrame = this.widthFrame * 1.4;
+    this.heightFrame = this.widthFrame * 1.35;
     this.knobName = knobName;
     this.indicatorStartDeg = degStart;
     this.indicatorEndDeg = degEnd;
@@ -31,7 +31,7 @@ class Knob {
     this.frame.style.position = `absolute`;
 
     // 设置frame样式
-    this.frame.style.backgroundColor = `gray`;
+    // this.frame.style.backgroundColor = `gray`;
 
     //-----------------------------------------------------------------------------------------
     // 创建knob节点
@@ -92,7 +92,7 @@ class Knob {
 
     // 设置pointer尺寸与定位
     this.widthPointer = 4;
-    this.heightPointer = this.heightIndicator * 0.35;
+    this.heightPointer = this.heightIndicator * 0.30;
     this.pointer.style.width = `${this.widthPointer}px`;
     this.pointer.style.height = `${this.heightPointer}px`;
     this.pointer.style.position = `absolute`;
@@ -106,12 +106,10 @@ class Knob {
 
     //-----------------------------------------------------------------------------------------
     // 创建label节点
-    this.label = document.createElement(`span`);
+    this.label = document.createElement(`div`);
     this.frame.appendChild(this.label);
 
     // 设置label基本属性
-    this.setLabelShowName();
-    this.label.value = knobName;
     this.label.className = `knob_label`;
     this.label.id = this.label.className + `_${knobName}`;
 
@@ -124,10 +122,30 @@ class Knob {
     this.label.style.transform = `translate(-50%, 0)`;
 
     // 设置label样式
-    this.label.style.textAlign = `center`;
-    this.label.style.lineHeight = this.label.style.height;
-    this.label.style.fontSize = `${this.widthFrame * 0.2}px`;
-    this.label.style.backgroundColor = `pink`;
+    // this.label.style.backgroundColor = `green`;
+
+    //-----------------------------------------------------------------------------------------
+    // 创建label_text节点
+    this.labelText = document.createElement(`span`);
+    this.label.appendChild(this.labelText);
+
+    // 设置label_text基本属性
+    this.labelText.className = `knob_label_text`;
+    this.labelText.id = this.labelText.className + `_${knobName}`;
+
+    // 设置label_text尺寸与定位
+    this.labelText.style.width = `auto`;
+    this.labelText.style.height = `auto`;
+    this.labelText.style.position = `absolute`;
+    this.labelText.style.bottom = `0`;
+    this.labelText.style.left = `50%`;
+    this.labelText.style.transform = `translate(-50%, 0)`;
+
+    // 设置label样式
+    this.setLabelShowName();
+    this.labelText.style.fontSize = `${this.widthFrame * 0.2}px`;
+    // this.labelText.style.backgroundColor = `pink`;
+    this.labelText.style.cursor = `default`;
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
@@ -167,7 +185,7 @@ class Knob {
       this.isEditing = true;
 
       // 激活label可编辑状态
-      this.label.setAttribute(`contenteditable`, true);
+      this.labelText.setAttribute(`contenteditable`, true);
 
       // 去掉单位
       this.setLabelShowValue(false);
@@ -175,34 +193,34 @@ class Knob {
       // 获取光标并全选label
       const selection = window.getSelection();
       const range = document.createRange();
-      range.selectNodeContents(this.label);
+      range.selectNodeContents(this.labelText);
       selection.removeAllRanges();
       selection.addRange(range);
 
       // 给label注册回车事件
-      this.label.addEventListener('keydown', e => {
+      this.labelText.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
           // 更新信号量
           this.isEditing = false;
           // 防止换行
           e.preventDefault();
           // 根据输入数据调整indicator
-          this.setIndicatorFromText(this.label.innerHTML);
+          this.setIndicatorFromText(this.labelText.innerHTML);
           // 取消label可编辑状态
-          this.label.setAttribute(`contenteditable`, false);
+          this.labelText.setAttribute(`contenteditable`, false);
           // 若用户鼠标已经离开，则恢复label标签
           if (!this.isHovering) this.setLabelShowName();
         }
       })
 
       // 给label注册失焦事件
-      this.label.addEventListener('blur', e => {
+      this.labelText.addEventListener('blur', e => {
         // 更新信号量
         this.isEditing = false;
         // 根据输入数据调整indicator
-        this.setIndicatorFromText(this.label.innerHTML);
+        this.setIndicatorFromText(this.labelText.innerHTML);
         // 取消label可编辑状态
-        this.label.setAttribute(`contenteditable`, false);
+        this.labelText.setAttribute(`contenteditable`, false);
         // 若用户鼠标已经离开，则恢复label标签
         if (!this.isHovering) this.setLabelShowName();
       })
@@ -235,7 +253,7 @@ class Knob {
       // 如果label不在编辑状态，则移除label可编辑状态
       if (!this.isEditing) {
         this.setLabelShowName();
-        this.label.setAttribute(`contenteditable`, false);
+        this.labelText.setAttribute(`contenteditable`, false);
       }
     })
 
@@ -323,13 +341,12 @@ class Knob {
 
   //-----------------------------------------------------------------------------------------
   setLabelShowName() {
-    this.label.innerHTML = this.knobName;
+    this.labelText.innerHTML = this.knobName;
   }
 
   //-----------------------------------------------------------------------------------------
   setLabelShowValue(withSuffix = true) {
     const targetText = withSuffix ? this.currentValue.toFixed(this.numberDecimals) + this.suffix : this.currentValue.toFixed(this.numberDecimals);
-    this.label.innerHTML = targetText;
+    this.labelText.innerHTML = targetText;
   }
-
 }
