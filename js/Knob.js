@@ -1,9 +1,9 @@
 class Knob {
-  constructor(width = 100, height, knobName = `New Knob`, degStart = -150, degEnd = 150, valueStart = -64, valueEnd = 12, defaultValue = -12, numberDecimals = 1, suffix = `dB`) {
+  constructor(width = 100, knobName = `New Knob`, degStart = -150, degEnd = 150, valueStart = 0, valueEnd = 1, defaultValue = 0.5, numberDecimals = 2, suffix = `dB`, spritePath = `resources/Knob.png`) {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     this.widthFrame = width;
-    this.heightFrame = this.widthFrame * 1.35;
+    this.heightFrame = this.widthFrame * 1.45;
     this.knobName = knobName;
     this.indicatorStartDeg = degStart;
     this.indicatorEndDeg = degEnd;
@@ -12,8 +12,17 @@ class Knob {
     this.defaultValue = defaultValue;
     this.numberDecimals = numberDecimals;
     this.suffix = suffix;
+    this.spritePath = spritePath;
     this.isHovering = false;
     this.isEditing = false;
+
+    if (spritePath) {
+      const sprite = new Image();
+      sprite.src = spritePath;
+      this.widthSprite = sprite.width;
+      this.heightSprite = sprite.height;
+      this.spriteLength = this.heightSprite / this.widthSprite;
+    }
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
@@ -52,8 +61,8 @@ class Knob {
 
     // 设置knob基本样式
     this.knob.style.borderRadius = `50%`;
-    this.knob.style.border = `1px solid black`;
-    this.knob.style.backgroundColor = `pink`;
+    // this.knob.style.border = `2px solid black`;
+    // this.knob.style.backgroundColor = `pink`;
 
     //-----------------------------------------------------------------------------------------
     // 创建indicator
@@ -65,7 +74,7 @@ class Knob {
     this.indicator.id = this.indicator.className + `_${knobName}`;
 
     // 设置indicator尺寸与定位
-    this.ratioIndicator = 0.92;
+    this.ratioIndicator = 1;
     this.widthIndicator = this.widthFrame * this.ratioIndicator;
     this.heightIndicator = this.widthFrame * this.ratioIndicator;
     this.indicator.style.width = `${this.widthIndicator}px`;
@@ -79,30 +88,31 @@ class Knob {
     // 设置indicator基本样式
     this.indicator.style.borderRadius = `50%`;
     this.indicator.style.backgroundColor = `skyblue`;
-    this.indicator.style.cursor = "grab";
+    this.indicator.style.cursor = `grab`;
+    this.indicator.style.overflow = `default`;
 
-    //-----------------------------------------------------------------------------------------
-    // 创建pointer节点
-    this.pointer = document.createElement(`div`);
-    this.indicator.append(this.pointer);
+    // //-----------------------------------------------------------------------------------------
+    // // 创建pointer节点
+    // this.pointer = document.createElement(`div`);
+    // this.indicator.append(this.pointer);
 
-    // 设置pointer基本属性
-    this.pointer.className = `knob_indicator_pointer`;
-    this.pointer.id = this.pointer.className + `_${knobName}`;
+    // // 设置pointer基本属性
+    // this.pointer.className = `knob_indicator_pointer`;
+    // this.pointer.id = this.pointer.className + `_${knobName}`;
 
-    // 设置pointer尺寸与定位
-    this.widthPointer = 4;
-    this.heightPointer = this.heightIndicator * 0.30;
-    this.pointer.style.width = `${this.widthPointer}px`;
-    this.pointer.style.height = `${this.heightPointer}px`;
-    this.pointer.style.position = `absolute`;
-    this.pointer.style.left = `50%`;
-    this.pointer.style.transformOrigin = `50% 100%`;
-    this.pointer.style.transform = `translate(-50%, 0)`;
+    // // 设置pointer尺寸与定位
+    // this.widthPointer = 4;
+    // this.heightPointer = this.heightIndicator * 0.30;
+    // this.pointer.style.width = `${this.widthPointer}px`;
+    // this.pointer.style.height = `${this.heightPointer}px`;
+    // this.pointer.style.position = `absolute`;
+    // this.pointer.style.left = `50%`;
+    // this.pointer.style.transformOrigin = `50% 100%`;
+    // this.pointer.style.transform = `translate(-50%, 0)`;
 
-    // 设置pointer基本样式
-    this.pointer.style.borderRadius = `${this.widthPointer * 0.5}px`;
-    this.pointer.style.backgroundColor = `black`;
+    // // 设置pointer基本样式
+    // this.pointer.style.borderRadius = `${this.widthPointer * 0.5}px`;
+    // this.pointer.style.backgroundColor = `black`;
 
     //-----------------------------------------------------------------------------------------
     // 创建label节点
@@ -143,13 +153,13 @@ class Knob {
 
     // 设置label样式
     this.setLabelShowName();
-    this.labelText.style.fontSize = `${this.widthFrame * 0.2}px`;
+    this.labelText.style.fontSize = `${this.widthFrame * 0.25}px`;
     // this.labelText.style.backgroundColor = `pink`;
     this.labelText.style.cursor = `default`;
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
-    // 初始化
+    // 通过默认值初始化
     this.setIndicatorFromValue(this.defaultValue);
 
     //-----------------------------------------------------------------------------------------
@@ -283,10 +293,17 @@ class Knob {
   setIndicatorFromDeg(targetDeg) {
     // 取目标角度
     this.currentIndicatorDeg = targetDeg % 360.0;
-    // 根据目标角度更新indicator的样式
-    this.indicator.style.transform = `translate(-50%, -50%) rotate(${targetDeg}deg)`;
     // 更新当前值
     this.currentValue = this.degToValue(this.currentIndicatorDeg);
+
+    // 根据目标角度更新indicator的样式（pointer）
+    // this.indicator.style.transform = `translate(-50%, -50%) rotate(${targetDeg}deg)`;
+
+    // 根据目标角度更新indicator的样式（精灵图）
+    this.indicator.style.background = `url(${this.spritePath})`;
+    this.indicator.style.backgroundSize = `100% auto`;
+    this.indicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
+
     // 更新label
     this.setLabelShowValue();
   }
@@ -298,10 +315,18 @@ class Knob {
     this.currentValue = targetValue;
     // 计算目标角度
     const targetDeg = this.valueToDeg(targetValue);
-    // 根据目标角度更新indicator的样式
-    this.indicator.style.transform = `translate(-50%, -50%) rotate(${targetDeg}deg)`;
     // 更新当前角度
     this.currentIndicatorDeg = targetDeg % 360.0;
+
+    // 根据目标角度更新indicator的样式
+    // this.indicator.style.transform = `translate(-50%, -50%) rotate(${targetDeg}deg)`;
+
+    // 根据目标角度更新indicator的样式（精灵图）
+    this.indicator.style.background = `url(${this.spritePath})`;
+    this.indicator.style.backgroundSize = `100% auto`;
+    this.indicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
+
+
     // 更新label
     this.setLabelShowValue();
   }
@@ -317,6 +342,11 @@ class Knob {
     } else if (this.isHovering) {
       this.setLabelShowValue(false);
     }
+  }
+
+  //-----------------------------------------------------------------------------------------
+  setIndicatorPNG() {
+
   }
 
   //-----------------------------------------------------------------------------------------
@@ -337,6 +367,16 @@ class Knob {
     const slop = deltaY / deltaX;
     const bias = (this.indicatorEndDeg * this.valueStart - this.indicatorStartDeg * this.valueEnd) / deltaX;
     return (slop * deg + bias);
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 由indicator的角度获取sprite的index
+  getIndexSprite() {
+    const deltaX = this.indicatorEndDeg - this.indicatorStartDeg;
+    const deltaY = this.spriteLength - 1;
+    const slop = deltaY / deltaX;
+    const bias = (- this.indicatorStartDeg * (this.spriteLength - 1)) / deltaX;
+    return Math.round(slop * this.currentIndicatorDeg + bias);
   }
 
   //-----------------------------------------------------------------------------------------
