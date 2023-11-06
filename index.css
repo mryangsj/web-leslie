@@ -87,24 +87,27 @@
       position: relative;
     }
     
-  .knob {
-    width: 75px;
-    height: 75px;
-    background-color: #2D2C2C;
-    border-radius: 50%;
-    margin: 0 40px;
-    position: relative;
-    /* cursor: pointer;
-    transform-origin: 50% 100%;
-    transform: rotate(0deg);
-    transition: transform 0.2s ease-in-out; */
-    /* position: relative; */
-  }
+.knob {
+  width: 75px;
+  height: 75px;
+  background-color: transparent;
+  border-radius: 30%;
+  margin: 0 40px;
+  position: relative;
+  background-image: url(./icon/knob2.png);
+  background-size: 86px 77px;
+  background-position: -5px -3px;
+  /* cursor: pointer;
+  transform-origin: 50% 100%;
+  transform: rotate(0deg);
+  transition: transform 0.2s ease-in-out; */
+  /* position: relative; */
+}
   
   .pointer {
     position: absolute;
     width: 2px;
-    height: 35px;
+    height: 20px;
     background-color: whitesmoke;
     transform-origin: 0% 0%; 
     left: 50%;
@@ -123,6 +126,11 @@
     transform: translateX(0);
     cursor: pointer;
   }
+
+#knob3{
+  background-image: url(./icon/knob2_rotated.png);
+  background-size: 85px 89px;
+}
 
 .knob_container_text{
     width: 75px;
@@ -262,6 +270,8 @@ select:focus {
     background-color: #252525;
     height: 5%; /* 设置为视窗高度的10% */
     /* line-height: 60px; */
+    display: flex;
+    justify-content: space-between;
   }
   
   .bottom_text{
@@ -271,3 +281,26 @@ select:focus {
     padding: 5px;
   }
   
+
+
+/* 默认状态 */
+.button-style {
+  background-color: #000000;
+  border: 1px solid #766643;
+  border-radius: 4px;
+  color: #766643;
+  font-weight: bolder;
+  cursor: pointer;
+  transition: color 0.3s; /* 添加颜色过渡效果 */
+  width: 10%;
+}
+
+
+a{
+  text-decoration: none;
+  color: #766643;
+}
+
+a:active {
+  color: #fff;
+}
