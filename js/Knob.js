@@ -15,6 +15,8 @@ class Knob {
     this.spritePath = spritePath;
     this.spriteLength = spriteLength;
     this.isHovering = false;
+    this.isMouseDown = false;
+    this.isDragging = false;
     this.isEditing = false;
 
     //-----------------------------------------------------------------------------------------
@@ -151,6 +153,8 @@ class Knob {
     this.labelText.style.fontSize = `${this.widthFrame * 0.2}px`;
     // this.labelText.style.backgroundColor = `pink`;
     this.labelText.style.cursor = `default`;
+    this.labelText.style.userSelect = `none`;
+    this.labelText.style.webkitUserSelect = `none`; // For Safari
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
@@ -158,22 +162,39 @@ class Knob {
     this.setIndicatorFromValue(this.defaultValue);
 
     //-----------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------
-    // 在构造函数中绑定方法，并保存为实例的属性
-    this.mouseMoveOnIndicatorEventResponse = this.mouseMoveOnIndicatorEventResponse.bind(this);
-
-    //-----------------------------------------------------------------------------------------
     // 给indicator注册点击事件：为拖动事件设置监听器
     this.indicator.addEventListener('mousedown', e => {
-      this.indicator.addEventListener('mousemove', this.mouseMoveOnIndicatorEventResponse);
-    })
+      // 更新信号量
+      this.isMouseDown = true;
+    });
 
     //-----------------------------------------------------------------------------------------
-    // 给indicator注册释放事件：释放光标、移除拖动事件监听器
-    this.indicator.addEventListener('mouseup', e => {
-      document.exitPointerLock();
-      this.indicator.removeEventListener('mousemove', this.mouseMoveOnIndicatorEventResponse);
-    })
+    // 注册拖动事件
+    document.addEventListener('mousemove', e => {
+      // 判定拖动事件
+      if (this.isMouseDown) {
+        // 计算增量：indicator的增量与鼠标Y轴移动速度关联
+        const increment = Math.abs(e.movementY);
+        const sign = Math.sign(-e.movementY);
+        let nextDeg = this.currentIndicatorDeg + sign * Math.pow(increment, 1.3) * 0.5;
+        // 判断是否已达indicator的边界
+        nextDeg = nextDeg <= this.indicatorStartDeg ? this.indicatorStartDeg : nextDeg;
+        nextDeg = nextDeg >= this.indicatorEndDeg ? this.indicatorEndDeg : nextDeg;
+        // 设置indicator的角度
+        this.setIndicatorFromDeg(nextDeg);
+        // 更新label
+        this.setLabelShowValue();
+      }
+    });
+
+    //-----------------------------------------------------------------------------------------
+    // 释放拖动事件
+    document.addEventListener('mouseup', e => {
+      // 更新信号量
+      this.isMouseDown = false;
+      // 更新label
+      if (!this.isHovering) this.setLabelShowName();
+    });
 
     //-----------------------------------------------------------------------------------------
     // 给indicator注册键盘+点击事件：按住alt键单击恢复默认值
@@ -181,62 +202,47 @@ class Knob {
       if (e.altKey) {
         this.setIndicatorFromValue(this.defaultValue);
       }
-    })
+    });
 
     //-----------------------------------------------------------------------------------------
     // 给frame注册双击事件：手动输入值
     this.frame.addEventListener('dblclick', e => {
       // 更新信号量
       this.isEditing = true;
-
       // 激活label可编辑状态
       this.labelText.setAttribute(`contenteditable`, true);
-
       // 去掉单位
       this.setLabelShowValue(false);
-
       // 获取光标并全选label
       const selection = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(this.labelText);
       selection.removeAllRanges();
       selection.addRange(range);
+    });
 
-      // 给label注册回车事件
-      this.labelText.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          // 更新信号量
-          this.isEditing = false;
-          // 防止换行
-          e.preventDefault();
-          // 根据输入数据调整indicator
-          this.setIndicatorFromText(this.labelText.innerHTML);
-          // 取消label可编辑状态
-          this.labelText.setAttribute(`contenteditable`, false);
-          // 更新label
-          if (this.isHovering) {
-            this.setLabelShowValue();
-          } else {
-            this.setLabelShowName();
-          }
-        }
-      })
+    //-----------------------------------------------------------------------------------------
+    // 给label注册回车事件
+    this.labelText.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        // 防止换行
+        e.preventDefault();
+        // 触发blur事件
+        this.labelText.blur();
+      }
+    });
 
-      // 给label注册失焦事件
-      this.labelText.addEventListener('blur', e => {
-        // 更新信号量
-        this.isEditing = false;
-        // 根据输入数据调整indicator
-        this.setIndicatorFromText(this.labelText.innerHTML);
-        // 取消label可编辑状态
-        this.labelText.setAttribute(`contenteditable`, false);
-        // 更新label
-        if (this.isHovering) {
-          this.setLabelShowValue();
-        } else {
-          this.setLabelShowName();
-        }
-      })
+    //-----------------------------------------------------------------------------------------
+    // 给label注册失焦事件
+    this.labelText.addEventListener('blur', e => {
+      // 更新信号量
+      this.isEditing = false;
+      // 根据输入数据调整indicator
+      this.setIndicatorFromText(this.labelText.innerHTML);
+      // 取消label可编辑状态
+      this.labelText.setAttribute(`contenteditable`, false);
+      // 更新label
+      this.isHovering ? this.setLabelShowValue() : this.setLabelShowName();
     })
 
     //-----------------------------------------------------------------------------------------
@@ -246,24 +252,20 @@ class Knob {
     }, false);
 
     //-----------------------------------------------------------------------------------------
-    // 给frame添加鼠标移入事件：label显示当前值
+    // 给frame添加鼠标移入事件：当label不在编辑状态时，label显示当前值
     this.frame.addEventListener('mouseenter', () => {
       // 更新信号量
       this.isHovering = true;
 
-      // 防止编辑状态下移入鼠标导致label改变
-      if (!this.isEditing) {
-        this.setLabelShowValue();
-      }
+      if (!this.isEditing) this.setLabelShowValue();
     })
 
     //-----------------------------------------------------------------------------------------
-    // 给knob添加鼠标移出事件：label显示控件名称
+    // 给knob添加鼠标移出事件：当label不在编辑状态时，label显示控件名称
     this.frame.addEventListener('mouseleave', () => {
       // 更新信号量
       this.isHovering = false;
 
-      // 如果label不在编辑状态，则移除label可编辑状态
       if (!this.isEditing) {
         this.setLabelShowName();
         this.labelText.setAttribute(`contenteditable`, false);
@@ -273,24 +275,6 @@ class Knob {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     return this.frame;
-  }
-
-  //-----------------------------------------------------------------------------------------
-  mouseMoveOnIndicatorEventResponse(e) {
-    // 固定并隐藏鼠标
-    this.indicator.requestPointerLock();
-    // 计算增量：indicator的增量与鼠标Y轴移动速度关联
-    const increment = Math.abs(e.movementY);
-    const sign = Math.sign(-e.movementY);
-    let nextDeg = this.currentIndicatorDeg + sign * Math.pow(increment, 1.25) * 0.3;
-    // let nextDeg = this.currentIndicatorDeg + sign * increment * 0.6;
-    // 判断是否已达indicator的边界
-    nextDeg = nextDeg <= this.indicatorStartDeg ? this.indicatorStartDeg : nextDeg;
-    nextDeg = nextDeg >= this.indicatorEndDeg ? this.indicatorEndDeg : nextDeg;
-    // 设置indicator的角度
-    this.setIndicatorFromDeg(nextDeg);
-    // 更新label数值
-    this.setLabelShowValue();
   }
 
   //-----------------------------------------------------------------------------------------
@@ -318,7 +302,7 @@ class Knob {
     // 更新当前角度
     this.currentIndicatorDeg = targetDeg % 360.0;
 
-    // 根据目标角度更新indicator的样式
+    // 根据目标角度更新indicator的样式（pointer）
     // this.indicator.style.transform = `translate(-50%, -50%) rotate(${targetDeg}deg)`;
 
     // 根据目标角度更新indicator的样式（精灵图）
@@ -336,11 +320,6 @@ class Knob {
     } else if (this.isHovering) {
       this.setLabelShowValue(false);
     }
-  }
-
-  //-----------------------------------------------------------------------------------------
-  setIndicatorPNG() {
-
   }
 
   //-----------------------------------------------------------------------------------------
