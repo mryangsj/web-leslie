@@ -1,5 +1,5 @@
 class Knob {
-  constructor(width = 100, knobName = `New Knob`, degStart = -150, degEnd = 150, valueStart = 0, valueEnd = 1, defaultValue = 0.5, numberDecimals = 2, suffix = `dB`, spritePath = `resources/KnobBig.png`, spriteLength = 60) {
+  constructor(width = 100, knobName = `New Knob`, degStart = -150, degEnd = 150, valueStart = 0, valueEnd = 1, defaultValue = 0.5, numberDecimals = 3, suffix = `dB`, spritePath = `resources/KnobBig.png`, spriteLength = 60) {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     this.widthFrame = width;
@@ -162,7 +162,7 @@ class Knob {
     this.setIndicatorFromValue(this.defaultValue);
 
     //-----------------------------------------------------------------------------------------
-    // 给indicator注册点击事件：为拖动事件设置监听器
+    // 给indicator注册点击事件
     this.indicator.addEventListener('mousedown', e => {
       // 更新信号量
       this.isMouseDown = true;
@@ -176,7 +176,7 @@ class Knob {
         // 计算增量：indicator的增量与鼠标Y轴移动速度关联
         const increment = Math.abs(e.movementY);
         const sign = Math.sign(-e.movementY);
-        let nextDeg = this.currentIndicatorDeg + sign * Math.pow(increment, 1.3) * 0.5;
+        let nextDeg = this.currentIndicatorDeg + sign * Math.pow(increment, 1.25) * 0.25;
         // 判断是否已达indicator的边界
         nextDeg = nextDeg <= this.indicatorStartDeg ? this.indicatorStartDeg : nextDeg;
         nextDeg = nextDeg >= this.indicatorEndDeg ? this.indicatorEndDeg : nextDeg;
@@ -199,9 +199,7 @@ class Knob {
     //-----------------------------------------------------------------------------------------
     // 给indicator注册键盘+点击事件：按住alt键单击恢复默认值
     this.indicator.addEventListener('click', e => {
-      if (e.altKey) {
-        this.setIndicatorFromValue(this.defaultValue);
-      }
+      if (e.altKey) this.setIndicatorFromValue(this.defaultValue);
     });
 
     //-----------------------------------------------------------------------------------------
