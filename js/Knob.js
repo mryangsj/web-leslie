@@ -1,9 +1,9 @@
 class Knob {
-  constructor(width = 100, knobName = `New Knob`, degStart = -150, degEnd = 150, valueStart = 0, valueEnd = 1, defaultValue = 0.5, numberDecimals = 2, suffix = `dB`, spritePath = `resources/Knob.png`) {
+  constructor(width = 100, knobName = `New Knob`, degStart = -150, degEnd = 150, valueStart = 0, valueEnd = 1, defaultValue = 0.5, numberDecimals = 2, suffix = `dB`, spritePath = `resources/KnobBig.png`, spriteLength = 60) {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     this.widthFrame = width;
-    this.heightFrame = this.widthFrame * 1.45;
+    this.heightFrame = this.widthFrame * 1.3;
     this.knobName = knobName;
     this.indicatorStartDeg = degStart;
     this.indicatorEndDeg = degEnd;
@@ -13,16 +13,9 @@ class Knob {
     this.numberDecimals = numberDecimals;
     this.suffix = suffix;
     this.spritePath = spritePath;
+    this.spriteLength = spriteLength;
     this.isHovering = false;
     this.isEditing = false;
-
-    if (spritePath) {
-      const sprite = new Image();
-      sprite.src = spritePath;
-      this.widthSprite = sprite.width;
-      this.heightSprite = sprite.height;
-      this.spriteLength = this.heightSprite / this.widthSprite;
-    }
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
@@ -90,6 +83,8 @@ class Knob {
     this.indicator.style.backgroundColor = `skyblue`;
     this.indicator.style.cursor = `grab`;
     this.indicator.style.overflow = `default`;
+    this.indicator.style.background = `url(${this.spritePath})`;
+    this.indicator.style.backgroundSize = `100% auto`;
 
     // //-----------------------------------------------------------------------------------------
     // // 创建pointer节点
@@ -153,7 +148,7 @@ class Knob {
 
     // 设置label样式
     this.setLabelShowName();
-    this.labelText.style.fontSize = `${this.widthFrame * 0.25}px`;
+    this.labelText.style.fontSize = `${this.widthFrame * 0.2}px`;
     // this.labelText.style.backgroundColor = `pink`;
     this.labelText.style.cursor = `default`;
 
@@ -218,8 +213,12 @@ class Knob {
           this.setIndicatorFromText(this.labelText.innerHTML);
           // 取消label可编辑状态
           this.labelText.setAttribute(`contenteditable`, false);
-          // 若用户鼠标已经离开，则恢复label标签
-          if (!this.isHovering) this.setLabelShowName();
+          // 更新label
+          if (this.isHovering) {
+            this.setLabelShowValue();
+          } else {
+            this.setLabelShowName();
+          }
         }
       })
 
@@ -231,8 +230,12 @@ class Knob {
         this.setIndicatorFromText(this.labelText.innerHTML);
         // 取消label可编辑状态
         this.labelText.setAttribute(`contenteditable`, false);
-        // 若用户鼠标已经离开，则恢复label标签
-        if (!this.isHovering) this.setLabelShowName();
+        // 更新label
+        if (this.isHovering) {
+          this.setLabelShowValue();
+        } else {
+          this.setLabelShowName();
+        }
       })
     })
 
@@ -286,6 +289,8 @@ class Knob {
     nextDeg = nextDeg >= this.indicatorEndDeg ? this.indicatorEndDeg : nextDeg;
     // 设置indicator的角度
     this.setIndicatorFromDeg(nextDeg);
+    // 更新label数值
+    this.setLabelShowValue();
   }
 
   //-----------------------------------------------------------------------------------------
@@ -300,12 +305,7 @@ class Knob {
     // this.indicator.style.transform = `translate(-50%, -50%) rotate(${targetDeg}deg)`;
 
     // 根据目标角度更新indicator的样式（精灵图）
-    this.indicator.style.background = `url(${this.spritePath})`;
-    this.indicator.style.backgroundSize = `100% auto`;
     this.indicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
-
-    // 更新label
-    this.setLabelShowValue();
   }
 
   //-----------------------------------------------------------------------------------------
@@ -322,17 +322,11 @@ class Knob {
     // this.indicator.style.transform = `translate(-50%, -50%) rotate(${targetDeg}deg)`;
 
     // 根据目标角度更新indicator的样式（精灵图）
-    this.indicator.style.background = `url(${this.spritePath})`;
-    this.indicator.style.backgroundSize = `100% auto`;
     this.indicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
-
-
-    // 更新label
-    this.setLabelShowValue();
   }
 
   //-----------------------------------------------------------------------------------------
-  // 通过文本来旋转indicator
+  // 通过文本来设置indicator的角度
   setIndicatorFromText(inputText) {
     // 接收数字
     const targetNumber = parseFloat(inputText); // 尝试将输入转换为浮点数
