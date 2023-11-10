@@ -172,7 +172,7 @@ class Knob {
         // 计算增量：indicator的增量与鼠标Y轴移动速度关联
         const increment = Math.abs(e.movementY);
         const sign = Math.sign(-e.movementY);
-        let nextDeg = this.currentIndicatorDeg + sign * Math.pow(increment, 1) * 1;
+        let nextDeg = this.currentIndicatorDeg + sign * Math.pow(increment, 1.3) * 0.3;
         // 判断是否已达indicator的边界
         nextDeg = nextDeg <= this.indicatorStartDeg ? this.indicatorStartDeg : nextDeg;
         nextDeg = nextDeg >= this.indicatorEndDeg ? this.indicatorEndDeg : nextDeg;
