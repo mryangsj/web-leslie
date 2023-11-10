@@ -7,28 +7,29 @@
   <title>Knob</title>
 
   <style>
+    /* 移除所有预设样式 */
     * {
       padding: 0;
       margin: 0;
     }
 
-    .test {
-      width: 400px;
-      height: 20px;
-      background-color: grey;
+    /* 填充body到整个屏幕 */
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
     }
   </style>
 </head>
 
 <body>
-  <!-- <div class="test"></div> -->
-
   <script src="js/Knob.js"></script>
   <script>
-    const knob = new Knob(100, `Volume`);
+    const knob = new Knob(100, `Volume`, 0, 1, defaultValue = 0.5, numberDecimals = 2, suffix = `dB`, spritePath = `resources/KnobMid.png`, spriteLength = 129);
     knob.style.top = `50%`;
     knob.style.left = `50%`;
     knob.style.transform = `translate(-50%, -50%)`;
+    document.body.style.cursor = `grabbing`;
   </script>
 </body>
 
