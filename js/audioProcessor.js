@@ -53,10 +53,71 @@ registerProcessor('low-pass-filter', class extends AudioWorkletProcessor {
   }
 });
 
-
+// Leslie效果器
 registerProcessor("LeslieProcessor", class extends AudioWorkletProcessor {
-  constructor() { super(); }
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  // 定义可调参数
+  static get parameterDescriptors() {
+    return [{
+      name: 'rotorMode',
+      defaultValue: 0,
+      minValue: 0,
+      maxValue: 2,
+      automationRate: 'k-rate'
+    }, {
+      name: 'slowSpeedFineTune',
+      defaultValue: 0,
+      minValue: -20,
+      maxValue: 20,
+      automationRate: 'k-rate'
+    }, {
+      name: 'fastSpeedFineTune',
+      defaultValue: 0,
+      minValue: -20,
+      maxValue: 20,
+      automationRate: 'k-rate'
+    }, {
+      name: 'acceleration',
+      defaultValue: 1,
+      minValue: 0.25,
+      maxValue: 4,
+      automationRate: 'k-rate'
+    }, {
+      name: 'deceleration',
+      defaultValue: 1,
+      minValue: 0.25,
+      maxValue: 4,
+      automationRate: 'k-rate'
+    }];
+  }
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  constructor() {
+    super();
+
+    // 定义内部参数
+    this.speed = 0;
+    this.rotorInstantPhase = 0;
+    this.rotorAngularSpeed = 0;
+  }
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
   process(inputList, outputList, parameters) {
+    //-----------------------------------------------------------------------------------------
+    // 接收参数
+    const rotorMode = parameters.rotorMode[0];
+    const slowSpeedFineTune = parameters.slowSpeedFineTune[0];
+    const fastSpeedFineTune = parameters.fastSpeedFineTune[0];
+    const acceleration = parameters.acceleration[0];
+    const deceleration = parameters.deceleration[0];
+
+    //-----------------------------------------------------------------------------------------
+    // 更新内部参数
+
+
     const numberOfSource = Math.min(inputList.length, outputList.length);
 
     // 遍历每一个输入源

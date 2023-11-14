@@ -1,5 +1,5 @@
 class Knob {
-  constructor(width = 100, knobLabel = 'New Knob', valueStart = 0, valueEnd = 1, defaultValue = 0.5, numberDecimals = 3, suffix = 'dB', spritePath = 'resources/KnobMid.png', spriteLength = 129, degStart = -150, degEnd = 150, devMode = true) {
+  constructor(width = 100, knobLabel = 'New Knob', valueStart = 0, valueEnd = 1, defaultValue = 0.5, numberDecimals = 3, suffix = 'dB', spritePath = 'resources/KnobBig.png', spriteLength = 257, degStart = -150, degEnd = 150, devMode = true) {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     this.ratioSizeDom = 1.3;
