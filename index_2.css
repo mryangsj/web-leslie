@@ -122,7 +122,9 @@ button.active {
     /* 声明行间距和列间距 */
     grid-gap: 45px;
 }
-
+.knob_container_hide{
+  display: none;
+}
 .knob {
   width: 50px;
   height: 50px;
@@ -181,23 +183,28 @@ cursor: pointer;
     font-size: 10px;
     font-weight: lighter;
 }
-#slider_mic_distance {
+#slider_mic_distance,
+#slider_VOLUME {
     margin-left: 175px;
 }
 
-#slider_slow_speed {
+#slider_slow_speed,
+#slider_HPF {
     margin-top: 95px; 
 }
 
-#slider_acce {
+#slider_acce,
+#slider_LOW {
     margin: 95px 175px; 
 }
 
-#slider_fast_spd {
+#slider_fast_spd,
+#slider_MID {
     margin-top: 190px; 
 }
 
-#slider_dece {
+#slider_dece,
+#slider_HIGH {
     margin: 190px 175px; 
 }
 
@@ -256,6 +263,37 @@ cursor: pointer;
 .icon_decro_6{
     background-image: url(./icon/shengji.png);
     transform: scaleY(-1);
+}
+
+.icon_decro_gain{
+  background-image: url(./icon/Gain.png);
+  transform: rotate(0deg);
+  background-size: 35px 30px;
+}
+
+.icon_decro_VOLUME{
+  background-image: url(./icon/Page.png);
+  transform: rotate(0deg);
+}
+
+.icon_decro_HPF{
+  background-image: url(./icon/linkedin-line.png);
+  transform: rotate(0deg);
+}
+
+.icon_decro_LOW{
+  background-image: url(./icon/xiajiang-2.png);
+  transform: rotate(0deg);
+}
+
+.icon_decro_MID{
+  background-image: url(./icon/ic_whiteboarde_figure_arc.png);
+  transform: rotate(0deg);
+}
+
+.icon_decro_HIGH{
+  background-image: url(./icon/a-icon_zengchangzhexian.png);
+  transform: rotate(0deg);
 }
 
 .speed_control {

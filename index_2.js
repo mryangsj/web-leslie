@@ -20,27 +20,36 @@ function handleFileSelect(event) {
 let activeButton = null;
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Select the first button and set it as active by default
-    const firstButton = document.querySelector('.button_container button');
-    if (firstButton) {
-        firstButton.classList.add('active');
-        activeButton = firstButton;
-    }
+  // Select the first button and set it as active by default
+  const firstButton = document.querySelector('.button_container button');
+  toggleColor(firstButton, 0);
 });
 
-function toggleColor(button) {
-    if (activeButton) {
-        activeButton.classList.remove('active');
-    }
+function toggleColor(button, containerIndex) {
+  if (activeButton) {
+      activeButton.classList.remove('active');
+  }
 
-    if (activeButton !== button) {
-        button.classList.add('active');
-        activeButton = button;
-    } else {
-        activeButton = null;
-    }
+  if (activeButton !== button) {
+      button.classList.add('active');
+      activeButton = button;
+  } else {
+      activeButton = null;
+  }
+
+  // Hide all knob containers
+  const knobContainers = document.querySelectorAll('.knob_container');
+  knobContainers.forEach((container, index) => {
+      if (index === containerIndex) {
+          // Show the selected knob container
+          //container.style.display = 'block';
+          container.classList.remove('knob_container_hide');
+      } else {
+          // Hide other knob containers
+          container.classList.add('knob_container_hide')
+      }
+  });
 }
-
 
 const knob_spring = document.getElementById('knob_spring');
 const pointer_spring = document.getElementById('pointer_spring');
@@ -65,6 +74,34 @@ const slider_fast_spd = document.getElementById('slider_fast_spd');
 const knob_dece = document.getElementById('knob_dece');
 const pointer_dece = document.getElementById('pointer_dece');
 const slider_dece = document.getElementById('slider_dece');
+
+const knob_gain = document.getElementById('knob_gain');
+const pointer_gain = document.getElementById('pointer_gain');
+const slider_gain = document.getElementById('slider_gain');
+
+const knob_VOLUME = document.getElementById('knob_VOLUME');
+const pointer_VOLUME = document.getElementById('pointer_VOLUME');
+const slider_VOLUME = document.getElementById('slider_VOLUME');
+
+const knob_HPF = document.getElementById('knob_HPF');
+const pointer_HPF = document.getElementById('pointer_HPF');
+const slider_HPF = document.getElementById('slider_HPF');
+
+const knob_LOW = document.getElementById('knob_LOW');
+const pointer_LOW = document.getElementById('pointer_LOW');
+const slider_LOW = document.getElementById('slider_LOW');
+
+const knob_MID = document.getElementById('knob_MID');
+const pointer_MID = document.getElementById('pointer_MID');
+const slider_MID = document.getElementById('slider_MID');
+
+const knob_HIGH = document.getElementById('knob_HIGH');
+const pointer_HIGH = document.getElementById('pointer_HIGH');
+const slider_HIGH = document.getElementById('slider_HIGH');
+
+const knob_EQ = document.getElementById('knob_EQ');
+const pointer_EQ = document.getElementById('pointer_EQ');
+const slider_EQ = document.getElementById('slider_EQ');
 
 const knob_horn_l = document.getElementById('knob-horn-l');
 const pointer_horn_l = document.getElementById('pointer-horn-l');
@@ -134,6 +171,15 @@ handleSliderMovement(knob_slow_speed, pointer_slow_speed, slider_slow_speed);
 handleSliderMovement(knob_acce, pointer_acce, slider_acce);
 handleSliderMovement(knob_fast_spd, pointer_fast_spd, slider_fast_spd);
 handleSliderMovement(knob_dece, pointer_dece, slider_dece);
+
+handleSliderMovement(knob_gain, pointer_gain, slider_gain);
+handleSliderMovement(knob_VOLUME, pointer_VOLUME, slider_VOLUME);
+handleSliderMovement(knob_HPF, pointer_HPF, slider_HPF);
+handleSliderMovement(knob_LOW, pointer_LOW, slider_LOW);
+handleSliderMovement(knob_MID, pointer_MID, slider_MID);
+handleSliderMovement(knob_HIGH, pointer_HIGH, slider_HIGH);
+
+handleSliderMovement(knob_EQ, pointer_EQ, slider_EQ);
 
 handleSliderMovement(knob_horn_l, pointer_horn_l, knobslider_horn_l);
 handleSliderMovement(knob_horn_r, pointer_horn_r, knobslider_horn_r);

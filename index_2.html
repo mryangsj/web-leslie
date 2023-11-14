@@ -25,11 +25,11 @@
         </div>
         <div class="left_control">
             <div class="button_container">
-                <button onclick="toggleColor(this)">SETUP</button>
-                <button onclick="toggleColor(this)">AMP</button>
-                <button onclick="toggleColor(this)">EQ</button>
+                <button onclick="toggleColor(this,0)">SETUP</button>
+                <button onclick="toggleColor(this,1)">AMP</button>
+                <button onclick="toggleColor(this,2)">EQ</button>
             </div>
-            <div class="knob_container">
+            <div class="knob_container knob_container_hide" id="knob_container1">
                 <div class="knob" id="knob_spring">
                     <div class="knob-text">SPRING</div>
                     <div class="icon_decro icon_decro1"></div>
@@ -66,6 +66,52 @@
                     <div class="pointer-dec" style="margin-top: -35%;"></div>
                     <div id="pointer_dece" class="pointer"></div></div>
                 <div id="slider_dece" class="slider"></div>
+            </div>
+            <div class="knob_container knob_container_hide" id="knob_container2">
+                <div class="knob" id="knob_gain">
+                    <div class="knob-text">GAIN</div>
+                    <div class="icon_decro icon_decro_gain"></div>
+                    <div class="pointer-dec"></div>
+                    <div id="pointer_gain" class="pointer"></div></div>
+                <div id="slider_gain" class="slider"></div>
+                <div class="knob" id="knob_VOLUME">
+                    <div class="knob-text">VOLUME</div>
+                    <div class="icon_decro icon_decro_VOLUME"></div>
+                    <div class="pointer-dec" style="margin-top: -35%;"></div>
+                    <div id="pointer_VOLUME" class="pointer"></div></div>
+                <div id="slider_VOLUME" class="slider"></div>
+                <div class="knob" id="knob_HPF">
+                    <div class="knob-text">INPUT HPF</div>
+                    <div class="icon_decro icon_decro_HPF"></div>
+                    <div class="pointer-dec" style="margin-top: -35%;"></div>
+                    <div id="pointer_HPF" class="pointer"></div></div>
+                <div id="slider_HPF" class="slider"></div>
+                <div class="knob" id="knob_LOW">
+                    <div class="knob-text">LOW</div>
+                    <div class="icon_decro icon_decro_LOW"></div>
+                    <div class="pointer-dec" style="margin-top: -35%;"></div>
+                    <div id="pointer_LOW" class="pointer"></div></div>
+                <div id="slider_LOW" class="slider"></div>
+                <div class="knob" id="knob_MID">
+                    <div class="knob-text">MID</div>
+                    <div class="icon_decro icon_decro_MID"></div>
+                    <div class="pointer-dec" style="margin-top: -35%;"></div>
+                    <div id="pointer_MID" class="pointer"></div></div>
+                <div id="slider_MID" class="slider"></div>
+                <div class="knob" id="knob_HIGH">
+                    <div class="knob-text">HIGH</div>
+                    <div class="icon_decro icon_decro_HIGH"></div>
+                    <div class="pointer-dec" style="margin-top: -35%;"></div>
+                    <div id="pointer_HIGH" class="pointer"></div></div>
+                <div id="slider_HIGH" class="slider"></div>
+            </div>
+            <div class="knob_container knob_container_hide" id="knob_container3">
+                <div class="knob" id="knob_EQ">
+                    <div class="knob-text">EQ</div>
+                    <div class="icon_decro icon_decro_6"></div>
+                    <div class="pointer-dec"></div>
+                    <div id="pointer_EQ" class="pointer"></div></div>
+                <div id="slider_EQ" class="slider"></div>
             </div>
             <div class="speed_control">
                 <div class="speaker_control">
