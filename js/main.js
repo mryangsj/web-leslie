@@ -1,6 +1,5 @@
 import Knob from './knob.js';
 
-
 //-----------------------------------------------------------------------------------------
 // get elements
 const audioPlayer = document.getElementById('audioPlayer');
