@@ -3,103 +3,43 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web Leslie Speaker</title>
-  <link rel="stylesheet" href="index.css">
-  <!-- <script type="text/javascript"  src="./index.js"></script> -->
+  <title>AudioWokelet Test</title>
+
+  <style>
+    /* 移除所有预设样式 */
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    /* 填充body到整个屏幕 */
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+  </style>
 </head>
 
 <body>
-  <div class="common-layout">
-    <header class="header header_text">
-      <div>
-        Audio 1: Factory Default
-      </div>
-    </header>
-    <main class="main">
-      <div class="inner-box">
-        <div class="right_mic_pro">
-          <div class="decoration">MIC PROCESSING</div>
-          <div class="knob_container">
-            <div class="knob" id="knob1">
-              <div id="pointer1" class="pointer"></div>
-            </div>
-            <div id="slider1" class="slider"></div>
-            <div class="knob" id="knob2">
-              <div id="pointer2" class="pointer"></div>
-            </div>
-            <div id="slider2" class="slider" style="margin-left: 195px;"></div>
-            <div class="knob" id="knob3" style="transform: rotate(150deg);">
-              <div id="pointer3" class="pointer"></div>
-            </div>
-            <div id="slider3" class="slider" style="margin-left: 350px;"></div>
-          </div>
-          <div class="knob_container" style="margin: 0px 0px 15px 0px;">
-            <p class="knob_container_text">HORN</p>
-            <p class="knob_container_text">DRUM</p>
-            <p class="knob_container_text">BALANCE</p>
-          </div>
-          <div class="decoration">MOTOR</div>
-          <div class="knob_container">
-            <div class="knob" id="knob4">
-              <div id="pointer4" class="pointer"></div>
-            </div>
-            <div id="slider4" class="slider"></div>
-            <div class="knob" id="knob5">
-              <div id="pointer5" class="pointer"></div>
-            </div>
-            <div id="slider5" class="slider" style="margin-left: 195px;"></div>
-            <div class="MOTOR_CONTROL">MOTOR CONTROL
-              <select class="select_box">
-                <option>normal</option>
-                <option>inv</option>
-                <option>910</option>
-                <option>sync</option>
-              </select>
-            </div>
-          </div>
-          <div class="knob_container" style="margin: 0px 0px 15px 0px;">
-            <p class="knob_container_text">ACCELERATION</p>
-            <p class="knob_container_text">MAX RATE</p>
-            <p class="knob_container_text" style="visibility: hidden;">BALANCE</p>
-          </div>
-        </div>
-        <div class="left_mic_pro">
-          <div class="left_nav">1</div>
-          <div class="left_nav">2</div>
-          <div class="left_nav">3</div>
-        </div>
-      </div>
-      <div class="speaker_control">
-        <div class="cut-off">
-          <div class="cut-off-text">
-            <span>SLOW</span>
-            <span style="margin: 0 20px;">BRAKE</span>
-            <span>FAST</span>
-            <div class="rotation-slider">
-              <div class="rotation-track">
-                <div class="rotation-fill"></div>
-                <div class="rotation-thumb">
-                  <div class="rotation-thumb-in"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- <input type="file" id="audioFileInput" accept="audio/*"> -->
+  <audio src="resources/test-audio.mp3" id="audioPlayer" controls></audio>
 
-      </div>
-    </main>
-    <footer class="bottom bottom_text">
-      <div>
-        Rotor Cabinet
-      </div>
-    </footer>
-  </div>
-  <script type="text/javascript" src="./index.js"></script>
+  <button role="switch" aria-checked="false" id="button-power">
+    <span>ON</span>
+  </button>
 
-  <!-- import GSAP lib -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script type="module" src="./js/main.js"></script>
 
+  <script>
+    // 当文档加载完毕时，添加事件监听器
+    window.addEventListener('DOMContentLoaded', (event) => {
+      // 阻止页面上所有元素的拖拽事件
+      document.addEventListener('dragstart', function (e) {
+        e.preventDefault();
+      });
+    });
+  </script>
 </body>
 
 </html>

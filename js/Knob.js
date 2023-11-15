@@ -1,26 +1,32 @@
 export default class Knob {
-  constructor(width = 100, knobLabel = 'New Knob', valueStart = 0, valueEnd = 1, defaultValue = 0.5, numberDecimals = 3, suffix = 'dB', spritePath = 'resources/KnobMid.png', spriteLength = 129, degStart = -150, degEnd = 150, devMode = true) {
+  constructor(width = 100, knobLabel = 'NewKnob', valueStart = 20, valueEnd = 20000, defaultValue = 1000, numberDecimals = 1, suffix = 'Hz', spritePath = 'resources/KnobMid.png', spriteLength = 129, devMode = true) {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     this.ratioSizeDom = 1.3;
     this.widthDom = width;
     this.heightDom = this.widthDom * this.ratioSizeDom;
     this.knobName = knobLabel;
-    this.indicatorStartDeg = degStart;
-    this.indicatorEndDeg = degEnd;
+
     this.valueStart = valueStart;
     this.valueEnd = valueEnd;
     this.defaultValue = defaultValue;
     this.currentValue = defaultValue;
+
+    this.stateValue = 0; // 0~1
+    this.skewFactor = 1; // 当skewFactor为1时，knob是线性控件；非1时为非线性控件。除非极为特殊的情况，否则skewFactor应该大于0。
+
     this.numberDecimals = numberDecimals;
     this.suffix = suffix;
+
     this.spritePath = spritePath;
     this.spriteLength = spriteLength;
+
     this.isCursorOnIndicator = false;
     this.isCursorOnFrame = false;
     this.isMouseDownOnIndicator = false;
     this.isDragging = false;
     this.isEditing = false;
+
     this.devMode = devMode;
 
     //-----------------------------------------------------------------------------------------
@@ -127,6 +133,7 @@ export default class Knob {
 
     // 设置label样式
     this.setLabelShowName();
+    this.domLabel.style.textAlign = 'center';
     this.domLabel.style.fontSize = `${this.widthDom * 0.2}px`;
     document.body.style.cursor = 'default';
     this.domLabel.style.userSelect = 'none';
@@ -175,14 +182,16 @@ export default class Knob {
         // 计算增量：indicator的增量与鼠标Y轴移动速度关联
         const increment = Math.abs(e.movementY);
         const sign = Math.sign(-e.movementY);
-        let nextDeg = this.currentIndicatorDeg + sign * Math.pow(increment, 1.3) * 0.3;
+        let nextState = this.stateValue + sign * Math.pow(increment, 1) * 0.005;
         // 判断是否已达indicator的边界
-        nextDeg = nextDeg <= this.indicatorStartDeg ? this.indicatorStartDeg : nextDeg;
-        nextDeg = nextDeg >= this.indicatorEndDeg ? this.indicatorEndDeg : nextDeg;
+        nextState = nextState <= 0 ? 0 : nextState;
+        nextState = nextState >= 1 ? 1 : nextState;
         // 设置indicator的角度
-        this.setIndicatorByDeg(nextDeg);
+        this.setIndicatorByState(nextState);
         // label显示当前值
         this.setLabelShowValue();
+        // indicator在拖动时，鼠标样式为grabbing
+        // document.body.style.cursor = 'grabbing';
         // 触发drag事件
         this.dom.dispatchEvent(new CustomEvent('drag'));
       }
@@ -201,9 +210,10 @@ export default class Knob {
     });
 
     //-----------------------------------------------------------------------------------------
-    // 给indicator注册键盘+点击事件：按住alt键单击恢复默认值
+    // 给indicator注册键盘+点击事件：按住command键(MacOS)、ctrl键(Windows)、alt键单击恢复默认值
     this.domIndicator.addEventListener('click', e => {
-      if (e.altKey) this.setIndicatorByValue(this.defaultValue);
+      if (e.altKey || e.metaKey || e.ctrlKey) this.setIndicatorByValue(this.defaultValue);
+      this.setLabelShowValue();
     });
 
     //-----------------------------------------------------------------------------------------
@@ -276,25 +286,23 @@ export default class Knob {
   }
 
   //-----------------------------------------------------------------------------------------
-  // 通过目标角度来旋转indicator
-  setIndicatorByDeg(targetDeg) {
-    // 取目标角度
-    this.currentIndicatorDeg = targetDeg % 360.0;
+  // 通过目标值来旋转indicator
+  setIndicatorByValue(targetValue) {
     // 更新当前值
-    this.currentValue = this.degToValue(this.currentIndicatorDeg);
+    this.currentValue = targetValue;
+    // 更新当前状态值
+    this.stateValue = this.valueToState(this.currentValue);
     // 根据目标角度更新indicator的样式（精灵图）
     this.domIndicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
   }
 
   //-----------------------------------------------------------------------------------------
-  // 通过目标值来旋转indicator
-  setIndicatorByValue(targetValue) {
+  // 通过目标状态值来旋转indicator
+  setIndicatorByState(targetState) {
+    // 更新当前状态值
+    this.stateValue = targetState;
     // 更新当前值
-    this.currentValue = targetValue;
-    // 计算目标角度
-    const targetDeg = this.valueToDeg(targetValue);
-    // 更新当前角度
-    this.currentIndicatorDeg = targetDeg % 360.0;
+    this.currentValue = this.stateToValue(this.stateValue);
     // 根据目标角度更新indicator的样式（精灵图）
     this.domIndicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
   }
@@ -313,33 +321,34 @@ export default class Knob {
   }
 
   //-----------------------------------------------------------------------------------------
-  // indicator的角度转输出值
-  valueToDeg(value) {
-    const deltaX = this.valueEnd - this.valueStart;
-    const deltaY = this.indicatorEndDeg - this.indicatorStartDeg;
-    const slop = deltaY / deltaX;
-    const bias = (this.valueEnd * this.indicatorStartDeg - this.valueStart * this.indicatorEndDeg) / deltaX;
-    return (slop * value + bias);
+  // 设置中间值来非线性地调整knob
+  setSkewFactorByMidValue(midValue) {
+    if (midValue > this.valueStart && midValue < this.valueEnd) {
+      this.midValue = midValue;
+      this.skewFactor = Math.log((midValue - this.valueStart) / (this.valueEnd - this.valueStart)) / Math.log(0.5);
+      this.setIndicatorByValue(this.currentValue);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   //-----------------------------------------------------------------------------------------
-  // 输出值转indicator的角度
-  degToValue(deg) {
-    const deltaX = this.indicatorEndDeg - this.indicatorStartDeg;
-    const deltaY = this.valueEnd - this.valueStart;
-    const slop = deltaY / deltaX;
-    const bias = (this.indicatorEndDeg * this.valueStart - this.indicatorStartDeg * this.valueEnd) / deltaX;
-    return (slop * deg + bias);
+  // 状态值转输出值
+  stateToValue(stateValue) {
+    return (this.valueEnd - this.valueStart) * Math.pow(stateValue, this.skewFactor) + this.valueStart;
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 输出值转状态值
+  valueToState(value) {
+    return Math.pow((value - this.valueStart) / (this.valueEnd - this.valueStart), 1 / this.skewFactor);
   }
 
   //-----------------------------------------------------------------------------------------
   // 由indicator的角度获取sprite的index
   getIndexSprite() {
-    const deltaX = this.indicatorEndDeg - this.indicatorStartDeg;
-    const deltaY = this.spriteLength - 1;
-    const slop = deltaY / deltaX;
-    const bias = (- this.indicatorStartDeg * (this.spriteLength - 1)) / deltaX;
-    return Math.round(slop * this.currentIndicatorDeg + bias);
+    return Math.round(this.stateValue * (this.spriteLength - 1));
   }
 
   //-----------------------------------------------------------------------------------------

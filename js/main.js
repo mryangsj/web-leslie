@@ -32,11 +32,12 @@ addAudioProcessor()
 
 //-----------------------------------------------------------------------------------------
 // create knob (master volume)
-const knobMasterVolumeObj = new Knob(100, 'OUTPUT', -30, 6, 0, 1, 'dB');
+const knobMasterVolumeObj = new Knob(100, 'OUTPUT', -200, 6, 0, 1, 'dB');
 const knobMasterVolume = knobMasterVolumeObj.dom;
 knobMasterVolume.style.top = '50%';
 knobMasterVolume.style.left = '10%';
 knobMasterVolume.style.transform = 'translate(-50%, -50%)';
+knobMasterVolumeObj.setSkewFactorByMidValue(-6);
 
 //-----------------------------------------------------------------------------------------
 // 注册总开关点击事件
