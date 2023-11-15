@@ -4,6 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+</head>
+<body>
+  <script src="../shijie/js/Knob.js"></script>
+  <script>
+    const knob = new Knob(150, `Volume`, 0, 1, defaultValue = 0.5, numberDecimals = 3, suffix = `dB`, spritePath = `resources/KnobBig.png`, spriteLength = 257);
+    knob.style.top = `50%`;
+    knob.style.left = `50%`;
+    knob.style.transform = `translate(-50%, -50%)`;
+    document.body.style.cursor = `grabbing`;
+  </script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
   <style>
   *{
     margin: 0;
@@ -177,7 +196,7 @@
   }
   </script>
 </body>
-</html>
+</html> -->
 
 
 <!-- <!DOCTYPE html>
