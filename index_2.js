@@ -54,47 +54,113 @@ function openFileUploader() {
     }
 
 // slider control
-function initSlider(sliderId, handleId) {
+// 全局变量用于存储激活状态和handle-horn-r的位置
+let isSyncActivatedHorn = false;
+let isSyncActivatedDrum = false;
+let handleHornRPosition = 0;
+let handleDrumRPosition = 0;
+
+// slider control
+function initSlider(sliderId, handleId, syncHandleId) {
   const slider = document.getElementById(sliderId);
   const handle = document.getElementById(handleId);
-    
+  const syncHandle = document.getElementById(syncHandleId);
+
   let isDragging = false;
-    
+
   handle.addEventListener('mousedown', (event) => {
     isDragging = true;
+
+    // 如果激活状态，更新handle-horn-r的位置
+    if (isSyncActivatedHorn) {
+      handleHornRPosition = handle.offsetTop;
+    }
+
+    // 如果激活状态，同步更新handle-horn-l的位置
+    if (isSyncActivatedHorn && syncHandle) {
+      syncHandle.style.top = `${handleHornRPosition}px`;
+    }
+
+    // 如果激活状态，更新handle-drum-r的位置
+    if (isSyncActivatedDrum) {
+      handleDrumRPosition = handle.offsetTop;
+    }
+
+    // 如果激活状态，同步更新handle-drum-l的位置
+    if (isSyncActivatedDrum && syncHandle) {
+      syncHandle.style.top = `${handleDrumRPosition}px`;
+    }
   });
-    
+
   window.addEventListener('mouseup', () => {
     isDragging = false;
   });
-    
+
   window.addEventListener('mousemove', (event) => {
     if (isDragging) {
       const sliderRect = slider.getBoundingClientRect();
-      const handleTop = event.clientY - sliderRect.top - handle.clientHeight / 2;
-  
+      const handleTop = event.clientY - sliderRect.top;
+
       // Limit handle position within the slider
       const handlePosition = Math.min(Math.max(handleTop, 0), slider.clientHeight);
-  
+
       // Calculate the percentage position of the handle within the slider
       const percentage = handlePosition / slider.clientHeight;
-  
+
       // Calculate the value based on the percentage (assuming a range from 0 to 1)
-      const value = (1-percentage).toFixed(2); // Limit to two decimal places
-  
-      // Update handle position
-      handle.style.top = `${handlePosition}px`;
-  
+      const value = (1 - percentage).toFixed(2); // Limit to two decimal places
+
       // Log the value to the console
       console.log(value);
+      
+      // 如果激活状态，更新handle-horn-r的位置
+      if (isSyncActivatedHorn) {
+        handleHornRPosition = handlePosition;
+      }
+
+      // 如果激活状态，同步更新handle-horn-l的位置
+      if (isSyncActivatedHorn && syncHandle) {
+        syncHandle.style.top = `${handlePosition}px`;
+      }
+
+      // 如果激活状态，更新handle-drum-r的位置
+      if (isSyncActivatedDrum) {
+        handleDrumRPosition = handlePosition;
+      }
+
+      // 如果激活状态，同步更新handle-drum-l的位置
+      if (isSyncActivatedDrum && syncHandle) {
+        syncHandle.style.top = `${handlePosition}px`;
+      }
+
+      // Update handle position
+      handle.style.top = `${handlePosition}px`;
     }
-  });  
+  });
 }
-    
-    // Initialize each slider
-    initSlider('slider-horn-l', 'handle-horn-1');
-    initSlider('slider-horn-r', 'handle-horn-r');
-    initSlider('slider-drum-l', 'handle-drum-l');
-    initSlider('slider-drum-r', 'handle-drum-r');
-    initSlider('slider-output', 'handle-output');
-    
+
+// Initialize sliders with synchronization
+initSlider('slider-horn-l', 'handle-horn-l', 'handle-horn-r');
+initSlider('slider-horn-r', 'handle-horn-r', 'handle-horn-l');
+// Initialize sliders for drum with synchronization
+initSlider('slider-drum-l', 'handle-drum-l', 'handle-drum-r');
+initSlider('slider-drum-r', 'handle-drum-r', 'handle-drum-l');
+// Initialize other sliders without synchronization
+initSlider('slider-output', 'handle-output', '');
+
+// 添加按钮点击事件监听器
+const button_link1 = document.getElementById('button_link1');
+const button_link2 = document.getElementById('button_link2');
+button_link1.addEventListener('click', () => toggleButton(button_link1));
+button_link2.addEventListener('click', () => toggleButton(button_link2));
+
+function toggleButton(button) {
+  button.classList.toggle('active');
+
+  // 根据按钮的不同，设置不同的同步状态
+  if (button.id === 'button_link1') {
+    isSyncActivatedHorn = button.classList.contains('active');
+  } else if (button.id === 'button_link2') {
+    isSyncActivatedDrum = button.classList.contains('active');
+  }
+}

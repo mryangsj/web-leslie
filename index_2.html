@@ -69,7 +69,7 @@
           <div class="slider-dec">
             <div class="slider-output" id="slider-horn-l">
               <div class="slider_inside"></div>
-              <div class="slider-handle" id="handle-horn-1"></div>
+              <div class="slider-handle" id="handle-horn-l"></div>
             </div>
             <div class="slider-output" id="slider-horn-r">
               <div class="slider_inside"></div>
@@ -127,7 +127,7 @@
     const containerLinkLR3 = document.getElementById('knobLinkLR3')
     const containerLinkLR4 = document.getElementById('knobLinkLR4')
 
-      function createKnob(container, knobName) {
+      function createKnob(container, knobName,spritePath,spriteLength) {
         // const container = document.getElementById(containerId);
         let knobSize = 70;
         // if (window.innerWidth > 1500) {
@@ -136,7 +136,7 @@
         //   knobSize = 90;
         // }
         // 创建新的 Knob 实例
-        const knob = new Knob(knobSize, knobName, 0, 1, defaultValue = 0.5, numberDecimals = 2, suffix = `dB`, spritePath = `resources/KnobBig.png`, spriteLength = 257);
+        const knob = new Knob(knobSize, knobName, 0, 1, defaultValue = 0.5, numberDecimals = 2, suffix = `dB`, spritePath = spritePath, spriteLength = spriteLength);//257
         knob.style.top = `50%`;
         knob.style.left = `30%`;
         knob.style.transform = `translate(-50%, -50%)`;
@@ -171,45 +171,11 @@
     createKnob(containerLowF, 'HIGH');
     createKnob(containerLowG, 'HIGH');
 
-    LinkLR1= createKnob(containerLinkLR1, 'LinkLR1');
-    createKnob(containerLinkLR2, 'LinkLR2');
-    createKnob(containerLinkLR3, 'LinkLR3');
-    createKnob(containerLinkLR4, 'LinkLR4');
+    createKnob(containerLinkLR1, 'LinkLR1','resources/KnobMid.png',129);
+    createKnob(containerLinkLR2, 'LinkLR2','resources/KnobMid.png',129);
+    createKnob(containerLinkLR3, 'LinkLR3','resources/KnobMid.png',129);
+    createKnob(containerLinkLR4, 'LinkLR4','resources/KnobMid.png',129);
  
-
-    </script>
-
-    <script>
-  const button_link1 = document.getElementById('button_link1');
-  const button_link2 = document.getElementById('button_link2');
-
-  // 添加按钮点击事件监听器
-  button_link1.addEventListener('click', () => toggleButton(button_link1, containerLinkLR1, containerLinkLR2));
-  button_link2.addEventListener('click', () => toggleButton(button_link2, containerLinkLR3, containerLinkLR4));
-  
-
-  function toggleButton(button, activeKnob, inactiveKnob) {
-    button.classList.toggle('active');
-    const isActive = button.classList.contains('active');
-
-    // 根据按钮激活状态，判断是否联动knob
-  isKnobLinked = isActive;
-  }
-//   if (isActive) {
-//     // 注册鼠标移动事件
-//     document.addEventListener('mousemove', handleMouseMove);
-//   } else {
-//     // 移除鼠标移动事件
-//     document.removeEventListener('mousemove', handleMouseMove);
-//   }
-// }
-
-// // 鼠标移动事件处理程序
-// function handleMouseMove(event) {
-//   // 设置 containerLinkLR2 的位置与 containerLinkLR1 一致
-//   containerLinkLR2.style.left = containerLinkLR1.style.left;
-//   containerLinkLR2.style.top = containerLinkLR1.style.top;
-// }
 
     </script>
 </body>

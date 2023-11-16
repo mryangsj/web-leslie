@@ -237,44 +237,45 @@ button.active {
 #knobLinkLR1{
     position: absolute;
     left: 10%;
-    top: 25%;
+    top: 27%;
 }
 
 #knobLinkLR2{
     position: absolute;
-    left: 30%;
-    top: 25%;
+    left: 25%;
+    top: 27%;
 }
 
 #knobLinkLR3{
     position: absolute;
-    left: 50%;
-    top: 25%;
+    left: 44%;
+    top: 27%;
 }
 
 #knobLinkLR4{
     position: absolute;
-    left: 70%;
-    top: 25%;
+    left: 60%;
+    top: 27%;
 }
 
 .slider-container {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 12%;
-    width: 90%;
+    /* justify-content: center; */
+    gap: 11%;
+    width: 85%;
     padding-right: 10%;
     height: 60%;
-    margin-top: 5%;
+    margin-top: 2%;
+    padding-left: 3%;
   }
 
   .slider-dec {
-    height: 90%;
+    height: 85%;
     display: flex;
     align-items: center;
-    gap: 45px;
+    gap: 46px;
     position: relative;
     padding:0px 6%;
 }
