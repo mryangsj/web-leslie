@@ -40,8 +40,8 @@ export default class Knob {
     this.dom.id = this.dom.className + '-' + knobLabel;
 
     // 设置dom的尺寸、布局、定位
-    this.dom.style.width = `${this.widthDom}px`;
-    this.dom.style.height = `${this.heightDom}px`;
+    this.dom.style.width = this.widthDom + 'px';
+    this.dom.style.height = this.heightDom + 'px';
     this.dom.style.display = 'flex';
     this.dom.style.flexDirection = 'column';
     this.dom.style.justifyContent = 'flex-start';
@@ -63,8 +63,8 @@ export default class Knob {
     this.domIndicatorBox.id = this.domIndicatorBox.className + '-' + knobLabel;
 
     // 设置indicatorBox的尺寸、布局、定位
-    this.domIndicatorBox.style.width = `${this.widthDom}px`;
-    this.domIndicatorBox.style.height = `${this.widthDom}px`;
+    this.domIndicatorBox.style.width = this.widthDom + 'px';
+    this.domIndicatorBox.style.height = this.widthDom + 'px';
     this.domIndicatorBox.style.boxSizing = 'border-box';
     this.domIndicatorBox.style.display = 'flex';
     this.domIndicatorBox.style.flexDirection = 'column';
@@ -81,7 +81,7 @@ export default class Knob {
 
     // 设置indicator基本属性
     this.domIndicator.className = 'knob-indicator';
-    this.domIndicator.id = this.domIndicator.className + '-' + `${knobLabel}`;
+    this.domIndicator.id = this.domIndicator.className + '-' + knobLabel;
 
     // 设置indicator尺寸、布局、定位
     this.ratioSizeIndicator = 1;
@@ -107,7 +107,7 @@ export default class Knob {
 
     // 设置labelBox基本属性
     this.domLabelBox.className = 'knob-label-box';
-    this.domLabelBox.id = this.domLabelBox.className + '-' + `${knobLabel}`;
+    this.domLabelBox.id = this.domLabelBox.className + '-' + knobLabel;
 
     // 设置labelBox尺寸、布局定位
     this.domLabelBox.style.width = '100%';
@@ -128,7 +128,7 @@ export default class Knob {
 
     // 设置label基本属性
     this.domLabel.className = 'knob-label';
-    this.domLabel.id = this.domLabel.className + '-' + `${knobLabel}`;
+    this.domLabel.id = this.domLabel.className + '-' + knobLabel;
 
     // 设置label尺寸、布局、定位
     this.domLabel.style.width = 'auto';
