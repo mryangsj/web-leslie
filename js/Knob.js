@@ -1,8 +1,8 @@
 export default class Knob {
-  constructor(width = 100, knobLabel = 'NewKnob', valueStart = 20, valueEnd = 20000, defaultValue = 1000, numberDecimals = 1, suffix = 'Hz', spritePath = 'resources/KnobMid.png', spriteLength = 129, devMode = true) {
+  constructor(width = 100, knobLabel = 'New Knob', valueStart = 20, valueEnd = 20000, defaultValue = 1000, numberDecimals = 1, suffix = 'Hz', spritePath = 'resources/KnobMid.png', spriteLength = 129, devMode = true) {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
-    this.ratioSizeDom = 1.3;
+    this.ratioSizeDom = 1.2;
     this.widthDom = width;
     this.heightDom = this.widthDom * this.ratioSizeDom;
     this.knobName = knobLabel;
@@ -39,12 +39,17 @@ export default class Knob {
     this.dom.className = 'knob';
     this.dom.id = this.dom.className + '-' + knobLabel;
 
-    // 设置dom尺寸与定位
+    // 设置dom的尺寸、布局、定位
     this.dom.style.width = `${this.widthDom}px`;
     this.dom.style.height = `${this.heightDom}px`;
+    this.dom.style.display = 'flex';
+    this.dom.style.flexDirection = 'column';
+    this.dom.style.justifyContent = 'flex-start';
+    // this.dom.style.alignItems = 'center';
     this.dom.style.position = 'absolute';
+    this.dom.style.overflow = 'visible';
 
-    // 设置dom样式
+    // 设置dom的样式
     devMode ? this.dom.style.backgroundColor = 'gray' : null;
     devMode ? this.dom.style.border = '1px solid black' : null;
 
@@ -53,17 +58,18 @@ export default class Knob {
     this.domIndicatorBox = document.createElement('div');
     this.dom.appendChild(this.domIndicatorBox);
 
-    // 设置indicatorBox基本属性
+    // 设置indicatorBox的基本属性
     this.domIndicatorBox.className = 'indicator-box';
     this.domIndicatorBox.id = this.domIndicatorBox.className + '-' + knobLabel;
 
-    // 设置indicatorBox尺寸与定位
+    // 设置indicatorBox的尺寸、布局、定位
     this.domIndicatorBox.style.width = `${this.widthDom}px`;
     this.domIndicatorBox.style.height = `${this.widthDom}px`;
     this.domIndicatorBox.style.boxSizing = 'border-box';
-    this.domIndicatorBox.style.position = 'absolute';
-    this.domIndicatorBox.style.top = '0';
-    this.domIndicatorBox.style.left = '0';
+    this.domIndicatorBox.style.display = 'flex';
+    this.domIndicatorBox.style.flexDirection = 'column';
+    this.domIndicatorBox.style.justifyContent = 'center';
+    this.domIndicatorBox.style.alignItems = 'center';
 
     // 设置indicatorBox基本样式
     devMode ? this.domIndicatorBox.style.backgroundColor = 'pink' : null;
@@ -77,17 +83,17 @@ export default class Knob {
     this.domIndicator.className = 'knob-indicator';
     this.domIndicator.id = this.domIndicator.className + '-' + `${knobLabel}`;
 
-    // 设置indicator尺寸与定位
+    // 设置indicator尺寸、布局定位
     this.ratioSizeIndicator = 1;
     this.widthIndicator = this.widthDom * this.ratioSizeIndicator;
     this.heightIndicator = this.widthDom * this.ratioSizeIndicator;
-    this.domIndicator.style.width = `${this.widthIndicator}px`;
-    this.domIndicator.style.height = `${this.heightIndicator}px`;
+    this.domIndicator.style.width = this.widthIndicator + 'px';
+    this.domIndicator.style.height = this.heightIndicator + 'px';
     this.domIndicator.style.boxSizing = 'border-box';
-    this.domIndicator.style.position = 'absolute';
-    this.domIndicator.style.left = '50%';
-    this.domIndicator.style.top = '50%';
-    this.domIndicator.style.transform = 'translate(-50%, -50%)';
+    this.domIndicator.style.display = 'flex';
+    this.domIndicator.style.flexDirection = 'column';
+    this.domIndicator.style.justifyContent = 'center';
+    this.domIndicator.style.alignItems = 'center';
 
     // 设置indicator基本样式
     this.domIndicator.style.overflow = 'default';
@@ -103,13 +109,14 @@ export default class Knob {
     this.domLabelBox.className = 'knob-label-box';
     this.domLabelBox.id = this.domLabelBox.className + '-' + `${knobLabel}`;
 
-    // 设置labelBox尺寸与定位
+    // 设置labelBox尺寸、布局定位
     this.domLabelBox.style.width = `${this.widthDom}px`;
     this.domLabelBox.style.height = `${this.heightDom - this.widthDom}px`;
-    this.domLabelBox.style.position = 'absolute';
-    this.domLabelBox.style.bottom = '0';
-    this.domLabelBox.style.left = '50%';
-    this.domLabelBox.style.transform = 'translate(-50%, 0)';
+    this.domLabelBox.style.boxSizing = 'border-box';
+    this.domLabelBox.style.display = 'flex';
+    this.domLabelBox.style.flexDirection = 'column';
+    this.domLabelBox.style.justifyContent = 'flex-end';
+    this.domLabelBox.style.alignItems = 'center';
 
     // 设置label样式
     devMode ? this.domLabelBox.style.backgroundColor = 'skyblue' : null;
@@ -123,22 +130,23 @@ export default class Knob {
     this.domLabel.className = 'knob-label';
     this.domLabel.id = this.domLabel.className + '-' + `${knobLabel}`;
 
-    // 设置label尺寸与定位
+    // 设置label尺寸、布局、定位
     this.domLabel.style.width = 'auto';
     this.domLabel.style.height = 'auto';
-    this.domLabel.style.position = 'absolute';
-    this.domLabel.style.bottom = '0';
-    this.domLabel.style.left = '50%';
-    this.domLabel.style.transform = 'translate(-50%, 0)';
+    this.domLabel.style.boxSizing = 'border-box';
+    this.domLabel.style.display = 'flex';
+
+
 
     // 设置label样式
     this.setLabelShowName();
     this.domLabel.style.textAlign = 'center';
-    this.domLabel.style.fontSize = `${this.widthDom * 0.2}px`;
+    this.domLabel.style.whiteSpace = 'nowrap';
+    this.domLabel.style.fontSize = `${this.widthDom * 0.13}px`;
     document.body.style.cursor = 'default';
     this.domLabel.style.userSelect = 'none';
     this.domLabel.style.webkitUserSelect = 'none'; // for Safari
-    devMode ? this.domLabel.style.backgroundColor = 'pink' : null;
+    devMode ? this.domLabel.style.backgroundColor = 'gold' : null;
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
@@ -190,10 +198,6 @@ export default class Knob {
         this.setIndicatorByState(nextState);
         // label显示当前值
         this.setLabelShowValue();
-        // indicator在拖动时，鼠标样式为grabbing
-        // document.body.style.cursor = 'grabbing';
-        // 触发drag事件
-        this.dom.dispatchEvent(new CustomEvent('drag'));
       }
     });
 
@@ -294,6 +298,8 @@ export default class Knob {
     this.stateValue = this.valueToState(this.currentValue);
     // 根据目标角度更新indicator的样式（精灵图）
     this.domIndicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
+    // 触发changed事件
+    this.dom.dispatchEvent(new CustomEvent('changed'));
   }
 
   //-----------------------------------------------------------------------------------------
@@ -305,6 +311,8 @@ export default class Knob {
     this.currentValue = this.stateToValue(this.stateValue);
     // 根据目标角度更新indicator的样式（精灵图）
     this.domIndicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
+    // 触发changed事件
+    this.dom.dispatchEvent(new CustomEvent('changed'));
   }
 
   //-----------------------------------------------------------------------------------------
@@ -315,6 +323,7 @@ export default class Knob {
     // 处理数字
     if (!isNaN(targetNumber) && targetNumber >= this.valueStart && targetNumber <= this.valueEnd) {
       this.setIndicatorByValue(targetNumber);
+      this.dom.dispatchEvent(new CustomEvent('changed')); // 触发changed事件
     } else if (this.isCursorOnFrame) {
       this.setLabelShowValue(false);
     }
