@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="index_2.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <div class="header">
@@ -15,188 +15,203 @@
         </audio>
     </div>
     <div class="main">
-        <div class="decoration">
-            <div class="dec2"></div>
-            <div class="dec2" style="margin-top: 30%;"></div>
+      <!-- <div class="decoration"></div> -->
+      <!-- <div class="decoration" style="right: 0;"></div> -->
+      <div class="left_control">
+        <div class="decoration" style="left: 0;"></div>
+        <div class="button_container">
+          <button onclick="toggleColor(this,0)">SETUP</button>
+          <button onclick="toggleColor(this,1)">AMP</button>
+          <button onclick="toggleColor(this,2)">EQ</button>
         </div>
-        <div class="decoration decoration2">
-            <div class="dec2" style="margin-top: 50px;"></div>
-            <div class="dec2" style="margin-top: 304px;"></div>
+        <div class="knob_container knob_container_hide" id="knob_container1">
+          <div id="knobSpring"></div>
+          <div id="knobMicDistance"></div>
+          <div id="knobLowSpeed"></div>
+          <div id="knobAcce"></div>
+          <div id="knobFastSpeed"></div>
+          <div id="knobDece"></div>
         </div>
-        <div class="left_control">
-            <div class="button_container">
-                <button onclick="toggleColor(this,0)">SETUP</button>
-                <button onclick="toggleColor(this,1)">AMP</button>
-                <button onclick="toggleColor(this,2)">EQ</button>
-            </div>
-            <div class="knob_container knob_container_hide" id="knob_container1">
-                <div class="knob" id="knob_spring">
-                    <div class="knob-text">SPRING</div>
-                    <div class="icon_decro icon_decro1"></div>
-                    <div class="pointer-dec"></div>
-                    <div id="pointer_spring" class="pointer"></div></div>
-                <div id="slider_spring" class="slider"></div>
-                <div class="knob" id="knob_mic_distance">
-                    <div class="knob-text">MIC DISTANCE</div>
-                    <div class="icon_decro icon_decro_2"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_mic_distance" class="pointer"></div></div>
-                <div id="slider_mic_distance" class="slider"></div>
-                <div class="knob" id="knob_slow_speed">
-                    <div class="knob-text">SLOW SPEED</div>
-                    <div class="icon_decro icon_decro_3"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_slow_speed" class="pointer"></div></div>
-                <div id="slider_slow_speed" class="slider"></div>
-                <div class="knob" id="knob_acce">
-                    <div class="knob-text">ACCELERATION</div>
-                    <div class="icon_decro icon_decro_4"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_acce" class="pointer"></div></div>
-                <div id="slider_acce" class="slider"></div>
-                <div class="knob" id="knob_fast_spd">
-                    <div class="knob-text">FAST SPEED</div>
-                    <div class="icon_decro icon_decro_5"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_fast_spd" class="pointer"></div></div>
-                <div id="slider_fast_spd" class="slider"></div>
-                <div class="knob" id="knob_dece">
-                    <div class="knob-text">DECELERATION</div>
-                    <div class="icon_decro icon_decro_6"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_dece" class="pointer"></div></div>
-                <div id="slider_dece" class="slider"></div>
-            </div>
-            <div class="knob_container knob_container_hide" id="knob_container2">
-                <div class="knob" id="knob_gain">
-                    <div class="knob-text">GAIN</div>
-                    <div class="icon_decro icon_decro_gain"></div>
-                    <div class="pointer-dec"></div>
-                    <div id="pointer_gain" class="pointer"></div></div>
-                <div id="slider_gain" class="slider"></div>
-                <div class="knob" id="knob_VOLUME">
-                    <div class="knob-text">VOLUME</div>
-                    <div class="icon_decro icon_decro_VOLUME"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_VOLUME" class="pointer"></div></div>
-                <div id="slider_VOLUME" class="slider"></div>
-                <div class="knob" id="knob_HPF">
-                    <div class="knob-text">INPUT HPF</div>
-                    <div class="icon_decro icon_decro_HPF"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_HPF" class="pointer"></div></div>
-                <div id="slider_HPF" class="slider"></div>
-                <div class="knob" id="knob_LOW">
-                    <div class="knob-text">LOW</div>
-                    <div class="icon_decro icon_decro_LOW"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_LOW" class="pointer"></div></div>
-                <div id="slider_LOW" class="slider"></div>
-                <div class="knob" id="knob_MID">
-                    <div class="knob-text">MID</div>
-                    <div class="icon_decro icon_decro_MID"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_MID" class="pointer"></div></div>
-                <div id="slider_MID" class="slider"></div>
-                <div class="knob" id="knob_HIGH">
-                    <div class="knob-text">HIGH</div>
-                    <div class="icon_decro icon_decro_HIGH"></div>
-                    <div class="pointer-dec" style="margin-top: -35%;"></div>
-                    <div id="pointer_HIGH" class="pointer"></div></div>
-                <div id="slider_HIGH" class="slider"></div>
-            </div>
-            <div class="knob_container knob_container_hide" id="knob_container3">
-                <div class="knob" id="knob_EQ">
-                    <div class="knob-text">EQ</div>
-                    <div class="icon_decro icon_decro_6"></div>
-                    <div class="pointer-dec"></div>
-                    <div id="pointer_EQ" class="pointer"></div></div>
-                <div id="slider_EQ" class="slider"></div>
-            </div>
-            <div class="speed_control">
-                <div class="speaker_control">
-                    <div class="speaker-text">SLOW</div>
-                    <div class="rotation-slider">
-                        <div class="rotation-track">
-                          <div class="rotation-fill"></div>
-                          <div class="rotation-thumb">
-                            <div class="rotation-thumb-in"></div>
-                          </div>
-                        </div>
-                    </div>
-                    <div class="speaker-text">FAST</div>
-                </div>
-            <div class="logo1"></div>
-            </div>
+
+        <div class="knob_container knob_container_hide" id="knob_container2">
+          <div id="knobGain"></div>
+          <div id="knobVolume"></div>
+          <div id="knobHPF"></div>
+          <div id="knobLow"></div>
+          <div id="knobMid"></div>
+          <div id="knobHigh"></div>
         </div>
-        <div class="middle_control">2</div>
-        <div class="right_control">
-            <div class="dec">
-                <div class="dec1"></div>
-                <div class="dec1"></div>
-            </div>
-            <div class="knob_container_2">
-                <div class="knob knob2" id="knob-horn-l">
-                    <div class="pointer-dec" style="margin-top: 25%;"></div>
-                <div id="pointer-horn-l" class="pointer"></div></div>
-                <div id="knobslider-horn-l" class="slider"></div>
-                <div class="knob knob2" id="knob-horn-r">
-                    <div class="pointer-dec" style="margin-top: 25%;"></div>
-                <div id="pointer-horn-r" class="pointer"></div></div>
-                <div id="knobslider-horn-r" class="slider" style="margin-left: 78px;"></div>
-                <div class="knob knob2" id="knob-drum-l">
-                    <div class="pointer-dec" style="margin-top: 25%;"></div>
-                <div id="pointer-drum-l" class="pointer"></div></div>
-                <div id="knobslider-drum-l" class="slider" style="margin-left: 155px;"></div>
-                <div class="knob knob2" id="knob-drum-r">
-                    <div class="pointer-dec" style="margin-top: 25%;"></div>
-                <div id="pointer-drum-r" class="pointer"></div></div>
-                <div id="knobslider-drum-r" class="slider" style="margin-left: 230px;"></div>
-            </div>
-            <div class="slider-container">
-                <div class="slider-dec">
-                  <div class="slider-output" id="slider-horn-l">
-                  <div class="slider_inside"></div>
-                  <div class="slider-handle" id="handle-horn-1"></div>
-                </div>
-                <div class="slider-output" id="slider-horn-r">
-                  <div class="slider_inside"></div>
-                  <div class="slider-handle" id="handle-horn-r"></div>
-                </div>
-                </div>
-                <div class="slider-dec" >
-                  <div class="slider-output" id="slider-drum-l">
-                  <div class="slider_inside"></div>
-                  <div class="slider-handle" id="handle-drum-l"></div>
-                </div>
-                <div class="slider-output" id="slider-drum-r">
-                  <div class="slider_inside"></div>
-                  <div class="slider-handle" id="handle-drum-r"></div>
-                </div>
-                </div>
-                
-                <div class="slider-dec">
-                  <div class="slider-output" id="slider-output">
-                  <div class="slider_inside"></div>
-                  <div class="slider-handle" id="handle-output"></div>
-                </div>
-                </div>  
-            </div>
-            <div class="slider-dec-font">
-                <div class="slider-dec-horn"></div>
-                <div class="slider-dec-drum"></div>
-                <div class="slider-dec-output"></div>
-            </div>
-            <div class="logo-container">
-                <div class="logo2"></div>
-            </div>
+
+        <div class="knob_container knob_container_hide" id="knob_container3">
+          <div id="knobHighF"></div>
+          <div id="knobHighG"></div>
+          <div id="knobMidF"></div>
+          <div id="knobMidQ"></div>
+          <div id="knobMidG"></div>
+          <div id="knobLowF"></div>
+          <div id="knobLowG"></div>
         </div>
+
+      </div>
+      <div class="middle_control">2</div>
+      <div class="right_control">
+        <div class="button_contain_right">
+          <button class="button_link" id="button_link1">link</button>
+          <button class="button_link" id="button_link2" style="margin-left: 12%;">link</button>
+        </div>
+        <div class="knob_contain_right">
+          <div id="knobLinkLR1"></div>
+          <div id="knobLinkLR2"></div>
+          <div id="knobLinkLR3"></div>
+          <div id="knobLinkLR4"></div>
+        </div>
+        <div class="slider-container">
+          <div class="slider-dec">
+            <div class="slider-output" id="slider-horn-l">
+              <div class="slider_inside"></div>
+              <div class="slider-handle" id="handle-horn-1"></div>
+            </div>
+            <div class="slider-output" id="slider-horn-r">
+              <div class="slider_inside"></div>
+              <div class="slider-handle" id="handle-horn-r"></div>
+            </div>
+          </div>
+          <div class="slider-dec" >
+            <div class="slider-output" id="slider-drum-l">
+              <div class="slider_inside"></div>
+              <div class="slider-handle" id="handle-drum-l"></div>
+            </div>
+            <div class="slider-output" id="slider-drum-r">
+              <div class="slider_inside"></div>
+              <div class="slider-handle" id="handle-drum-r"></div>
+            </div>
+          </div>     
+          <div class="slider-dec">
+            <div class="slider-output" id="slider-output">
+            <div class="slider_inside"></div>
+            <div class="slider-handle" id="handle-output"></div>
+          </div>
+        </div>
+      </div>
+      <div class="decoration " style="right: 0;"></div>
     </div>
-    <div class="footer">
-        <div class="footer-text">
-            Leslie
-        </div>
-    </div>
-    <script src="./index_2.js"></script>
+    <div class="footer-text">LESLIE</div>
+    <script src="./js/Knob.js"></script>
+    <script src="index.js"></script>
+    <script>
+    //knob control
+    const containerSpring = document.getElementById('knobSpring')
+    const containerMicDistance = document.getElementById('knobMicDistance')
+    const containerLowSpeed = document.getElementById('knobLowSpeed')
+    const containerAcce = document.getElementById('knobAcce')
+    const containerFastSpeed = document.getElementById('knobFastSpeed')
+    const containerDece = document.getElementById('knobDece')
+
+    const containerGain = document.getElementById('knobGain')
+    const containerVolume = document.getElementById('knobVolume')
+    const containerHPF = document.getElementById('knobHPF')
+    const containerLow = document.getElementById('knobLow')
+    const containerMid = document.getElementById('knobMid')
+    const containerHigh = document.getElementById('knobHigh')
+
+    const containerHighF = document.getElementById('knobHighF')
+    const containerHighG = document.getElementById('knobHighG')
+    const containerMidF = document.getElementById('knobMidF')
+    const containerMidQ = document.getElementById('knobMidQ')
+    const containerMidG = document.getElementById('knobMidG')
+    const containerLowF = document.getElementById('knobLowF')
+    const containerLowG = document.getElementById('knobLowG')
+
+    const containerLinkLR1 = document.getElementById('knobLinkLR1')
+    const containerLinkLR2 = document.getElementById('knobLinkLR2')
+    const containerLinkLR3 = document.getElementById('knobLinkLR3')
+    const containerLinkLR4 = document.getElementById('knobLinkLR4')
+
+      function createKnob(container, knobName) {
+        // const container = document.getElementById(containerId);
+        let knobSize = 70;
+        // if (window.innerWidth > 1500) {
+        //   knobSize = 120;
+        // } else if (window.innerWidth > 1200) {
+        //   knobSize = 90;
+        // }
+        // 创建新的 Knob 实例
+        const knob = new Knob(knobSize, knobName, 0, 1, defaultValue = 0.5, numberDecimals = 2, suffix = `dB`, spritePath = `resources/KnobBig.png`, spriteLength = 257);
+        knob.style.top = `50%`;
+        knob.style.left = `30%`;
+        knob.style.transform = `translate(-50%, -50%)`;
+        document.body.style.cursor = `grabbing`;
+
+        // 添加到容器中
+        container.appendChild(knob);
+        // 返回 Knob 实例，以便需要时可以进一步操作
+        return knob;
+        
+      }
+      
+    createKnob(containerSpring, 'SPRING');
+    createKnob(containerMicDistance, 'MIC-DISTANCE');
+    createKnob(containerLowSpeed, 'LOW-SPEED');
+    createKnob(containerAcce, 'ACCELERATION');
+    createKnob(containerFastSpeed, 'FAST-SPEED');
+    createKnob(containerDece, 'DECELERATION');
+
+    createKnob(containerGain, 'GAIN');
+    createKnob(containerVolume, 'VOLUME');
+    createKnob(containerHPF, 'INPUT-HPF');
+    createKnob(containerLow, 'LOW');
+    createKnob(containerMid, 'MID');
+    createKnob(containerHigh, 'HIGH');
+
+    createKnob(containerHighF, 'GAIN');
+    createKnob(containerHighG, 'VOLUME');
+    createKnob(containerMidF, 'INPUT-HPF');
+    createKnob(containerMidQ, 'LOW');
+    createKnob(containerMidG, 'MID');
+    createKnob(containerLowF, 'HIGH');
+    createKnob(containerLowG, 'HIGH');
+
+    LinkLR1= createKnob(containerLinkLR1, 'LinkLR1');
+    createKnob(containerLinkLR2, 'LinkLR2');
+    createKnob(containerLinkLR3, 'LinkLR3');
+    createKnob(containerLinkLR4, 'LinkLR4');
+ 
+
+    </script>
+
+    <script>
+  const button_link1 = document.getElementById('button_link1');
+  const button_link2 = document.getElementById('button_link2');
+
+  // 添加按钮点击事件监听器
+  button_link1.addEventListener('click', () => toggleButton(button_link1, containerLinkLR1, containerLinkLR2));
+  button_link2.addEventListener('click', () => toggleButton(button_link2, containerLinkLR3, containerLinkLR4));
+  
+
+  function toggleButton(button, activeKnob, inactiveKnob) {
+    button.classList.toggle('active');
+    const isActive = button.classList.contains('active');
+
+    // 根据按钮激活状态，判断是否联动knob
+  isKnobLinked = isActive;
+  }
+//   if (isActive) {
+//     // 注册鼠标移动事件
+//     document.addEventListener('mousemove', handleMouseMove);
+//   } else {
+//     // 移除鼠标移动事件
+//     document.removeEventListener('mousemove', handleMouseMove);
+//   }
+// }
+
+// // 鼠标移动事件处理程序
+// function handleMouseMove(event) {
+//   // 设置 containerLinkLR2 的位置与 containerLinkLR1 一致
+//   containerLinkLR2.style.left = containerLinkLR1.style.left;
+//   containerLinkLR2.style.top = containerLinkLR1.style.top;
+// }
+
+    </script>
 </body>
 </html>
+
