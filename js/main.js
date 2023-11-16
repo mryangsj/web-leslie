@@ -1,5 +1,5 @@
 import Knob from './knob.js';
-import Switch from './switch.js';
+// import Switch from './switch.js';
 
 //-----------------------------------------------------------------------------------------
 // get elements
@@ -58,7 +58,7 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 
 //-----------------------------------------------------------------------------------------
 // 'MODE' switch
-const switchModeObj = new Switch();
+// const switchModeObj = new Switch();
 
 // 'SLOW SPEED' knob
 const knobSlowSpeedObj = new Knob(100, 'SLOW SPEED', -50, 50, 0, 0, '%');

@@ -28,12 +28,15 @@ export default class Switch {
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
-    // 创建indicatorBox节点
-    this.domIndicatorBox = document.createElement('div');
-    this.dom.appendChild(this.domIndicatorBox);
+    // 创建indicator节点
+    this.domIndicator = document.createElement('div');
+    this.dom.appendChild(this.domIndicator);
 
-    // 设置indicatorBox基本属性
-    this.domIndicatorBox.className = 'indicator-box';
-    this.domIndicatorBox.id = this.domIndicatorBox.className + '-' + switchLabel;
+    // 设置indicator基本属性
+    this.domIndicator.className = 'indicator-box';
+    this.domIndicator.id = this.domIndicator.className + '-' + switchLabel;
+
+    // 设置indicator尺寸、布局、定位
+
   }
 }
