@@ -45,7 +45,7 @@ export default class Knob {
     this.dom.style.display = 'flex';
     this.dom.style.flexDirection = 'column';
     this.dom.style.justifyContent = 'flex-start';
-    // this.dom.style.alignItems = 'center';
+    this.dom.style.alignItems = 'center';
     this.dom.style.position = 'absolute';
     this.dom.style.overflow = 'visible';
 
@@ -83,7 +83,7 @@ export default class Knob {
     this.domIndicator.className = 'knob-indicator';
     this.domIndicator.id = this.domIndicator.className + '-' + `${knobLabel}`;
 
-    // 设置indicator尺寸、布局定位
+    // 设置indicator尺寸、布局、定位
     this.ratioSizeIndicator = 1;
     this.widthIndicator = this.widthDom * this.ratioSizeIndicator;
     this.heightIndicator = this.widthDom * this.ratioSizeIndicator;
@@ -110,15 +110,15 @@ export default class Knob {
     this.domLabelBox.id = this.domLabelBox.className + '-' + `${knobLabel}`;
 
     // 设置labelBox尺寸、布局定位
-    this.domLabelBox.style.width = `${this.widthDom}px`;
-    this.domLabelBox.style.height = `${this.heightDom - this.widthDom}px`;
+    this.domLabelBox.style.width = '100%';
+    this.domLabelBox.style.flex = 1;
     this.domLabelBox.style.boxSizing = 'border-box';
     this.domLabelBox.style.display = 'flex';
     this.domLabelBox.style.flexDirection = 'column';
-    this.domLabelBox.style.justifyContent = 'flex-end';
+    this.domLabelBox.style.justifyContent = 'flex-start';
     this.domLabelBox.style.alignItems = 'center';
 
-    // 设置label样式
+    // 设置labelBox样式
     devMode ? this.domLabelBox.style.backgroundColor = 'skyblue' : null;
 
     //-----------------------------------------------------------------------------------------
@@ -136,12 +136,10 @@ export default class Knob {
     this.domLabel.style.boxSizing = 'border-box';
     this.domLabel.style.display = 'flex';
 
-
-
     // 设置label样式
     this.setLabelShowName();
     this.domLabel.style.textAlign = 'center';
-    this.domLabel.style.whiteSpace = 'nowrap';
+    // this.domLabel.style.whiteSpace = 'nowrap';
     this.domLabel.style.fontSize = `${this.widthDom * 0.13}px`;
     document.body.style.cursor = 'default';
     this.domLabel.style.userSelect = 'none';

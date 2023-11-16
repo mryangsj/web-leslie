@@ -18,6 +18,36 @@
       height: 100vh;
       overflow: hidden;
     }
+
+    .rotorBox {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      border: 1px solid black;
+      overflow: hidden;
+    }
+
+    .rotor {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: pink;
+      overflow: hidden;
+    }
+
+    .horn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2%;
+      height: 80%;
+      background-color: black;
+    }
   </style>
 </head>
 
@@ -29,8 +59,17 @@
     <span>ON</span>
   </button>
 
+  <!-- rotor模拟器 -->
+  <div class="rotorBox">
+    <div class="rotor">
+      <div class="horn"></div>
+    </div>
+  </div>
+
+  <!-- 链接js文件 -->
   <script type="module" src="./js/main.js"></script>
 
+  <!-- 屏蔽拖拽事件 -->
   <script>
     // 当文档加载完毕时，添加事件监听器
     window.addEventListener('DOMContentLoaded', (event) => {
@@ -39,6 +78,49 @@
         e.preventDefault();
       });
     });
+
+    // 等待DOM加载完毕后再执行代码
+    document.addEventListener('DOMContentLoaded', function () {
+      // 创建显示帧率的元素
+      var fpsDisplay = document.createElement('div');
+      document.body.appendChild(fpsDisplay);
+      fpsDisplay.style.position = 'fixed';
+      fpsDisplay.style.top = '10px';
+      fpsDisplay.style.right = '10px';
+      fpsDisplay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      fpsDisplay.style.color = 'white';
+      fpsDisplay.style.padding = '10px';
+      fpsDisplay.style.borderRadius = '4px';
+      fpsDisplay.style.zIndex = '10000'; // 确保它在最上面
+      fpsDisplay.style.fontFamily = 'sans-serif';
+
+      // 初始化帧率相关变量
+      var lastFrameTime = performance.now();
+      var frameCount = 0;
+      var fps = 0;
+
+      // 更新帧率显示
+      function update() {
+        var now = performance.now();
+        var deltaTime = now - lastFrameTime;
+        frameCount++;
+
+        // 如果超过1秒，则更新FPS值
+        if (deltaTime >= 1000) {
+          fps = frameCount;
+          frameCount = 0;
+          lastFrameTime = now;
+          fpsDisplay.textContent = fps + ' FPS'; // 更新文本内容
+        }
+
+        // 递归调用自身，继续更新
+        requestAnimationFrame(update);
+      }
+
+      // 使用requestAnimationFrame启动帧率更新流程
+      requestAnimationFrame(update);
+    });
+
   </script>
 </body>
 

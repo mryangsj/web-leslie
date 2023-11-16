@@ -54,7 +54,7 @@ registerProcessor('low-pass-filter', class extends AudioWorkletProcessor {
 });
 
 // Leslie效果器
-registerProcessor("LeslieProcessor", class extends AudioWorkletProcessor {
+registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
   // 定义可调参数
@@ -66,16 +66,16 @@ registerProcessor("LeslieProcessor", class extends AudioWorkletProcessor {
       maxValue: 2,
       automationRate: 'k-rate'
     }, {
-      name: 'slowSpeedFineTune',
+      name: 'slowSpeed',
       defaultValue: 0,
-      minValue: -20,
-      maxValue: 20,
+      minValue: -100,
+      maxValue: 100,
       automationRate: 'k-rate'
     }, {
-      name: 'fastSpeedFineTune',
+      name: 'fastSpeed',
       defaultValue: 0,
-      minValue: -20,
-      maxValue: 20,
+      minValue: -100,
+      maxValue: 100,
       automationRate: 'k-rate'
     }, {
       name: 'acceleration',
@@ -89,6 +89,12 @@ registerProcessor("LeslieProcessor", class extends AudioWorkletProcessor {
       minValue: 0.25,
       maxValue: 4,
       automationRate: 'k-rate'
+    }, {
+      name: 'outputGain',
+      defaultValue: 0,
+      minValue: -200,
+      maxValue: 6,
+      automationRate: 'k-rate'
     }];
   }
 
@@ -97,50 +103,99 @@ registerProcessor("LeslieProcessor", class extends AudioWorkletProcessor {
   constructor() {
     super();
 
-    // 定义内部参数
-    this.speed = 0;
-    this.rotorInstantPhase = 0;
-    this.rotorAngularSpeed = 0;
+    //-----------------------------------------------------------------------------------------
+    // 初始化必要参数
+    this.T = 1 / sampleRate;  // s
+
+    //-----------------------------------------------------------------------------------------
+    // 定义控制rotor旋转的低频振荡器的参数
+    this.rotorSlowFrequency = 2; // Hz
+    this.rotorFastFrequency = 6; // Hz
+    this.rotorFrequency = this.rotorSlowFrequency;
+    this.rotorAngularAcceleration = 3; // rad/s^2
+    this.rotorAngularDeceleration = 3; // rad/s^2
+    this.rotorAngularSpeed = 0; // rad/s
+    this.rotorAngularSpeedTarget = 0; // rad/s
+    this.rotorInstantPhase = 0; // rad
+
+    //-----------------------------------------------------------------------------------------
+    // 初始化MessagePort
+    this.port.onmessage = (event) => {
+      if (event.data.type === 'rotorInstantDegree') {
+        this.port.postMessage({ type: 'rotorInstantDegree', value: this.getCurrentRotorDegree() });
+      }
+    };
   }
 
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
-  process(inputList, outputList, parameters) {
+  process(inputs, outputs, parameters) {
     //-----------------------------------------------------------------------------------------
     // 接收参数
     const rotorMode = parameters.rotorMode[0];
-    const slowSpeedFineTune = parameters.slowSpeedFineTune[0];
-    const fastSpeedFineTune = parameters.fastSpeedFineTune[0];
+    const slowSpeedFineTune = parameters.slowSpeed[0];
+    const fastSpeedFineTune = parameters.fastSpeed[0];
     const acceleration = parameters.acceleration[0];
     const deceleration = parameters.deceleration[0];
+    const outputGain = parameters.outputGain[0];
+
+    //-----------------------------------------------------------------------------------------
+    // 更新rotor振荡器模式
+    if (rotorMode === 0) { this.rotorFrequency = this.rotorSlowFrequency * (1 + slowSpeedFineTune / 100); }
+    else if (rotorMode === 1) { this.rotorFrequency = this.rotorFastFrequency * (1 + fastSpeedFineTune / 100); }
+    this.rotorAngularSpeedTarget = 2 * Math.PI * this.rotorFrequency;
 
     //-----------------------------------------------------------------------------------------
     // 更新内部参数
+    const outputAmp = Math.pow(10, outputGain / 20);
 
+    //-----------------------------------------------------------------------------------------
+    // 只处理第一个源
+    const input = inputs[0];
+    const output = outputs[0];
+    const inputChannelCount = input.length;
+    const outputChannelCount = output.length;
+    const bufferSize = input[0].length;
 
-    const numberOfSource = Math.min(inputList.length, outputList.length);
-
-    // 遍历每一个输入源
-    for (let sourceIndex = 0; sourceIndex < numberOfSource; sourceIndex++) {
-      const input = inputList[sourceIndex].length;
-      const output = outputList[sourceIndex].length;
-      const numberOfInputChannel = input.length;
-      const numberOfOutputChannel = output.length;
-      const bufferSize = input[0].length;
-
-      // stetro -> stereo
-      if (numberOfInputChannel === 2 && numberOfOutputChannel === 2) {
-        for (let i = 0; sampleIndex < bufferSize; sampleIndex++) {
-          output[0][i] = 0.5 * input[0][i];
-          output[1][i] = 0.5 * input[1][i];
+    //-----------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------
+    // stetro -> stereo
+    if (inputChannelCount === 2 && outputChannelCount === 2) {
+      let inputMono = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        //-----------------------------------------------------------------------------------------
+        // 更新rotor振荡器参数
+        if (this.rotorAngularSpeed < this.rotorAngularSpeedTarget) {
+          this.rotorAngularSpeed += this.rotorAngularAcceleration * this.T;
+        } else if (this.rotorAngularSpeed > this.rotorAngularSpeedTarget) {
+          this.rotorAngularSpeed -= this.rotorAngularDeceleration * this.T;
         }
-      }
-      // mono -> stereo
-      else if (numberOfInputChannel === 1 && numberOfOutputChannel === 2) {
 
+        this.rotorInstantPhase += this.rotorAngularSpeed * this.T;
+        if (this.rotorInstantPhase > 2 * Math.PI) { this.rotorInstantPhase -= 2 * Math.PI; }
+
+        //-----------------------------------------------------------------------------------------
+        // 合并声道
+        inputMono = (input[0][i] + input[1][i]) / 2;
+
+        //-----------------------------------------------------------------------------------------
+        // 处理
+        output[0][i] = outputAmp * input[0][i];
+
+        //-----------------------------------------------------------------------------------------
+        // 拷贝声道
+        output[1][i] = output[0][i];
       }
+    }
+    // mono -> stereo
+    else if (inputChannelCount === 1 && outputChannelCount === 2) {
+
     }
 
     return true;
+  }
+
+  getCurrentRotorDegree() {
+    return 360 * this.rotorInstantPhase / (2 * Math.PI);
   }
 });
