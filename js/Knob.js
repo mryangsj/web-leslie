@@ -139,7 +139,7 @@ export default class Knob {
     // 设置label样式
     this.setLabelShowName();
     this.domLabel.style.textAlign = 'center';
-    // this.domLabel.style.whiteSpace = 'nowrap';
+    this.domLabel.style.whiteSpace = 'nowrap';
     this.domLabel.style.fontSize = `${this.widthDom * 0.13}px`;
     document.body.style.cursor = 'default';
     this.domLabel.style.userSelect = 'none';

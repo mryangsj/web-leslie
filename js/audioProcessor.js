@@ -66,30 +66,55 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
       maxValue: 2,
       automationRate: 'k-rate'
     }, {
-      name: 'slowSpeed',
+      name: 'hornSlowSpeed',
       defaultValue: 0,
       minValue: -100,
       maxValue: 100,
       automationRate: 'k-rate'
     }, {
-      name: 'fastSpeed',
+      name: 'hornFastSpeed',
       defaultValue: 0,
       minValue: -100,
       maxValue: 100,
       automationRate: 'k-rate'
     }, {
-      name: 'acceleration',
+      name: 'hornAcceleration',
       defaultValue: 1,
       minValue: 0.25,
       maxValue: 4,
       automationRate: 'k-rate'
     }, {
-      name: 'deceleration',
+      name: 'hornDeceleration',
       defaultValue: 1,
       minValue: 0.25,
       maxValue: 4,
       automationRate: 'k-rate'
     }, {
+      name: 'drumSlowSpeed',
+      defaultValue: 0,
+      minValue: -100,
+      maxValue: 100,
+      automationRate: 'k-rate'
+    }, {
+      name: 'drumFastSpeed',
+      defaultValue: 0,
+      minValue: -100,
+      maxValue: 100,
+      automationRate: 'k-rate'
+    }, {
+      name: 'drumAcceleration',
+      defaultValue: 1,
+      minValue: 0.25,
+      maxValue: 4,
+      automationRate: 'k-rate'
+    }, {
+      name: 'drumDeceleration',
+      defaultValue: 1,
+      minValue: 0.25,
+      maxValue: 4,
+      automationRate: 'k-rate'
+    },
+    {
       name: 'outputGain',
       defaultValue: 0,
       minValue: -200,
@@ -111,18 +136,28 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     // 定义控制rotor旋转的低频振荡器的参数
     this.rotorSlowFrequency = 2; // Hz
     this.rotorFastFrequency = 6; // Hz
-    this.rotorFrequency = this.rotorSlowFrequency;
-    this.rotorAngularAcceleration = 3; // rad/s^2
-    this.rotorAngularDeceleration = 3; // rad/s^2
-    this.rotorAngularSpeed = 0; // rad/s
-    this.rotorAngularSpeedTarget = 0; // rad/s
-    this.rotorInstantPhase = 0; // rad
+
+    this.hornRotorFrequency = this.rotorSlowFrequency;
+    this.hornRotorAngularAcceleration = 5 * Math.PI; // rad/s^2
+    this.hornRotorAngularDeceleration = 5 * Math.PI; // rad/s^2
+    this.hornRotorAngularSpeed = 0; // rad/s
+    this.hornRotorAngularSpeedTarget = 0; // rad/s
+    this.hornRotorInstantPhase = 0; // rad
+
+    this.drumRotorFrequency = this.rotorSlowFrequency;
+    this.drumRotorAngularAcceleration = 2 * Math.PI; // rad/s^2
+    this.drumRotorAngularDeceleration = 2 * Math.PI; // rad/s^2
+    this.drumRotorAngularSpeed = 0; // rad/s
+    this.drumRotorAngularSpeedTarget = 0; // rad/s
+    this.drumRotorInstantPhase = 0; // rad
 
     //-----------------------------------------------------------------------------------------
     // 初始化MessagePort
     this.port.onmessage = (event) => {
       if (event.data.type === 'rotorInstantDegree') {
         this.port.postMessage({ type: 'rotorInstantDegree', value: this.getCurrentRotorDegree() });
+      } else if (event.data.type === 'rotorInstantRate') {
+        this.port.postMessage({ type: 'rotorInstantRate', value: this.getCurrentRotorFrequency() });
       }
     };
   }
@@ -131,24 +166,41 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
   //-----------------------------------------------------------------------------------------
   process(inputs, outputs, parameters) {
     //-----------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------
     // 接收参数
     const rotorMode = parameters.rotorMode[0];
-    const slowSpeedFineTune = parameters.slowSpeed[0];
-    const fastSpeedFineTune = parameters.fastSpeed[0];
-    const acceleration = parameters.acceleration[0];
-    const deceleration = parameters.deceleration[0];
+    // horn参数
+    const hornSlowSpeedFineTune = parameters.hornSlowSpeed[0];
+    const hornFastSpeedFineTune = parameters.hornFastSpeed[0];
+    const hornAccelerationFineTune = parameters.hornAcceleration[0];
+    const hornDecelerationFineTune = parameters.hornDeceleration[0];
+    // drum参数
+    const drumSlowSpeedFineTune = parameters.drumSlowSpeed[0];
+    const drumFastSpeedFineTune = parameters.drumFastSpeed[0];
+    const drumAccelerationFineTune = parameters.drumAcceleration[0];
+    const drumDecelerationFineTune = parameters.drumDeceleration[0];
+    // mixer参数
     const outputGain = parameters.outputGain[0];
 
-    //-----------------------------------------------------------------------------------------
-    // 更新rotor振荡器模式
-    if (rotorMode === 0) { this.rotorFrequency = this.rotorSlowFrequency * (1 + slowSpeedFineTune / 100); }
-    else if (rotorMode === 1) { this.rotorFrequency = this.rotorFastFrequency * (1 + fastSpeedFineTune / 100); }
-    this.rotorAngularSpeedTarget = 2 * Math.PI * this.rotorFrequency;
 
     //-----------------------------------------------------------------------------------------
-    // 更新内部参数
+    //-----------------------------------------------------------------------------------------
+    // 更新rotor振荡器目标频率
+    if (rotorMode === 0) { // 慢速模式
+      this.hornRotorFrequency = this.rotorSlowFrequency * (1 + hornSlowSpeedFineTune / 100);
+      this.drumRotorFrequency = this.rotorSlowFrequency * (1 + drumSlowSpeedFineTune / 100);
+    }
+    else if (rotorMode === 1) { // 快速模式
+      this.hornRotorFrequency = this.rotorFastFrequency * (1 + hornFastSpeedFineTune / 100);
+      this.drumRotorFrequency = this.rotorFastFrequency * (1 + drumFastSpeedFineTune / 100);
+    }
+    // 更新rotor振荡器目标角速度
+    this.hornRotorAngularSpeedTarget = 2 * Math.PI * this.hornRotorFrequency;
+    this.drumRotorAngularSpeedTarget = 2 * Math.PI * this.drumRotorFrequency;
+    // 更新mixer参数
     const outputAmp = Math.pow(10, outputGain / 20);
 
+    //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     // 只处理第一个源
     const input = inputs[0];
@@ -164,15 +216,23 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
       let inputMono = 0;
       for (let i = 0; i < bufferSize; i++) {
         //-----------------------------------------------------------------------------------------
-        // 更新rotor振荡器参数
-        if (this.rotorAngularSpeed < this.rotorAngularSpeedTarget) {
-          this.rotorAngularSpeed += this.rotorAngularAcceleration * this.T;
-        } else if (this.rotorAngularSpeed > this.rotorAngularSpeedTarget) {
-          this.rotorAngularSpeed -= this.rotorAngularDeceleration * this.T;
+        //-----------------------------------------------------------------------------------------
+        // 更新horn振荡器参数
+        if (this.hornRotorAngularSpeed < this.hornRotorAngularSpeedTarget) {
+          this.hornRotorAngularSpeed += this.hornRotorAngularAcceleration * hornAccelerationFineTune * this.T;
+        } else if (this.hornRotorAngularSpeed > this.hornRotorAngularSpeedTarget) {
+          this.hornRotorAngularSpeed -= this.hornRotorAngularDeceleration * hornDecelerationFineTune * this.T;
         }
-
-        this.rotorInstantPhase += this.rotorAngularSpeed * this.T;
-        if (this.rotorInstantPhase > 2 * Math.PI) { this.rotorInstantPhase -= 2 * Math.PI; }
+        this.hornRotorInstantPhase -= this.hornRotorAngularSpeed * this.T;
+        if (this.hornRotorInstantPhase > 2 * Math.PI) { this.hornRotorInstantPhase -= 2 * Math.PI; }
+        // 更新drum振荡器参数
+        if (this.drumRotorAngularSpeed < this.drumRotorAngularSpeedTarget) {
+          this.drumRotorAngularSpeed += this.drumRotorAngularAcceleration * drumAccelerationFineTune * this.T;
+        } else if (this.drumRotorAngularSpeed > this.drumRotorAngularSpeedTarget) {
+          this.drumRotorAngularSpeed -= this.drumRotorAngularDeceleration * drumDecelerationFineTune * this.T;
+        }
+        this.drumRotorInstantPhase += this.drumRotorAngularSpeed * this.T;
+        if (this.drumRotorInstantPhase > 2 * Math.PI) { this.drumRotorInstantPhase -= 2 * Math.PI; }
 
         //-----------------------------------------------------------------------------------------
         // 合并声道
@@ -188,14 +248,20 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
       }
     }
     // mono -> stereo
-    else if (inputChannelCount === 1 && outputChannelCount === 2) {
-
-    }
+    else if (inputChannelCount === 1 && outputChannelCount === 2) { }
 
     return true;
   }
 
   getCurrentRotorDegree() {
-    return 360 * this.rotorInstantPhase / (2 * Math.PI);
+    const hornDegree = 360 / (2 * Math.PI) * this.hornRotorInstantPhase;
+    const drumDegree = 360 / (2 * Math.PI) * this.drumRotorInstantPhase;
+    return [hornDegree, drumDegree];
+  }
+
+  getCurrentRotorFrequency() {
+    const hornFrequency = this.hornRotorAngularSpeed / (2 * Math.PI);
+    const drumFrequency = this.drumRotorAngularSpeed / (2 * Math.PI);
+    return [hornFrequency, drumFrequency];
   }
 });

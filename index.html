@@ -12,6 +12,18 @@
       margin: 0;
     }
 
+    html {
+      -webkit-user-select: none;
+      /* Safari 3.1+ */
+      -moz-user-select: none;
+      /* Firefox 2+ */
+      -ms-user-select: none;
+      /* IE 10+ */
+      user-select: none;
+      /* 标准语法 */
+    }
+
+
     /* 填充body到整个屏幕 */
     body {
       width: 100vw;
@@ -20,33 +32,46 @@
     }
 
     .rotorBox {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 200px;
-      height: 200px;
+
+      width: 300px;
+      height: 500px;
       border: 1px solid black;
       overflow: hidden;
     }
 
     .rotor {
-      position: absolute;
-      width: 100%;
-      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
       background-color: pink;
       overflow: hidden;
     }
 
-    .horn {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    .line {
       width: 2%;
-      height: 80%;
-      background-color: black;
+      height: 40%;
+    }
+
+    .rate {
+      width: 30px;
+      height: 30px;
+      font-size: 25px;
+      background-color: white;
+      display: flex;
+      justify-content: center;
     }
   </style>
 </head>
@@ -56,17 +81,29 @@
   <audio src="resources/test-audio.mp3" id="audioPlayer" controls></audio>
 
   <button role="switch" aria-checked="false" id="button-power">
-    <span>ON</span>
+    <span>OFF</span>
   </button>
 
   <!-- rotor模拟器 -->
   <div class="rotorBox">
-    <div class="rotor">
-      <div class="horn"></div>
+    <div class="rotor" id="horn">
+      <div class="line" style="background-color: grey;"></div>
+      <div class="line" style="background-color: black;"></div>
     </div>
+    <span class="rate" id="hornRate">1</span>
+
+    <div class="rotor" id="drum">
+      <div class="line" style="background-color: grey;"></div>
+      <div class="line" style="background-color: black;"></div>
+    </div>
+    <span class="rate" id="drumRate">1</span>
   </div>
 
-  <!-- 链接js文件 -->
+  <button role="switch" aria-checked="slow" id="btnMode">
+    <span>SLOW</span>
+  </button>
+
+  <!-- 链接main.js文件 -->
   <script type="module" src="./js/main.js"></script>
 
   <!-- 屏蔽拖拽事件 -->
@@ -79,6 +116,10 @@
       });
     });
 
+  </script>
+
+  <!-- 显示帧率 -->
+  <script>
     // 等待DOM加载完毕后再执行代码
     document.addEventListener('DOMContentLoaded', function () {
       // 创建显示帧率的元素
@@ -120,8 +161,8 @@
       // 使用requestAnimationFrame启动帧率更新流程
       requestAnimationFrame(update);
     });
-
   </script>
+
 </body>
 
 </html>
