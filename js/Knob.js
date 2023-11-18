@@ -360,4 +360,4 @@
       return this.nextDeg;
     }
   }
-
+export default Knob;
