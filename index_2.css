@@ -222,6 +222,25 @@ button.active {
     margin-bottom: 6%;
 }
 
+.switch{
+    border: none;
+    outline: none;
+    background: none;
+    position: absolute;
+    width: 12%;
+    height: 12%;
+    margin-left: 8%;
+    background-image: url(./resources/switch_button_off.png);
+    /* background-color: #fff; */
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: background-image 0.3s ease;
+}
+
+.switch.clicked {
+    background-image: url(./resources/switch_button_on.png);
+  }
+
 .button_link{
     width: 25%;
     height: 100%;

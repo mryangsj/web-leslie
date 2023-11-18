@@ -186,3 +186,19 @@ function toggleButton() {
   console.log(isSyncActivatedHorn)
   console.log(isSyncActivatedDrum)
 }
+
+//switch button
+const switchButton = document.getElementById('switchButton');
+
+switchButton.addEventListener('click', function() {
+  // 切换点击状态
+  switchButton.classList.toggle('clicked');
+
+  // 根据点击状态设置背景图片
+  if (switchButton.classList.contains('clicked')) {
+    console.log(1); // 输出状态码 1
+  } else {
+    console.log(0); // 输出状态码 0
+  }
+});
+
