@@ -73,22 +73,30 @@ function initSlider(sliderId, handleId, syncHandleId) {
 
     // 如果激活状态，更新handle-horn-r的位置
     if (isSyncActivatedHorn) {
-      handleHornRPosition = handle.offsetTop;
+      if(sliderId ==='slider-horn-l' || sliderId === 'slider-horn-r'){
+        handleHornRPosition = handle.offsetTop;
+      }
     }
 
     // 如果激活状态，同步更新handle-horn-l的位置
     if (isSyncActivatedHorn && syncHandle) {
-      syncHandle.style.top = `${handleHornRPosition}px`;
+      if(sliderId ==='slider-horn-l' || sliderId === 'slider-horn-r'){
+        syncHandle.style.top = `${handleHornRPosition}px`;
+      }
     }
 
     // 如果激活状态，更新handle-drum-r的位置
     if (isSyncActivatedDrum) {
+      if(sliderId ==='slider-drum-l' || sliderId === 'slider-drum-r'){
       handleDrumRPosition = handle.offsetTop;
+      }
     }
 
     // 如果激活状态，同步更新handle-drum-l的位置
     if (isSyncActivatedDrum && syncHandle) {
-      syncHandle.style.top = `${handleDrumRPosition}px`;
+      if(sliderId ==='slider-drum-l' || sliderId === 'slider-drum-r'){
+        syncHandle.style.top = `${handleDrumRPosition}px`;
+    }
     }
   });
 
@@ -115,22 +123,31 @@ function initSlider(sliderId, handleId, syncHandleId) {
       
       // 如果激活状态，更新handle-horn-r的位置
       if (isSyncActivatedHorn) {
-        handleHornRPosition = handlePosition;
+        if(sliderId ==='slider-horn-l' || sliderId === 'slider-horn-r'){
+          handleHornRPosition = handle.offsetTop;
+        }
       }
-
+  
       // 如果激活状态，同步更新handle-horn-l的位置
       if (isSyncActivatedHorn && syncHandle) {
-        syncHandle.style.top = `${handlePosition}px`;
+        if(sliderId ==='slider-horn-l' || sliderId === 'slider-horn-r'){
+          syncHandle.style.top = `${handleHornRPosition}px`;
+        }
       }
 
-      // 如果激活状态，更新handle-drum-r的位置
+      
+
       if (isSyncActivatedDrum) {
-        handleDrumRPosition = handlePosition;
+        if(sliderId ==='slider-drum-l' || sliderId === 'slider-drum-r'){
+        handleDrumRPosition = handle.offsetTop;
+        }
       }
-
+  
       // 如果激活状态，同步更新handle-drum-l的位置
       if (isSyncActivatedDrum && syncHandle) {
-        syncHandle.style.top = `${handlePosition}px`;
+        if(sliderId ==='slider-drum-l' || sliderId === 'slider-drum-r'){
+          syncHandle.style.top = `${handleDrumRPosition}px`;
+      }
       }
 
       // Update handle position
@@ -151,16 +168,21 @@ initSlider('slider-output', 'handle-output', '');
 // 添加按钮点击事件监听器
 const button_link1 = document.getElementById('button_link1');
 const button_link2 = document.getElementById('button_link2');
-button_link1.addEventListener('click', () => toggleButton(button_link1));
-button_link2.addEventListener('click', () => toggleButton(button_link2));
+button_link1.addEventListener('click', toggleButton);
+button_link2.addEventListener('click', toggleButton);
 
-function toggleButton(button) {
-  button.classList.toggle('active');
+function toggleButton() {
+  this.classList.toggle('active');
 
   // 根据按钮的不同，设置不同的同步状态
-  if (button.id === 'button_link1') {
-    isSyncActivatedHorn = button.classList.contains('active');
-  } else if (button.id === 'button_link2') {
-    isSyncActivatedDrum = button.classList.contains('active');
+  if (this === button_link1) {
+    isSyncActivatedHorn = this.classList.contains('active');
+    console.log(isSyncActivatedHorn)
+  } 
+  if (this === button_link2) {
+    isSyncActivatedDrum = this.classList.contains('active');
+    console.log(isSyncActivatedDrum)
   }
+  console.log(isSyncActivatedHorn)
+  console.log(isSyncActivatedDrum)
 }
