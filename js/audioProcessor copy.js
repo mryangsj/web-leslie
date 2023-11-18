@@ -1,58 +1,3 @@
-// 白噪声生成器
-registerProcessor('white-noise-generator', class extends AudioWorkletProcessor {
-  constructor() { super(); }
-
-  process(inputs, outputs, parameters) {
-    const output = outputs[0];
-    const channelCount = output.length;
-
-    for (let channel = 0; channel < channelCount; channel++) {
-      const outputChannel = output[channel];
-      const channelLength = outputChannel.length;
-
-      for (let i = 0; i < channelLength; i++) {
-        outputChannel[i] = Math.random() * 2 - 1;
-      }
-    }
-    return true;
-  }
-});
-
-// IIR低通滤波器
-registerProcessor('low-pass-filter', class extends AudioWorkletProcessor {
-  static get parameterDescriptors() {
-    return [{
-      name: 'cutoff',
-      defaultValue: 1000,
-      minValue: 20,
-      maxValue: 20000
-    }];
-  }
-
-  constructor() {
-    super();
-    this.lastSample = 0;
-  }
-
-  process(inputList, outputsList, parameters) {
-    const input = inputList[0];
-    const output = outputsList[0];
-    const channelCount = output.length;
-    const cutoff = parameters.cutoff;
-
-    for (let channel = 0; channel < channelCount; channel++) {
-      const inputChannel = input[channel];
-      const outputChannel = output[channel];
-      const length = outputChannel.length;
-
-      for (let i = 0; i < length; i++) {
-        outputChannel[i] = this.lastSample + cutoff * (inputChannel[i] - this.lastSample);
-        this.lastSample = outputChannel[i];
-      }
-    }
-  }
-});
-
 // Leslie效果器
 registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
   //-----------------------------------------------------------------------------------------
@@ -245,7 +190,7 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
           this.hornRotorAngularSpeed -= this.hornRotorAngularDecelerationTarget * this.T;
         }
         this.hornRotorInstantPhase -= this.hornRotorAngularSpeed * this.T;
-        if (this.hornRotorInstantPhase < 0) { this.hornRotorInstantPhase += 2 * Math.PI; }
+        if (this.hornRotorInstantPhase > 2 * Math.PI) { this.hornRotorInstantPhase -= 2 * Math.PI; }
         // 更新drum振荡器状态
         if (this.drumRotorAngularSpeed < this.drumRotorAngularSpeedTarget) {
           this.drumRotorAngularSpeed += this.drumRotorAngularAccelerationTarget * this.T;

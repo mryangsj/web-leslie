@@ -5,12 +5,13 @@ import Knob from './knob.js';
 //-----------------------------------------------------------------------------------------
 // get elements
 const audioPlayer = document.getElementById('audioPlayer');
-const buttonPower = document.getElementById('button-power');
+const btnPower = document.getElementById('btnPower');
 const hornRotor = document.querySelector('#horn');
 const drumRotor = document.querySelector('#drum');
 const hornRate = document.querySelector('#hornRate');
 const drumRate = document.querySelector('#drumRate');
 const btnMode = document.querySelector('#btnMode');
+const btnBrake = document.querySelector('#btnBrake');
 
 
 //-----------------------------------------------------------------------------------------
@@ -21,28 +22,28 @@ const btnMode = document.querySelector('#btnMode');
 //-----------------------------------------------------------------------------------------
 // horn
 // 'SLOW SPEED' knob of horn
-const knobHornSlowSpeedObj = new Knob(80, 'SLOW SPEED', -20, 20, 0, 0, '%');
+const knobHornSlowSpeedObj = new Knob(100, 'SLOW SPEED', -20, 20, 0, 0, '%');
 const knobHornSlowSpeed = knobHornSlowSpeedObj.dom;
-knobHornSlowSpeed.style.top = '15%';
+knobHornSlowSpeed.style.top = '25%';
 knobHornSlowSpeed.style.left = '10%';
 knobHornSlowSpeed.style.transform = 'translate(-50%, -50%)';
 // 'Fast SPEED' knob of horn
-const knobHornFastSpeedObj = new Knob(80, 'FAST SPEED', -20, 20, 0, 0, '%');
+const knobHornFastSpeedObj = new Knob(100, 'FAST SPEED', -20, 20, 0, 0, '%');
 const knobHornFastSpeed = knobHornFastSpeedObj.dom;
-knobHornFastSpeed.style.top = '30%';
+knobHornFastSpeed.style.top = '40%';
 knobHornFastSpeed.style.left = '10%';
 knobHornFastSpeed.style.transform = 'translate(-50%, -50%)';
 // 'ACCELERATION' knob of horn
-const knobHornAccelerationObj = new Knob(80, 'ACCELERATION', 0.25, 4, 1, 2, 'x');
+const knobHornAccelerationObj = new Knob(100, 'ACCELERATION', 0.25, 4, 1, 2, 'x');
 const knobHornAcceleration = knobHornAccelerationObj.dom;
-knobHornAcceleration.style.top = '45%';
+knobHornAcceleration.style.top = '55%';
 knobHornAcceleration.style.left = '10%';
 knobHornAcceleration.style.transform = 'translate(-50%, -50%)';
 knobHornAccelerationObj.setSkewFactorByMidValue(1);
 // 'DECELERATION' knob of horn
-const knobHornDecelerationObj = new Knob(80, 'DECELERATION', 0.25, 4, 1, 2, 'x');
+const knobHornDecelerationObj = new Knob(100, 'DECELERATION', 0.25, 4, 1, 2, 'x');
 const knobHornDeceleration = knobHornDecelerationObj.dom;
-knobHornDeceleration.style.top = '60%';
+knobHornDeceleration.style.top = '70%';
 knobHornDeceleration.style.left = '10%';
 knobHornDeceleration.style.transform = 'translate(-50%, -50%)';
 knobHornDecelerationObj.setSkewFactorByMidValue(1);
@@ -50,28 +51,28 @@ knobHornDecelerationObj.setSkewFactorByMidValue(1);
 //-----------------------------------------------------------------------------------------
 // drum
 // 'SLOW SPEED' knob of drum
-const knobDrumSlowSpeedObj = new Knob(80, 'SLOW SPEED', -20, 20, 0, 0, '%');
+const knobDrumSlowSpeedObj = new Knob(100, 'SLOW SPEED', -20, 20, 0, 0, '%');
 const knobDrumSlowSpeed = knobDrumSlowSpeedObj.dom;
-knobDrumSlowSpeed.style.top = '15%';
+knobDrumSlowSpeed.style.top = '25%';
 knobDrumSlowSpeed.style.left = '20%';
 knobDrumSlowSpeed.style.transform = 'translate(-50%, -50%)';
 // 'Fast SPEED' knob of drum
-const knobDrumFastSpeedObj = new Knob(80, 'FAST SPEED', -20, 20, 0, 0, '%');
+const knobDrumFastSpeedObj = new Knob(100, 'FAST SPEED', -20, 20, 0, 0, '%');
 const knobDrumFastSpeed = knobDrumFastSpeedObj.dom;
-knobDrumFastSpeed.style.top = '30%';
+knobDrumFastSpeed.style.top = '40%';
 knobDrumFastSpeed.style.left = '20%';
 knobDrumFastSpeed.style.transform = 'translate(-50%, -50%)';
 // 'ACCELERATION' knob of drum
-const knobDrumAccelerationObj = new Knob(80, 'ACCELERATION', 0.25, 4, 1, 2, 'x');
+const knobDrumAccelerationObj = new Knob(100, 'ACCELERATION', 0.25, 4, 1, 2, 'x');
 const knobDrumAcceleration = knobDrumAccelerationObj.dom;
-knobDrumAcceleration.style.top = '45%';
+knobDrumAcceleration.style.top = '55%';
 knobDrumAcceleration.style.left = '20%';
 knobDrumAcceleration.style.transform = 'translate(-50%, -50%)';
 knobDrumAccelerationObj.setSkewFactorByMidValue(1);
 // 'DECELERATION' knob of drum
-const knobDrumDecelerationObj = new Knob(80, 'DECELERATION', 0.25, 4, 1, 2, 'x');
+const knobDrumDecelerationObj = new Knob(100, 'DECELERATION', 0.25, 4, 1, 2, 'x');
 const knobDrumDeceleration = knobDrumDecelerationObj.dom;
-knobDrumDeceleration.style.top = '60%';
+knobDrumDeceleration.style.top = '70%';
 knobDrumDeceleration.style.left = '20%';
 knobDrumDeceleration.style.transform = 'translate(-50%, -50%)';
 knobDrumDecelerationObj.setSkewFactorByMidValue(1);
@@ -100,6 +101,7 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 //-----------------------------------------------------------------------------------------
 // add audio processor and connect audio context nodes
 let rotorModeParam = null;
+let rotorBrakeParam = null;
 let hornSlowSpeedParam = null;
 let hornFastSpeedParam = null;
 let hornAccelerationParam = null;
@@ -121,6 +123,7 @@ let outputGainParam = null;
   //-----------------------------------------------------------------------------------------
   // 获取leslie效果器的参数
   rotorModeParam = leslieNode.parameters.get('rotorMode');
+  rotorBrakeParam = leslieNode.parameters.get('rotorBrake');
   hornSlowSpeedParam = leslieNode.parameters.get('hornSlowSpeed');
   hornFastSpeedParam = leslieNode.parameters.get('hornFastSpeed');
   hornAccelerationParam = leslieNode.parameters.get('hornAcceleration');
@@ -158,6 +161,7 @@ let outputGainParam = null;
     if (event.data.type === 'rotorInstantDegree') {
       hornRotor.style.transform = `rotate(${event.data.value[0]}deg)`;
       drumRotor.style.transform = `rotate(${event.data.value[1]}deg)`;
+      console.log(event.data.value);
     } else if (event.data.type === 'rotorInstantRate') {
       hornRate.innerText = `${event.data.value[0].toFixed(2)}Hz`;
       drumRate.innerText = `${event.data.value[1].toFixed(2)}Hz`;
@@ -172,19 +176,19 @@ let outputGainParam = null;
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 // 注册总开关点击事件
-buttonPower.addEventListener('click', () => {
+btnPower.addEventListener('click', () => {
   // 响应按钮点击事件
-  if (buttonPower.getAttribute('aria-checked') === 'false') {
+  if (btnPower.getAttribute('aria-checked') === 'false') {
     // 更新信号量
-    buttonPower.setAttribute('aria-checked', 'true');
+    btnPower.setAttribute('aria-checked', 'true');
     // 更新总开关按钮状态
-    buttonPower.querySelector('span').innerText = 'ON';
+    btnPower.querySelector('span').innerText = 'ON';
     // 恢复音频上下文
     audioContext.resume();
   } else {
-    buttonPower.setAttribute('aria-checked', 'false');
+    btnPower.setAttribute('aria-checked', 'false');
     // 更新总开关按钮状态
-    buttonPower.querySelector('span').innerText = 'OFF';
+    btnPower.querySelector('span').innerText = 'OFF';
     // 暂停音频上下文
     audioContext.suspend();
   }
@@ -210,4 +214,22 @@ btnMode.addEventListener('click', () => {
   }
 });
 
-
+//-----------------------------------------------------------------------------------------
+// 注册刹车按钮点击事件
+btnBrake.addEventListener('click', () => {
+  // 响应按钮点击事件
+  if (btnBrake.getAttribute('aria-checked') === 'false') {
+    // 更新信号量
+    btnBrake.setAttribute('aria-checked', 'true');
+    // 更新按钮状态
+    btnBrake.querySelector('span').innerText = 'Brake-ON';
+    // 更新leslie效果器的参数
+    rotorBrakeParam.setValueAtTime(1, audioContext.currentTime);
+  } else {
+    btnBrake.setAttribute('aria-checked', 'false');
+    // 更新按钮状态
+    btnBrake.querySelector('span').innerText = 'Brake-OFF';
+    // 更新leslie效果器的参数
+    rotorBrakeParam.setValueAtTime(0, audioContext.currentTime);
+  }
+});

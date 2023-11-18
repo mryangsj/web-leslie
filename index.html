@@ -80,28 +80,34 @@
   <!-- <input type="file" id="audioFileInput" accept="audio/*"> -->
   <audio src="resources/test-audio.mp3" id="audioPlayer" controls></audio>
 
-  <button role="switch" aria-checked="false" id="button-power">
+  <button role="switch" aria-checked="false" id="btnPower">
     <span>OFF</span>
   </button>
-
-  <!-- rotor模拟器 -->
-  <div class="rotorBox">
-    <div class="rotor" id="horn">
-      <div class="line" style="background-color: grey;"></div>
-      <div class="line" style="background-color: black;"></div>
-    </div>
-    <span class="rate" id="hornRate">1</span>
-
-    <div class="rotor" id="drum">
-      <div class="line" style="background-color: grey;"></div>
-      <div class="line" style="background-color: black;"></div>
-    </div>
-    <span class="rate" id="drumRate">1</span>
-  </div>
 
   <button role="switch" aria-checked="slow" id="btnMode">
     <span>SLOW</span>
   </button>
+
+  <button role="switch" aria-checked="false" id="btnBrake">
+    <span>Break-OFF</span>
+  </button>
+
+
+  <!-- rotor模拟器 -->
+  <div class="rotorBox">
+    <div class="rotor" id="horn">
+      <div class="line" style="background-color: white;"></div>
+      <div class="line" style="background-color: black;"></div>
+    </div>
+    <span class="rate" id="hornRate">0Hz</span>
+
+    <div class="rotor" id="drum">
+      <div class="line" style="background-color: white;"></div>
+      <div class="line" style="background-color: black;"></div>
+    </div>
+    <span class="rate" id="drumRate">0Hz</span>
+  </div>
+
 
   <!-- 链接main.js文件 -->
   <script type="module" src="./js/main.js"></script>
