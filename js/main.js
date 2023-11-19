@@ -22,13 +22,13 @@ const btnBrake = document.querySelector('#btnBrake');
 //-----------------------------------------------------------------------------------------
 // horn
 // 'SLOW SPEED' knob of horn
-const knobHornSlowSpeedObj = new Knob(100, 'SLOW SPEED', -20, 20, 0, 0, '%');
+const knobHornSlowSpeedObj = new Knob(100, 'SLOW SPEED', -100, 100, 0, 0, '%');
 const knobHornSlowSpeed = knobHornSlowSpeedObj.dom;
 knobHornSlowSpeed.style.top = '25%';
 knobHornSlowSpeed.style.left = '10%';
 knobHornSlowSpeed.style.transform = 'translate(-50%, -50%)';
 // 'Fast SPEED' knob of horn
-const knobHornFastSpeedObj = new Knob(100, 'FAST SPEED', -20, 20, 0, 0, '%');
+const knobHornFastSpeedObj = new Knob(100, 'FAST SPEED', -100, 100, 0, 0, '%');
 const knobHornFastSpeed = knobHornFastSpeedObj.dom;
 knobHornFastSpeed.style.top = '40%';
 knobHornFastSpeed.style.left = '10%';
@@ -78,13 +78,31 @@ knobDrumDeceleration.style.transform = 'translate(-50%, -50%)';
 knobDrumDecelerationObj.setSkewFactorByMidValue(1);
 
 //-----------------------------------------------------------------------------------------
+// 'HORN' knob (horn volume)
+const knobHornObj = new Knob(100, 'HORN', -200, 6, 0, 1, 'dB');
+const knobHorn = knobHornObj.dom;
+knobHorn.style.top = '50%';
+knobHorn.style.left = '60%';
+knobHorn.style.transform = 'translate(50%, -50%)';
+knobHornObj.setSkewFactorByMidValue(-3);
+
+//-----------------------------------------------------------------------------------------
+// 'DRUM' knob (drum volume)
+const knobDrumObj = new Knob(100, 'DRUM', -200, 3, 0, 1, 'dB');
+const knobDrum = knobDrumObj.dom;
+knobDrum.style.top = '50%';
+knobDrum.style.left = '70%';
+knobDrum.style.transform = 'translate(50%, -50%)';
+knobDrumObj.setSkewFactorByMidValue(-3);
+
+//-----------------------------------------------------------------------------------------
 // 'OUTPUT' knob (master volume)
-const knobOutputObj = new Knob(100, 'OUTPUT', -200, 6, 0, 1, 'dB');
+const knobOutputObj = new Knob(100, 'OUTPUT', -200, 3, 0, 1, 'dB');
 const knobOutput = knobOutputObj.dom;
 knobOutput.style.top = '50%';
-knobOutput.style.left = '30%';
+knobOutput.style.left = '90%';
 knobOutput.style.transform = 'translate(-50%, -50%)';
-knobOutputObj.setSkewFactorByMidValue(-6);
+knobOutputObj.setSkewFactorByMidValue(-3);
 
 
 //-----------------------------------------------------------------------------------------
@@ -110,15 +128,29 @@ let drumSlowSpeedParam = null;
 let drumFastSpeedParam = null;
 let drumAccelerationParam = null;
 let drumDecelerationParam = null;
+let hornGainParam = null;
+let drumGainParam = null;
 let outputGainParam = null;
 
 (async function () {
   await audioContext.audioWorklet.addModule('./js/audioProcessor.js')
 })().then(() => {
   //-----------------------------------------------------------------------------------------
-  // 创建leslie效果器并连接
-  const leslieNode = new AudioWorkletNode(audioContext, 'leslie-processor');
-  mp3Node.connect(leslieNode).connect(audioContext.destination);
+  // 创建分频器
+  const hpfNode = new BiquadFilterNode(audioContext, { type: 'highpass', frequency: 800 });
+  const lpfNode = new BiquadFilterNode(audioContext, { type: 'lowpass', frequency: 800 });
+  // 创建leslie效果器
+  const leslieNode = new AudioWorkletNode(audioContext, 'leslie-processor', {
+    numberOfInputs: 2,
+    numberOfOutputs: 1,
+    outputChannelCount: [2],
+  });
+  // 连接
+  mp3Node.connect(hpfNode);
+  mp3Node.connect(lpfNode);
+  hpfNode.connect(leslieNode, 0, 0);
+  lpfNode.connect(leslieNode, 0, 1);
+  leslieNode.connect(audioContext.destination);
 
   //-----------------------------------------------------------------------------------------
   // 获取leslie效果器的参数
@@ -132,6 +164,8 @@ let outputGainParam = null;
   drumFastSpeedParam = leslieNode.parameters.get('drumFastSpeed');
   drumAccelerationParam = leslieNode.parameters.get('drumAcceleration');
   drumDecelerationParam = leslieNode.parameters.get('drumDeceleration');
+  hornGainParam = leslieNode.parameters.get('hornGain');
+  drumGainParam = leslieNode.parameters.get('drumGain');
   outputGainParam = leslieNode.parameters.get('outputGain');
 
   //-----------------------------------------------------------------------------------------
@@ -144,6 +178,8 @@ let outputGainParam = null;
   knobDrumFastSpeed.addEventListener('changed', () => { drumFastSpeedParam.setValueAtTime(knobDrumFastSpeedObj.currentValue, audioContext.currentTime); });
   knobDrumAcceleration.addEventListener('changed', () => { drumAccelerationParam.setValueAtTime(knobDrumAccelerationObj.currentValue, audioContext.currentTime); });
   knobDrumDeceleration.addEventListener('changed', () => { drumDecelerationParam.setValueAtTime(knobDrumDecelerationObj.currentValue, audioContext.currentTime); });
+  knobHorn.addEventListener('changed', () => { hornGainParam.setValueAtTime(knobHornObj.currentValue, audioContext.currentTime); });
+  knobDrum.addEventListener('changed', () => { drumGainParam.setValueAtTime(knobDrumObj.currentValue, audioContext.currentTime); });
   knobOutput.addEventListener('changed', () => { outputGainParam.setValueAtTime(knobOutputObj.currentValue, audioContext.currentTime); });
 
   //-----------------------------------------------------------------------------------------
@@ -161,7 +197,7 @@ let outputGainParam = null;
     if (event.data.type === 'rotorInstantDegree') {
       hornRotor.style.transform = `rotate(${event.data.value[0]}deg)`;
       drumRotor.style.transform = `rotate(${event.data.value[1]}deg)`;
-      console.log(event.data.value);
+      // console.log(event.data.value);
     } else if (event.data.type === 'rotorInstantRate') {
       hornRate.innerText = `${event.data.value[0].toFixed(2)}Hz`;
       drumRate.innerText = `${event.data.value[1].toFixed(2)}Hz`;

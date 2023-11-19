@@ -119,6 +119,18 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
       minValue: 0.25,
       maxValue: 4,
       automationRate: 'k-rate'
+    }, {
+      name: 'hornGain',
+      defaultValue: 0,
+      minValue: -200,
+      maxValue: 6,
+      automationRate: 'k-rate'
+    }, {
+      name: 'drumGain',
+      defaultValue: 0,
+      minValue: -200,
+      maxValue: 6,
+      automationRate: 'k-rate'
     },
     {
       name: 'outputGain',
@@ -140,26 +152,28 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
 
     //-----------------------------------------------------------------------------------------
     // 定义控制rotor旋转的低频振荡器的参数
-    this.rotorSlowFrequency = 2; // Hz
+    this.gloabalModulatorDepth = 0.8; // %
+
+    this.rotorSlowFrequency = 0.687; // Hz
     this.rotorFastFrequency = 6; // Hz
 
     this.hornRotorFrequency = this.rotorSlowFrequency;
-    this.hornRotorAngularAccelerationDefault = 5 * Math.PI; // rad/s^2
-    this.hornRotorAngularDecelerationDefault = 5 * Math.PI; // rad/s^2
+    this.hornRotorAngularAccelerationDefault = 4 * Math.PI; // rad/s^2
+    this.hornRotorAngularDecelerationDefault = 3 * Math.PI; // rad/s^2
     this.hornRotorAngularAccelerationTarget = 0; // rad/s^2
     this.hornRotorAngularDecelerationTarget = 0; // rad/s^2
     this.hornRotorAngularSpeed = 0; // rad/s
     this.hornRotorAngularSpeedTarget = 0; // rad/s
-    this.hornRotorInstantPhase = 0; // rad
+    this.hornRotorInstantPhase = Math.random(); // rad
 
     this.drumRotorFrequency = this.rotorSlowFrequency;
     this.drumRotorAngularAccelerationDefault = 2 * Math.PI; // rad/s^2
-    this.drumRotorAngularDecelerationDefault = 2 * Math.PI; // rad/s^2
+    this.drumRotorAngularDecelerationDefault = 0.5 * Math.PI; // rad/s^2
     this.drumRotorAngularAccelerationTarget = 0; // rad/s^2
     this.drumRotorAngularDecelerationTarget = 0; // rad/s^2
     this.drumRotorAngularSpeed = 0; // rad/s
     this.drumRotorAngularSpeedTarget = 0; // rad/s
-    this.drumRotorInstantPhase = 0; // rad
+    this.drumRotorInstantPhase = Math.random(); // rad
 
     //-----------------------------------------------------------------------------------------
     // 初始化MessagePort
@@ -178,11 +192,19 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     // 声道预处理
-    const input = inputs[0];
+    const inputHorn = inputs[0];
+    const inputDrum = inputs[1];
     const output = outputs[0];
-    const inputChannelCount = input.length;
-    const outputChannelCount = output.length;
-    const bufferSize = input[0].length;
+    const bufferSize = inputHorn[0].length;
+    let inputHornSampleL = 0;
+    let inputHornSampleR = 0;
+    let inputDrumSampleL = 0;
+    let inputDrumSampleR = 0;
+    let inputHornSampleMono = 0;
+    let inputDrumSampleMono = 0;
+    let outputSampleL = 0;
+    let outputSampleR = 0;
+
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
@@ -200,7 +222,10 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     const drumAccelerationFineTune = parameters.drumAcceleration[0];
     const drumDecelerationFineTune = parameters.drumDeceleration[0];
     // mixer参数
+    const hornGain = parameters.hornGain[0];
+    const drumGain = parameters.drumGain[0];
     const outputGain = parameters.outputGain[0];
+
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
@@ -218,58 +243,71 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
       this.hornRotorAngularDecelerationTarget = this.hornRotorAngularDecelerationDefault * hornDecelerationFineTune;
       this.drumRotorAngularAccelerationTarget = this.drumRotorAngularAccelerationDefault * drumAccelerationFineTune;
       this.drumRotorAngularDecelerationTarget = this.drumRotorAngularDecelerationDefault * drumDecelerationFineTune;
-    } else if (rotorBrake === 1) { // 停止模式
+    }
+    //-----------------------------------------------------------------------------------------
+    else if (rotorBrake === 1) { // 停止模式
       this.hornRotorFrequency = 0;
       this.drumRotorFrequency = 0;
-      this.hornRotorAngularDecelerationTarget = 8 * this.hornRotorAngularDecelerationDefault;
-      this.drumRotorAngularDecelerationTarget = 8 * this.drumRotorAngularDecelerationDefault;
+      this.hornRotorAngularDecelerationTarget = 2 * this.hornRotorAngularDecelerationDefault;
+      this.drumRotorAngularDecelerationTarget = 2 * this.drumRotorAngularDecelerationDefault;
     }
+    //-----------------------------------------------------------------------------------------
     // 更新rotor振荡器目标角速度
     this.hornRotorAngularSpeedTarget = 2 * Math.PI * this.hornRotorFrequency;
     this.drumRotorAngularSpeedTarget = 2 * Math.PI * this.drumRotorFrequency;
+    //-----------------------------------------------------------------------------------------
     // 更新mixer参数
+    const hornAmp = Math.pow(10, hornGain / 20);
+    const drumAmp = Math.pow(10, drumGain / 20);
     const outputAmp = Math.pow(10, outputGain / 20);
 
+
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
-    // stetro -> stereo
-    if (inputChannelCount === 2 && outputChannelCount === 2) {
-      let inputMono = 0;
-      for (let i = 0; i < bufferSize; i++) {
-        //-----------------------------------------------------------------------------------------
-        //-----------------------------------------------------------------------------------------
-        // 更新horn振荡器状态
-        if (this.hornRotorAngularSpeed < this.hornRotorAngularSpeedTarget) {
-          this.hornRotorAngularSpeed += this.hornRotorAngularAccelerationTarget * this.T;
-        } else if (this.hornRotorAngularSpeed > this.hornRotorAngularSpeedTarget) {
-          this.hornRotorAngularSpeed -= this.hornRotorAngularDecelerationTarget * this.T;
-        }
-        this.hornRotorInstantPhase -= this.hornRotorAngularSpeed * this.T;
-        if (this.hornRotorInstantPhase < 0) { this.hornRotorInstantPhase += 2 * Math.PI; }
-        // 更新drum振荡器状态
-        if (this.drumRotorAngularSpeed < this.drumRotorAngularSpeedTarget) {
-          this.drumRotorAngularSpeed += this.drumRotorAngularAccelerationTarget * this.T;
-        } else if (this.drumRotorAngularSpeed > this.drumRotorAngularSpeedTarget) {
-          this.drumRotorAngularSpeed -= this.drumRotorAngularDecelerationTarget * this.T;
-        }
-        this.drumRotorInstantPhase += this.drumRotorAngularSpeed * this.T;
-        if (this.drumRotorInstantPhase > 2 * Math.PI) { this.drumRotorInstantPhase -= 2 * Math.PI; }
+    for (let i = 0; i < bufferSize; i++) {
+      //-----------------------------------------------------------------------------------------
+      // 读取音频样本
+      inputHornSampleL = inputHorn[0][i];
+      inputHornSampleR = inputHorn[1][i];
+      inputDrumSampleL = inputDrum[0][i];
+      inputDrumSampleR = inputDrum[1][i];
+      // 合并声道
+      inputHornSampleMono = (inputHornSampleL + inputHornSampleR) / 2;
+      inputDrumSampleMono = (inputDrumSampleL + inputDrumSampleR) / 2;
 
-        //-----------------------------------------------------------------------------------------
-        // 合并声道
-        inputMono = (input[0][i] + input[1][i]) / 2;
-
-        //-----------------------------------------------------------------------------------------
-        // 处理
-        output[0][i] = outputAmp * input[0][i];
-
-        //-----------------------------------------------------------------------------------------
-        // 拷贝声道
-        output[1][i] = output[0][i];
+      //-----------------------------------------------------------------------------------------
+      // 更新horn振荡器状态
+      if (this.hornRotorAngularSpeed < this.hornRotorAngularSpeedTarget) {
+        this.hornRotorAngularSpeed += this.hornRotorAngularAccelerationTarget * this.T;
+      } else if (this.hornRotorAngularSpeed > this.hornRotorAngularSpeedTarget) {
+        this.hornRotorAngularSpeed -= this.hornRotorAngularDecelerationTarget * this.T;
       }
+      this.hornRotorInstantPhase -= this.hornRotorAngularSpeed * this.T;
+      if (this.hornRotorInstantPhase < 0) { this.hornRotorInstantPhase += 2 * Math.PI; }
+      // 更新drum振荡器状态
+      if (this.drumRotorAngularSpeed < this.drumRotorAngularSpeedTarget) {
+        this.drumRotorAngularSpeed += this.drumRotorAngularAccelerationTarget * this.T;
+      } else if (this.drumRotorAngularSpeed > this.drumRotorAngularSpeedTarget) {
+        this.drumRotorAngularSpeed -= this.drumRotorAngularDecelerationTarget * this.T;
+      }
+      this.drumRotorInstantPhase += this.drumRotorAngularSpeed * this.T;
+      if (this.drumRotorInstantPhase > 2 * Math.PI) { this.drumRotorInstantPhase -= 2 * Math.PI; }
+
+      //-----------------------------------------------------------------------------------------
+      // 振幅调制
+      const horn_am = (1 / 2 * this.gloabalModulatorDepth * (Math.cos(this.hornRotorInstantPhase) - 1) + 1) * inputHornSampleMono;
+      const drum_am = (1 / 2 * this.gloabalModulatorDepth * (Math.cos(this.drumRotorInstantPhase) - 1) + 1) * inputDrumSampleMono;
+
+      //-----------------------------------------------------------------------------------------
+      // 音量
+      outputSampleL = hornAmp * horn_am + drumAmp * drum_am;
+      outputSampleL *= outputAmp;
+
+      //-----------------------------------------------------------------------------------------
+      // 写入音频样本
+      output[0][i] = outputSampleL;
+      output[1][i] = outputSampleL;
     }
-    // mono -> stereo
-    else if (inputChannelCount === 1 && outputChannelCount === 2) { }
 
     return true;
   }
