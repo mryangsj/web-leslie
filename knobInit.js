@@ -29,8 +29,21 @@ import Knob from './js/Knob.js';
     const containerLinkLR4 = document.getElementById('knobLinkLR4')
 
       function createKnob(container, knobName,spritePath,spriteLength) {
+        // Calculate the width-to-height ratio
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const ratio = width / height;
         // const container = document.getElementById(containerId);
         let knobSize = 70;
+
+        if (ratio > 1.5 && window.innerWidth > 1500) {
+          // Increase knob size for larger width-to-height ratios
+          knobSize = 100;
+        }
+        if (ratio > 1.3 && window.innerWidth > 1200) {
+          // Increase knob size for larger width-to-height ratios
+          knobSize = 80;
+        }
         // if (window.innerWidth > 1500) {
         //   knobSize = 120;
         // } else if (window.innerWidth > 1200) {

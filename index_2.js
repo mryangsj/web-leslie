@@ -60,48 +60,73 @@ let isSyncActivatedDrum = false;
 let handleHornRPosition = 0;
 let handleDrumRPosition = 0;
 
+
+// 更新元素的内容
+function updateElementValues(containerElement, elements) {
+  // 清空容器的内容
+  containerElement.innerHTML = '';
+
+  elements.forEach((element) => {
+    const spanElement = document.createElement('span');
+    spanElement.textContent = element.value;
+
+    // 应用样式
+    spanElement.style.textAlign = 'center';
+    spanElement.style.color = '#D4CEAF';
+    spanElement.style.marginTop = '5%';
+
+    // 将 span 元素添加到容器中
+    containerElement.appendChild(spanElement);
+  });
+}
+
+
 // slider control
-function initSlider(sliderId, handleId, syncHandleId) {
+function initSlider(sliderId, handleId, syncHandleId, containerElementId, textElementId,) {
   const slider = document.getElementById(sliderId);
   const handle = document.getElementById(handleId);
   const syncHandle = document.getElementById(syncHandleId);
+  const containerElement = document.querySelector(containerElementId);
+  const textElement = document.querySelector(textElementId);
 
   let isDragging = false;
+  let value = 0.5;
 
   handle.addEventListener('mousedown', (event) => {
     isDragging = true;
 
-    // 如果激活状态，更新handle-horn-r的位置
-    if (isSyncActivatedHorn) {
-      if(sliderId ==='slider-horn-l' || sliderId === 'slider-horn-r'){
-        handleHornRPosition = handle.offsetTop;
+    // 如果激活状态，更新 handle 的位置
+    if (isSyncActivatedHorn || isSyncActivatedDrum) {
+      const handlePosition = handle.offsetTop;
+      if (sliderId === 'slider-horn-l' || sliderId === 'slider-horn-r') {
+        handleHornRPosition = handlePosition;
+      } else if (sliderId === 'slider-drum-l' || sliderId === 'slider-drum-r') {
+        handleDrumRPosition = handlePosition;
       }
     }
-
-    // 如果激活状态，同步更新handle-horn-l的位置
-    if (isSyncActivatedHorn && syncHandle) {
-      if(sliderId ==='slider-horn-l' || sliderId === 'slider-horn-r'){
-        syncHandle.style.top = `${handleHornRPosition}px`;
-      }
+     
+    if (textElement) {
+      textElement.style.display = 'none';
     }
 
-    // 如果激活状态，更新handle-drum-r的位置
-    if (isSyncActivatedDrum) {
-      if(sliderId ==='slider-drum-l' || sliderId === 'slider-drum-r'){
-      handleDrumRPosition = handle.offsetTop;
-      }
-    }
-
-    // 如果激活状态，同步更新handle-drum-l的位置
-    if (isSyncActivatedDrum && syncHandle) {
-      if(sliderId ==='slider-drum-l' || sliderId === 'slider-drum-r'){
-        syncHandle.style.top = `${handleDrumRPosition}px`;
-    }
+    // 显示相应的文本元素
+    if (containerElement) {
+      containerElement.style.display = '';
     }
   });
 
   window.addEventListener('mouseup', () => {
     isDragging = false;
+
+    // 显示 .horn_text
+    if (textElement) {
+      textElement.style.display = '';
+    }
+
+    // 显示相应的文本元素
+    if (containerElement) {
+      containerElement.style.display = 'none';
+    }
   });
 
   window.addEventListener('mousemove', (event) => {
@@ -122,48 +147,49 @@ function initSlider(sliderId, handleId, syncHandleId) {
       console.log(value);
       
       // 如果激活状态，更新handle-horn-r的位置
-      if (isSyncActivatedHorn) {
-        if(sliderId ==='slider-horn-l' || sliderId === 'slider-horn-r'){
-          handleHornRPosition = handle.offsetTop;
-        }
-      }
-  
-      // 如果激活状态，同步更新handle-horn-l的位置
       if (isSyncActivatedHorn && syncHandle) {
         if(sliderId ==='slider-horn-l' || sliderId === 'slider-horn-r'){
+          handleHornRPosition = handle.offsetTop;
           syncHandle.style.top = `${handleHornRPosition}px`;
         }
       }
 
-      
-
-      if (isSyncActivatedDrum) {
-        if(sliderId ==='slider-drum-l' || sliderId === 'slider-drum-r'){
-        handleDrumRPosition = handle.offsetTop;
-        }
-      }
-  
-      // 如果激活状态，同步更新handle-drum-l的位置
       if (isSyncActivatedDrum && syncHandle) {
         if(sliderId ==='slider-drum-l' || sliderId === 'slider-drum-r'){
-          syncHandle.style.top = `${handleDrumRPosition}px`;
+        handleDrumRPosition = handle.offsetTop;
+        syncHandle.style.top = `${handleDrumRPosition}px`;
+        }
       }
-      }
-
+      
       // Update handle position
       handle.style.top = `${handlePosition}px`;
+      
+      // 更新对应元素的值
+      const elementsToUpdate = [
+        { element: syncHandle, value: value },
+      ];
+ 
+        // 否则只更新单个元素
+        updateElementValues(containerElement, elementsToUpdate);   
     }
   });
 }
 
-// Initialize sliders with synchronization
-initSlider('slider-horn-l', 'handle-horn-l', 'handle-horn-r');
-initSlider('slider-horn-r', 'handle-horn-r', 'handle-horn-l');
-// Initialize sliders for drum with synchronization
-initSlider('slider-drum-l', 'handle-drum-l', 'handle-drum-r');
-initSlider('slider-drum-r', 'handle-drum-r', 'handle-drum-l');
-// Initialize other sliders without synchronization
-initSlider('slider-output', 'handle-output', '');
+// 初始化 sliders
+function initSliders() {
+  // Initialize sliders with synchronization
+  initSlider('slider-horn-l', 'handle-horn-l', 'handle-horn-r', '.horn_HZ', '.horn_text');
+  initSlider('slider-horn-r', 'handle-horn-r', 'handle-horn-l', '.horn_HZ', '.horn_text');
+  // Initialize sliders for drum with synchronization
+  initSlider('slider-drum-l', 'handle-drum-l', 'handle-drum-r', '.drum_HZ', '.drum_text');
+  initSlider('slider-drum-r', 'handle-drum-r', 'handle-drum-l', '.drum_HZ', '.drum_text');
+  // Initialize other sliders without synchronization
+  initSlider('slider-output', 'handle-output', '','.output_HZ', '.output_text');
+}
+
+// 初始化所有 sliders
+initSliders();
+
 
 // 添加按钮点击事件监听器
 const button_link1 = document.getElementById('button_link1');
