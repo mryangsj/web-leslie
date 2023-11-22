@@ -12,6 +12,7 @@ const hornRate = document.querySelector('#hornRate');
 const drumRate = document.querySelector('#drumRate');
 const btnMode = document.querySelector('#btnMode');
 const btnBrake = document.querySelector('#btnBrake');
+const hornImg = document.querySelector('#leslieHorn');
 
 
 //-----------------------------------------------------------------------------------------
@@ -148,8 +149,10 @@ let outputGainParam = null;
   // 连接
   mp3Node.connect(hpfNode);
   mp3Node.connect(lpfNode);
-  hpfNode.connect(leslieNode, 0, 0);
-  lpfNode.connect(leslieNode, 0, 1);
+  // hpfNode.connect(leslieNode, 0, 0);
+  // lpfNode.connect(leslieNode, 0, 1);
+  mp3Node.connect(leslieNode, 0, 0);
+  mp3Node.connect(leslieNode, 0, 1);
   leslieNode.connect(audioContext.destination);
 
   //-----------------------------------------------------------------------------------------
@@ -203,6 +206,11 @@ let outputGainParam = null;
       drumRate.innerText = `${event.data.value[1].toFixed(2)}Hz`;
     }
 
+    // if (event.data.type === 'rotorInstantDegree') {
+    //   const hornDegree = event.data.value[0];
+    //   const index = Math.round(hornDegree / 360 * (72 - 1));
+    //   hornImg.style.backgroundPosition = `0 ${-index * 1080}px`;
+    // }
   };
 }).catch((err) => {
   console.log(err);

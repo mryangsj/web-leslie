@@ -74,12 +74,43 @@
       display: flex;
       justify-content: center;
     }
+
+    #leslieSimulator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      width: 1033px;
+      height: 1080px;
+      border: 1px solid black;
+      overflow: hidden;
+    }
+
+    #leslieBackground {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: url("./resources/leslie/background.png");
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+    }
+
+    #leslieHorn {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: url("./resources/leslie/horn.png");
+      background-size: 100% auto;
+    }
   </style>
+
+
 </head>
 
 <body>
   <!-- <input type="file" id="audioFileInput" accept="audio/*"> -->
-  <audio src="resources/test-audio.wav" id="audioPlayer" controls></audio>
+  <audio src="resources/dev-audio.wav" id="audioPlayer" controls></audio>
 
   <button role="switch" aria-checked="false" id="btnPower">
     <span>OFF</span>
@@ -108,6 +139,12 @@
     </div>
     <span class="rate" id="drumRate">0Hz</span>
   </div>
+
+  <!-- Leslie Speaker Simulator -->
+  <!-- <div id="leslieSimulator">
+    <div id="leslieBackground"></div>
+    <div id="leslieHorn"></div>
+  </div> -->
 
 
   <!-- 链接main.js文件 -->
