@@ -119,20 +119,6 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 // add audio processor and connect audio context nodes
-let rotorModeParam = null;
-let rotorBrakeParam = null;
-let hornSlowSpeedParam = null;
-let hornFastSpeedParam = null;
-let hornAccelerationParam = null;
-let hornDecelerationParam = null;
-let drumSlowSpeedParam = null;
-let drumFastSpeedParam = null;
-let drumAccelerationParam = null;
-let drumDecelerationParam = null;
-let hornGainParam = null;
-let drumGainParam = null;
-let outputGainParam = null;
-
 (async function () {
   await audioContext.audioWorklet.addModule('./js/audioProcessor.js')
 })().then(() => {
@@ -150,9 +136,9 @@ let outputGainParam = null;
   const pannerHornNode = new StereoPannerNode(audioContext, { pan: 0 });
   const pannerDrumNode = new StereoPannerNode(audioContext, { pan: 0 });
   // 创建gain
-  const gainHornNode = new GainNode(audioContext, { gain: 1 });
-  const gainDrumNode = new GainNode(audioContext, { gain: 1 });
-  const gainOutputNode = new GainNode(audioContext, { gain: 1 });
+  const hornGainNode = new GainNode(audioContext, { gain: 1 });
+  const drumGainNode = new GainNode(audioContext, { gain: 1 });
+  const outputGainNode = new GainNode(audioContext, { gain: 1 });
   // 连接
   mp3Node.connect(hpfNode);
   mp3Node.connect(lpfNode);
@@ -161,48 +147,73 @@ let outputGainParam = null;
   // leslieNode.connect(audioContext.destination);
   leslieNode.connect(pannerHornNode, 0, 0);
   leslieNode.connect(pannerDrumNode, 1, 0);
-  pannerHornNode.connect(gainHornNode);
-  pannerDrumNode.connect(gainDrumNode);
-  gainHornNode.connect(gainOutputNode);
-  gainDrumNode.connect(gainOutputNode);
-  gainOutputNode.connect(audioContext.destination);
+  pannerHornNode.connect(hornGainNode);
+  pannerDrumNode.connect(drumGainNode);
+  hornGainNode.connect(outputGainNode);
+  drumGainNode.connect(outputGainNode);
+  outputGainNode.connect(audioContext.destination);
 
-  //-----------------------------------------------------------------------------------------
-  // 获取leslie效果器的参数
-  rotorModeParam = leslieNode.parameters.get('rotorMode');
-  rotorBrakeParam = leslieNode.parameters.get('rotorBrake');
-  hornSlowSpeedParam = leslieNode.parameters.get('hornSlowSpeed');
-  hornFastSpeedParam = leslieNode.parameters.get('hornFastSpeed');
-  hornAccelerationParam = leslieNode.parameters.get('hornAcceleration');
-  hornDecelerationParam = leslieNode.parameters.get('hornDeceleration');
-  drumSlowSpeedParam = leslieNode.parameters.get('drumSlowSpeed');
-  drumFastSpeedParam = leslieNode.parameters.get('drumFastSpeed');
-  drumAccelerationParam = leslieNode.parameters.get('drumAcceleration');
-  drumDecelerationParam = leslieNode.parameters.get('drumDeceleration');
-  hornGainParam = leslieNode.parameters.get('hornGain');
-  drumGainParam = leslieNode.parameters.get('drumGain');
-  outputGainParam = leslieNode.parameters.get('outputGain');
 
   //-----------------------------------------------------------------------------------------
   // 注册knob值改变事件
-  knobHornSlowSpeed.addEventListener('changed', () => { hornSlowSpeedParam.setValueAtTime(knobHornSlowSpeedObj.currentValue, audioContext.currentTime); });
-  knobHornFastSpeed.addEventListener('changed', () => { hornFastSpeedParam.setValueAtTime(knobHornFastSpeedObj.currentValue, audioContext.currentTime); });
-  knobHornAcceleration.addEventListener('changed', () => { hornAccelerationParam.setValueAtTime(knobHornAccelerationObj.currentValue, audioContext.currentTime); });
-  knobHornDeceleration.addEventListener('changed', () => { hornDecelerationParam.setValueAtTime(knobHornDecelerationObj.currentValue, audioContext.currentTime); });
-  knobDrumSlowSpeed.addEventListener('changed', () => { drumSlowSpeedParam.setValueAtTime(knobDrumSlowSpeedObj.currentValue, audioContext.currentTime); });
-  knobDrumFastSpeed.addEventListener('changed', () => { drumFastSpeedParam.setValueAtTime(knobDrumFastSpeedObj.currentValue, audioContext.currentTime); });
-  knobDrumAcceleration.addEventListener('changed', () => { drumAccelerationParam.setValueAtTime(knobDrumAccelerationObj.currentValue, audioContext.currentTime); });
-  knobDrumDeceleration.addEventListener('changed', () => { drumDecelerationParam.setValueAtTime(knobDrumDecelerationObj.currentValue, audioContext.currentTime); });
-  knobHorn.addEventListener('changed', () => { hornGainParam.setValueAtTime(knobHornObj.currentValue, audioContext.currentTime); });
-  knobDrum.addEventListener('changed', () => { drumGainParam.setValueAtTime(knobDrumObj.currentValue, audioContext.currentTime); });
-  knobOutput.addEventListener('changed', () => { outputGainParam.setValueAtTime(knobOutputObj.currentValue, audioContext.currentTime); });
+  knobHornSlowSpeed.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setHornSlowSpeedFineTune', value: knobHornSlowSpeedObj.currentValue }); });
+  knobHornFastSpeed.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setHornFastSpeedFineTune', value: knobHornFastSpeedObj.currentValue }); });
+  knobHornAcceleration.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setHornAccelerationFineTune', value: knobHornAccelerationObj.currentValue }); });
+  knobHornDeceleration.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setHornDecelerationFineTune', value: knobHornDecelerationObj.currentValue }); });
+  knobDrumSlowSpeed.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setDrumSlowSpeedFineTune', value: knobDrumSlowSpeedObj.currentValue }); });
+  knobDrumFastSpeed.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setDrumFastSpeedFineTune', value: knobDrumFastSpeedObj.currentValue }); });
+  knobDrumAcceleration.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setDrumAccelerationFineTune', value: knobDrumAccelerationObj.currentValue }); });
+  knobDrumDeceleration.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setDrumDecelerationFineTune', value: knobDrumDecelerationObj.currentValue }); });
+  knobHorn.addEventListener('changed', () => { hornGainNode.gain.value = Math.pow(10, knobHornObj.currentValue / 20); });
+  knobDrum.addEventListener('changed', () => { drumGainNode.gain.value = Math.pow(10, knobDrumObj.currentValue / 20); });
+  knobOutput.addEventListener('changed', () => { outputGainNode.gain.value = Math.pow(10, knobOutputObj.currentValue / 20); });
+
+  //-----------------------------------------------------------------------------------------
+  // 注册模式切换按钮点击事件
+  btnMode.addEventListener('click', () => {
+    // 响应按钮点击事件
+    if (btnMode.getAttribute('aria-checked') === 'slow') {
+      // 更新信号量
+      btnMode.setAttribute('aria-checked', 'fast');
+      // 更新按钮状态
+      btnMode.querySelector('span').innerText = 'FAST';
+      // 更新leslie效果器的参数
+      leslieNode.port.postMessage({ type: 'setRotorMode', value: 1 });
+    } else {
+      btnMode.setAttribute('aria-checked', 'slow');
+      // 更新按钮状态
+      btnMode.querySelector('span').innerText = 'SLOW';
+      // 更新leslie效果器的参数
+      leslieNode.port.postMessage({ type: 'setRotorMode', value: 0 });
+    }
+  });
+
+  //-----------------------------------------------------------------------------------------
+  // 注册刹车按钮点击事件
+  btnBrake.addEventListener('click', () => {
+    // 响应按钮点击事件
+    if (btnBrake.getAttribute('aria-checked') === 'false') {
+      // 更新信号量
+      btnBrake.setAttribute('aria-checked', 'true');
+      // 更新按钮状态
+      btnBrake.querySelector('span').innerText = 'Brake-ON';
+      // 更新leslie效果器的参数
+      leslieNode.port.postMessage({ type: 'setRotorBrake', value: true });
+    } else {
+      btnBrake.setAttribute('aria-checked', 'false');
+      // 更新按钮状态
+      btnBrake.querySelector('span').innerText = 'Brake-OFF';
+      // 更新leslie效果器的参数
+      leslieNode.port.postMessage({ type: 'setRotorBrake', value: false });
+    }
+  });
 
   //-----------------------------------------------------------------------------------------
   // 控制rotor转动
   function updateRotor() {
     if (audioContext.state === 'running') {
-      leslieNode.port.postMessage({ type: 'rotorInstantDegree' });
-      leslieNode.port.postMessage({ type: 'rotorInstantRate' });
+      leslieNode.port.postMessage({ type: 'getRotorInstantDegree' });
+      leslieNode.port.postMessage({ type: 'getRotorInstantRate' });
     }
     requestAnimationFrame(updateRotor);
   };
@@ -247,45 +258,5 @@ btnPower.addEventListener('click', () => {
     btnPower.querySelector('span').innerText = 'OFF';
     // 暂停音频上下文
     audioContext.suspend();
-  }
-});
-
-//-----------------------------------------------------------------------------------------
-// 注册模式切换按钮点击事件
-btnMode.addEventListener('click', () => {
-  // 响应按钮点击事件
-  if (btnMode.getAttribute('aria-checked') === 'slow') {
-    // 更新信号量
-    btnMode.setAttribute('aria-checked', 'fast');
-    // 更新按钮状态
-    btnMode.querySelector('span').innerText = 'FAST';
-    // 更新leslie效果器的参数
-    rotorModeParam.setValueAtTime(1, audioContext.currentTime);
-  } else {
-    btnMode.setAttribute('aria-checked', 'slow');
-    // 更新按钮状态
-    btnMode.querySelector('span').innerText = 'SLOW';
-    // 更新leslie效果器的参数
-    rotorModeParam.setValueAtTime(0, audioContext.currentTime);
-  }
-});
-
-//-----------------------------------------------------------------------------------------
-// 注册刹车按钮点击事件
-btnBrake.addEventListener('click', () => {
-  // 响应按钮点击事件
-  if (btnBrake.getAttribute('aria-checked') === 'false') {
-    // 更新信号量
-    btnBrake.setAttribute('aria-checked', 'true');
-    // 更新按钮状态
-    btnBrake.querySelector('span').innerText = 'Brake-ON';
-    // 更新leslie效果器的参数
-    rotorBrakeParam.setValueAtTime(1, audioContext.currentTime);
-  } else {
-    btnBrake.setAttribute('aria-checked', 'false');
-    // 更新按钮状态
-    btnBrake.querySelector('span').innerText = 'Brake-OFF';
-    // 更新leslie效果器的参数
-    rotorBrakeParam.setValueAtTime(0, audioContext.currentTime);
   }
 });
