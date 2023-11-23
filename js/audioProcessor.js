@@ -151,40 +151,48 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     this.T = 1 / sampleRate;  // s
 
     //-----------------------------------------------------------------------------------------
-    // 定义控制rotor旋转的低频振荡器的参数
-    this.rotorModeLast = 0; // 默认值为慢速模式
-    this.gloabalModulatorDepth = 0.5; // %
-
+    // 控制rotor旋转的振荡器参数
     this.rotorSlowFrequency = 0.7; // Hz
     this.rotorFastFrequency = 6; // Hz
-
+    // horn振荡器
     this.hornRotorFrequency = this.rotorSlowFrequency;
     this.hornRotorAngularAccelerationDefault = 4 * Math.PI; // rad/s^2
     this.hornRotorAngularDecelerationDefault = 3 * Math.PI; // rad/s^2
     this.hornRotorAngularAcceleration = 0; // rad/s^2
     this.hornRotorAngularDeceleration = 0; // rad/s^2
     this.hornRotorAngularSpeed = 0; // rad/s
-    this.hornRotorAngularSpeedTarget = 0; // rad/s
+    // this.hornRotorAngularSpeedTarget = 0; // rad/s
     this.hornRotorInstantPhase = Math.random(); // rad
     // this.hornRotorInstantPhase = 0; // rad
-
+    // drum振荡器
     this.drumRotorFrequency = this.rotorSlowFrequency;
     this.drumRotorAngularAccelerationDefault = 2 * Math.PI; // rad/s^2
     this.drumRotorAngularDecelerationDefault = 0.5 * Math.PI; // rad/s^2
     this.drumRotorAngularAcceleration = 0; // rad/s^2
     this.drumRotorAngularDeceleration = 0; // rad/s^2
     this.drumRotorAngularSpeed = 0; // rad/s
-    this.drumRotorAngularSpeedTarget = 0; // rad/s
+    // this.drumRotorAngularSpeedTarget = 0; // rad/s
     this.drumRotorInstantPhase = Math.random(); // rad
     // this.drumRotorInstantPhase = 0; // rad
 
     //-----------------------------------------------------------------------------------------
+    // FM与AM参数
+    this.gloabalAmDepth = 0.5; // % 0~1
+    this.gloabalFmDepth = 1; // %
+
+    this.hornLength = 37; // cm
+    this.drumLength = 35; // cm
+    this.soundSpeed = 340; // m/s
+    this.hornFmDepth = this.gloabalFmDepth * this.hornLength / 100 / this.soundSpeed * sampleRate; // samples
+    this.drumFmDepth = this.gloabalFmDepth * this.drumLength / 100 / this.soundSpeed * sampleRate; // samples
+
+    //-----------------------------------------------------------------------------------------
     // 用于duopler效应的延迟线
-    this.delayLineLength = 1000; // ~1s
+    this.delayLineLength = 100000;
     this.hornDelayLine = new Float32Array(this.delayLineLength);
     this.drumDelayLine = new Float32Array(this.delayLineLength);
-    this.hornDelayLineReadPointer = 0;
-    this.drumDelayLineReadPointer = 0;
+    this.hornDelayLineReadPointerMid = 0;
+    this.drumDelayLineReadPointerMid = 0;
     this.hornDelayLineWritePointer = 0;
     this.drumDelayLineWritePointer = 0;
 
@@ -206,17 +214,26 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     //-----------------------------------------------------------------------------------------
     // 声道预处理
     const inputHorn = inputs[0];
+    const outputHorn = outputs[0];
+
     const inputDrum = inputs[1];
-    const output = outputs[0];
+    const outputDrum = outputs[1];
+
     const bufferSize = inputHorn[0].length;
+
     let inputHornSampleL = 0;
     let inputHornSampleR = 0;
+    let inputHornSampleMono = 0;
+
     let inputDrumSampleL = 0;
     let inputDrumSampleR = 0;
-    let inputHornSampleMono = 0;
     let inputDrumSampleMono = 0;
-    let outputSampleL = 0;
-    let outputSampleR = 0;
+
+    let outputHornSampleL = 0;
+    let outputHornSampleR = 0;
+
+    let outputDrumSampleL = 0;
+    let outputDrumSampleR = 0;
 
 
     //-----------------------------------------------------------------------------------------
@@ -224,12 +241,12 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     // 接收用户参数
     const rotorMode = parameters.rotorMode[0];
     const rotorBrake = parameters.rotorBrake[0];
-    // horn参数
+    // horn速度微调参数
     const hornSlowSpeedFineTune = parameters.hornSlowSpeed[0];
     const hornFastSpeedFineTune = parameters.hornFastSpeed[0];
     const hornAccelerationFineTune = parameters.hornAcceleration[0];
     const hornDecelerationFineTune = parameters.hornDeceleration[0];
-    // drum参数
+    // drum速度微调参数
     const drumSlowSpeedFineTune = parameters.drumSlowSpeed[0];
     const drumFastSpeedFineTune = parameters.drumFastSpeed[0];
     const drumAccelerationFineTune = parameters.drumAcceleration[0];
@@ -239,40 +256,66 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     const drumGain = parameters.drumGain[0];
     const outputGain = parameters.outputGain[0];
 
+
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     // 数据容器
-    let hornLFO = 0;
-    let drumLFO = 0;
-    let hornDelayLength = 0;
-    let drumDelayLength = 0;
-    let hornDelayLengthInt = 0;
-    let hornDelayLengthFrac = 0;
-    let drumDelayLengthInt = 0;
-    let drumDelayLengthFrac = 0;
-    let hornAmAmp = 1;
-    let drumAmAmp = 1;
+    let hornLFOMid = 0;
+    let hornDelayLengthMid = 0;
+    let hornDelayLengthIntMid = 0;
+    let hornDelayLengthFracMid = 0;
+    let hornAmAmpMid = 1;
+    // horn左声道
+    let hornLFOLeft = 0;
+    let hornDelayLengthLeft = 0;
+    let hornDelayLengthIntLeft = 0;
+    let hornDelayLengthFracLeft = 0;
+    let hornAmAmpLeft = 1;
+    // horn右声道
+    let hornLFORight = 0;
+    let hornDelayLengthRight = 0;
+    let hornDelayLengthIntRight = 0;
+    let hornDelayLengthFracRight = 0;
+    let hornAmAmpRight = 1;
+    // drum中置声道
+    let drumLFOMid = 0;
+    let drumDelayLengthMid = 0;
+    let drumDelayLengthIntMid = 0;
+    let drumDelayLengthFracMid = 0;
+    let drumAmAmpMid = 1;
+    // drum左声道
+    let drumLFOLeft = 0;
+    let drumDelayLengthLeft = 0;
+    let drumDelayLengthIntLeft = 0;
+    let drumDelayLengthFracLeft = 0;
+    let drumAmAmpLeft = 1;
+    // drum右声道
+    let drumLFORight = 0;
+    let drumDelayLengthRight = 0;
+    let drumDelayLengthIntRight = 0;
+    let drumDelayLengthFracRight = 0;
+    let drumAmAmpRight = 1;
 
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     if (rotorBrake === 0) { // 旋转模式
-      // 计算rotor振荡器目标频率
-      if (rotorMode === 0) { // 慢速模式 
-        this.hornRotorFrequency = (this.rotorSlowFrequency + 0.11) * (1 + hornSlowSpeedFineTune / 100);
+      // 计算rotor目标频率
+      if (rotorMode === 0) { // 慢速模式
+        this.hornRotorFrequency = (this.rotorSlowFrequency + 0.11) * (1 + hornSlowSpeedFineTune / 100); // 由于horn质量较小，故在慢速模式下，horn的转速比drum快0.11Hz
         this.drumRotorFrequency = this.rotorSlowFrequency * (1 + drumSlowSpeedFineTune / 100);
       } else if (rotorMode === 1) { // 快速模式
         this.hornRotorFrequency = this.rotorFastFrequency * (1 + hornFastSpeedFineTune / 100);
-        this.drumRotorFrequency = (this.rotorFastFrequency - 0.11) * (1 + drumFastSpeedFineTune / 100);
+        this.drumRotorFrequency = (this.rotorFastFrequency - 0.11) * (1 + drumFastSpeedFineTune / 100); // 由于drum质量较大，故在快速模式下，drum的转速比horn慢0.11Hz
       }
-      // 计算rotor振荡器目标角加速度
+      // 计算rotor目标角加速度
       this.hornRotorAngularAcceleration = this.hornRotorAngularAccelerationDefault * hornAccelerationFineTune;
       this.hornRotorAngularDeceleration = this.hornRotorAngularDecelerationDefault * hornDecelerationFineTune;
       this.drumRotorAngularAcceleration = this.drumRotorAngularAccelerationDefault * drumAccelerationFineTune;
       this.drumRotorAngularDeceleration = this.drumRotorAngularDecelerationDefault * drumDecelerationFineTune;
     }
     //-----------------------------------------------------------------------------------------
-    else if (rotorBrake === 1) { // 停止模式
+    else if (rotorBrake === 1) { // 刹车模式
       this.hornRotorFrequency = 0;
       this.drumRotorFrequency = 0;
       this.hornRotorAngularDeceleration = 2 * this.hornRotorAngularDecelerationDefault;
@@ -315,7 +358,6 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
           this.hornRotorAngularSpeed -= this.hornRotorAngularDeceleration * this.T;
         }
       }
-      //-----------------------------------------------------------------------------------------
       this.hornRotorInstantPhase -= this.hornRotorAngularSpeed * this.T;
       if (this.hornRotorInstantPhase < 0) { this.hornRotorInstantPhase += 2 * Math.PI; }
 
@@ -325,52 +367,112 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
       if (Math.abs(this.drumRotorAngularSpeedTarget - this.drumRotorAngularSpeed) < 1e-8) { // 稳定状态
         this.drumRotorAngularSpeed = this.drumRotorAngularSpeedTarget;
       } else { // 非稳定状态
-        if (this.drumRotorAngularSpeed < this.drumRotorAngularSpeedTarget) {
+        if (this.drumRotorAngularSpeed < this.drumRotorAngularSpeedTarget) { // 加速状态
           this.drumRotorAngularSpeed += this.drumRotorAngularAcceleration * this.T;
-        } else if (this.drumRotorAngularSpeed > this.drumRotorAngularSpeedTarget) {
+        } else if (this.drumRotorAngularSpeed > this.drumRotorAngularSpeedTarget) { // 减速状态
           this.drumRotorAngularSpeed -= this.drumRotorAngularDeceleration * this.T;
         }
       }
-      //-----------------------------------------------------------------------------------------
       this.drumRotorInstantPhase += this.drumRotorAngularSpeed * this.T;
       if (this.drumRotorInstantPhase > 2 * Math.PI) { this.drumRotorInstantPhase -= 2 * Math.PI; }
 
 
       //-----------------------------------------------------------------------------------------
       // 计算振荡器输出
-      hornLFO = Math.cos(this.hornRotorInstantPhase);
-      drumLFO = Math.cos(this.drumRotorInstantPhase);
+      const globlePhaseOffset = - Math.PI / 2;
+      hornLFOMid = Math.sin(this.hornRotorInstantPhase + globlePhaseOffset);
+      hornLFOLeft = Math.sin(this.hornRotorInstantPhase + globlePhaseOffset - Math.PI / 2);
+      hornLFORight = Math.sin(this.hornRotorInstantPhase + globlePhaseOffset + Math.PI / 2);
+
+      drumLFOMid = Math.sin(this.drumRotorInstantPhase + globlePhaseOffset);
+      drumLFOLeft = Math.sin(this.drumRotorInstantPhase + globlePhaseOffset - Math.PI / 2);
+      drumLFORight = Math.sin(this.drumRotorInstantPhase + globlePhaseOffset + Math.PI / 2);
 
 
       //-----------------------------------------------------------------------------------------
-      // 计算duopler效应必要参数 52.235 49.412
-      hornDelayLength = (-hornLFO + 1) / 2 * 52.235;
-      drumDelayLength = (-drumLFO + 1) / 2 * 49.412;
-      hornDelayLengthInt = Math.floor(hornDelayLength);
-      hornDelayLengthFrac = hornDelayLength - hornDelayLengthInt;
-      drumDelayLengthInt = Math.floor(drumDelayLength);
-      drumDelayLengthFrac = drumDelayLength - drumDelayLengthInt;
+      // 计算duopler效应必要参数(即延时长度)
+      // horn中置声道
+      hornDelayLengthMid = (hornLFOMid + 1) / 2 * this.hornFmDepth;
+      hornDelayLengthIntMid = Math.floor(hornDelayLengthMid);
+      hornDelayLengthFracMid = hornDelayLengthMid - hornDelayLengthIntMid;
+      // horn左声道
+      hornDelayLengthLeft = (hornLFOLeft + 1) / 2 * this.hornFmDepth;
+      hornDelayLengthIntLeft = Math.floor(hornDelayLengthLeft);
+      hornDelayLengthFracLeft = hornDelayLengthLeft - hornDelayLengthIntLeft;
+      // horn右声道
+      hornDelayLengthRight = (hornLFORight + 1) / 2 * this.hornFmDepth;
+      hornDelayLengthIntRight = Math.floor(hornDelayLengthRight);
+      hornDelayLengthFracRight = hornDelayLengthRight - hornDelayLengthIntRight;
+      // drum中置声道
+      drumDelayLengthMid = (drumLFOMid + 1) / 2 * this.drumFmDepth;
+      drumDelayLengthIntMid = Math.floor(drumDelayLengthMid);
+      drumDelayLengthFracMid = drumDelayLengthMid - drumDelayLengthIntMid;
+      // drum左声道
+      drumDelayLengthLeft = (drumLFOLeft + 1) / 2 * this.drumFmDepth;
+      drumDelayLengthIntLeft = Math.floor(drumDelayLengthLeft);
+      drumDelayLengthFracLeft = drumDelayLengthLeft - drumDelayLengthIntLeft;
+      // drum右声道
+      drumDelayLengthRight = (drumLFORight + 1) / 2 * this.drumFmDepth;
+      drumDelayLengthIntRight = Math.floor(drumDelayLengthRight);
+      drumDelayLengthFracRight = drumDelayLengthRight - drumDelayLengthIntRight;
 
 
       //-----------------------------------------------------------------------------------------
-      // apply integer delay --------------------------------------------------------------------
       // 将当前样本写入输入缓冲区
       this.hornDelayLine[this.hornDelayLineWritePointer] = inputHornSampleMono;
       this.drumDelayLine[this.drumDelayLineWritePointer] = inputDrumSampleMono;
+
       //-----------------------------------------------------------------------------------------
       // 根据延时整数值计算读指针位置
-      this.hornDelayLineReadPointer = this.hornDelayLineWritePointer - hornDelayLengthInt;
-      this.drumDelayLineReadPointer = this.drumDelayLineWritePointer - drumDelayLengthInt;
-      if (this.hornDelayLineReadPointer < 0) { this.hornDelayLineReadPointer += this.delayLineLength; }
-      if (this.drumDelayLineReadPointer < 0) { this.drumDelayLineReadPointer += this.delayLineLength; }
+      this.hornDelayLineReadPointerMid = this.hornDelayLineWritePointer - hornDelayLengthIntMid;
+      if (this.hornDelayLineReadPointerMid < 0) { this.hornDelayLineReadPointerMid += this.delayLineLength; }
+      // horn左声道
+      this.hornDelayLineReadPointerLeft = this.hornDelayLineWritePointer - hornDelayLengthIntLeft;
+      if (this.hornDelayLineReadPointerLeft < 0) { this.hornDelayLineReadPointerLeft += this.delayLineLength; }
+      // horn右声道
+      this.hornDelayLineReadPointerRight = this.hornDelayLineWritePointer - hornDelayLengthIntRight;
+      if (this.hornDelayLineReadPointerRight < 0) { this.hornDelayLineReadPointerRight += this.delayLineLength; }
+
+      // drum中置声道
+      this.drumDelayLineReadPointerMid = this.drumDelayLineWritePointer - drumDelayLengthIntMid;
+      if (this.drumDelayLineReadPointerMid < 0) { this.drumDelayLineReadPointerMid += this.delayLineLength; }
+      // drum左声道
+      this.drumDelayLineReadPointerLeft = this.drumDelayLineWritePointer - drumDelayLengthIntLeft;
+      if (this.drumDelayLineReadPointerLeft < 0) { this.drumDelayLineReadPointerLeft += this.delayLineLength; }
+      // drum右声道
+      this.drumDelayLineReadPointerRight = this.drumDelayLineWritePointer - drumDelayLengthIntRight;
+      if (this.drumDelayLineReadPointerRight < 0) { this.drumDelayLineReadPointerRight += this.delayLineLength; }
+
+
       //-----------------------------------------------------------------------------------------
       // 方法一：一阶线性插值
-      let hornDelayLineReadPointerBackward1 = this.hornDelayLineReadPointer - 1;
-      let drumDelayLineReadPointerBackward1 = this.drumDelayLineReadPointer - 1;
-      if (hornDelayLineReadPointerBackward1 < 0) { hornDelayLineReadPointerBackward1 += this.delayLineLength; }
-      if (drumDelayLineReadPointerBackward1 < 0) { drumDelayLineReadPointerBackward1 += this.delayLineLength; }
-      inputHornSampleMono = (1 - hornDelayLengthFrac) * this.hornDelayLine[this.hornDelayLineReadPointer] + hornDelayLengthFrac * this.hornDelayLine[hornDelayLineReadPointerBackward1];
-      inputDrumSampleMono = (1 - drumDelayLengthFrac) * this.drumDelayLine[this.drumDelayLineReadPointer] + drumDelayLengthFrac * this.drumDelayLine[drumDelayLineReadPointerBackward1];
+      // horn中置声道
+      let hornDelayLineReadPointerMidBackward1 = this.hornDelayLineReadPointerMid - 1;
+      if (hornDelayLineReadPointerMidBackward1 < 0) { hornDelayLineReadPointerMidBackward1 += this.delayLineLength; }
+      inputHornSampleMono = (1 - hornDelayLengthFracMid) * this.hornDelayLine[this.hornDelayLineReadPointerMid] + hornDelayLengthFracMid * this.hornDelayLine[hornDelayLineReadPointerMidBackward1];
+      // horn左声道
+      let hornDelayLineReadPointerLeftBackward1 = this.hornDelayLineReadPointerLeft - 1;
+      if (hornDelayLineReadPointerLeftBackward1 < 0) { hornDelayLineReadPointerLeftBackward1 += this.delayLineLength; }
+      inputHornSampleL = (1 - hornDelayLengthFracLeft) * this.hornDelayLine[this.hornDelayLineReadPointerLeft] + hornDelayLengthFracLeft * this.hornDelayLine[hornDelayLineReadPointerLeftBackward1];
+      // horn右声道
+      let hornDelayLineReadPointerRightBackward1 = this.hornDelayLineReadPointerRight - 1;
+      if (hornDelayLineReadPointerRightBackward1 < 0) { hornDelayLineReadPointerRightBackward1 += this.delayLineLength; }
+      inputHornSampleR = (1 - hornDelayLengthFracRight) * this.hornDelayLine[this.hornDelayLineReadPointerRight] + hornDelayLengthFracRight * this.hornDelayLine[hornDelayLineReadPointerRightBackward1];
+
+      // drum中置声道
+      let drumDelayLineReadPointerMidBackward1 = this.drumDelayLineReadPointerMid - 1;
+      if (drumDelayLineReadPointerMidBackward1 < 0) { drumDelayLineReadPointerMidBackward1 += this.delayLineLength; }
+      inputDrumSampleMono = (1 - drumDelayLengthFracMid) * this.drumDelayLine[this.drumDelayLineReadPointerMid] + drumDelayLengthFracMid * this.drumDelayLine[drumDelayLineReadPointerMidBackward1];
+      // drum左声道
+      let drumDelayLineReadPointerLeftBackward1 = this.drumDelayLineReadPointerLeft - 1;
+      if (drumDelayLineReadPointerLeftBackward1 < 0) { drumDelayLineReadPointerLeftBackward1 += this.delayLineLength; }
+      inputDrumSampleL = (1 - drumDelayLengthFracLeft) * this.drumDelayLine[this.drumDelayLineReadPointerLeft] + drumDelayLengthFracLeft * this.drumDelayLine[drumDelayLineReadPointerLeftBackward1];
+      // drum右声道
+      let drumDelayLineReadPointerRightBackward1 = this.drumDelayLineReadPointerRight - 1;
+      if (drumDelayLineReadPointerRightBackward1 < 0) { drumDelayLineReadPointerRightBackward1 += this.delayLineLength; }
+      inputDrumSampleR = (1 - drumDelayLengthFracRight) * this.drumDelayLine[this.drumDelayLineReadPointerRight] + drumDelayLengthFracRight * this.drumDelayLine[drumDelayLineReadPointerRightBackward1];
+
+
       //-----------------------------------------------------------------------------------------
       // 方法二：四阶线性插值（运用拉格朗日质心公式）
       // 取数据
@@ -406,10 +508,14 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
       // }
       // inputHornSampleMono = numeratorHorn / denominatorHorn;
       // inputDrumSampleMono = numeratorDrum / denominatorDrum;
+
+
       //-----------------------------------------------------------------------------------------
       // 直接读取（无插值，会引入数字噪声）
       // inputHornSampleMono = this.hornDelayLine[this.hornDelayLineReadPointer];
       // inputDrumSampleMono = this.drumDelayLine[this.drumDelayLineReadPointer];
+
+
       //-----------------------------------------------------------------------------------------
       // 更新延时线写指针
       this.hornDelayLineWritePointer++;
@@ -420,22 +526,54 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
 
       //-----------------------------------------------------------------------------------------
       // 应用AM
-      hornAmAmp = this.gloabalModulatorDepth * 1 / 2 * (hornLFO - 1) + 1;
-      drumAmAmp = this.gloabalModulatorDepth * 1 / 2 * (drumLFO - 1) + 1;
-      inputHornSampleMono *= hornAmAmp;
-      inputDrumSampleMono *= drumAmAmp;
+      // horn中置声道
+      hornAmAmpMid = 0.5 * this.gloabalAmDepth * (-hornLFOMid - 1) + 1;
+      inputHornSampleMono *= hornAmAmpMid;
+      // horn左声道
+      hornAmAmpLeft = 0.5 * this.gloabalAmDepth * (-hornLFOLeft - 1) + 1;
+      inputHornSampleL *= hornAmAmpLeft;
+      // horn右声道
+      hornAmAmpRight = 0.5 * this.gloabalAmDepth * (-hornLFORight - 1) + 1;
+      inputHornSampleR *= hornAmAmpRight;
+
+      // drum中置声道
+      drumAmAmpMid = 0.5 * this.gloabalAmDepth * (-drumLFOMid - 1) + 1;
+      inputDrumSampleMono *= drumAmAmpMid;
+      // drum左声道
+      drumAmAmpLeft = 0.5 * this.gloabalAmDepth * (-drumLFOLeft - 1) + 1;
+      inputDrumSampleL *= drumAmAmpLeft;
+      // drum右声道
+      drumAmAmpRight = 0.5 * this.gloabalAmDepth * (-drumLFORight - 1) + 1;
+      inputDrumSampleR *= drumAmAmpRight;
 
 
       //-----------------------------------------------------------------------------------------
       // 应用音量
-      outputSampleL = hornAmp * inputHornSampleMono + drumAmp * inputDrumSampleMono;
-      outputSampleL *= outputAmp;
+      // horn中置声道
+
+      // horn左声道
+      outputHornSampleL = hornAmp * inputHornSampleL;
+      outputHornSampleL *= outputAmp;
+      // horn右声道
+      outputHornSampleR = hornAmp * inputHornSampleR;
+      outputHornSampleR *= outputAmp;
+
+      // drum中置声道
+
+      // drum左声道
+      outputDrumSampleL = drumAmp * inputDrumSampleL;
+      outputDrumSampleL *= outputAmp;
+      // drum右声道
+      outputDrumSampleR = drumAmp * inputDrumSampleR;
+      outputDrumSampleR *= outputAmp;
 
 
       //-----------------------------------------------------------------------------------------
       // 写入音频样本
-      output[0][i] = outputSampleL;
-      output[1][i] = outputSampleL;
+      outputHorn[0][i] = outputHornSampleL;
+      outputHorn[1][i] = outputHornSampleR;
+      outputDrum[0][i] = outputDrumSampleL;
+      outputDrum[1][i] = outputDrumSampleR;
     }
 
     return true;

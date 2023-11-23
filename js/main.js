@@ -143,17 +143,29 @@ let outputGainParam = null;
   // 创建leslie效果器
   const leslieNode = new AudioWorkletNode(audioContext, 'leslie-processor', {
     numberOfInputs: 2,
-    numberOfOutputs: 1,
-    outputChannelCount: [2],
+    numberOfOutputs: 2,
+    outputChannelCount: [2, 2],
   });
+  // 创建panner
+  const pannerHornNode = new StereoPannerNode(audioContext, { pan: 0 });
+  const pannerDrumNode = new StereoPannerNode(audioContext, { pan: 0 });
+  // 创建gain
+  const gainHornNode = new GainNode(audioContext, { gain: 1 });
+  const gainDrumNode = new GainNode(audioContext, { gain: 1 });
+  const gainOutputNode = new GainNode(audioContext, { gain: 1 });
   // 连接
   mp3Node.connect(hpfNode);
   mp3Node.connect(lpfNode);
-  // hpfNode.connect(leslieNode, 0, 0);
-  // lpfNode.connect(leslieNode, 0, 1);
-  mp3Node.connect(leslieNode, 0, 0);
-  mp3Node.connect(leslieNode, 0, 1);
-  leslieNode.connect(audioContext.destination);
+  hpfNode.connect(leslieNode, 0, 0);
+  lpfNode.connect(leslieNode, 0, 1);
+  // leslieNode.connect(audioContext.destination);
+  leslieNode.connect(pannerHornNode, 0, 0);
+  leslieNode.connect(pannerDrumNode, 1, 0);
+  pannerHornNode.connect(gainHornNode);
+  pannerDrumNode.connect(gainDrumNode);
+  gainHornNode.connect(gainOutputNode);
+  gainDrumNode.connect(gainOutputNode);
+  gainOutputNode.connect(audioContext.destination);
 
   //-----------------------------------------------------------------------------------------
   // 获取leslie效果器的参数
