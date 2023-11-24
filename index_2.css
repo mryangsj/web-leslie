@@ -310,7 +310,7 @@ button.active {
     height: 0;
     padding-bottom: 12%;
     /* margin-left: 5%; */
-    background-image: url(./resources/switch_button_off.png);
+    background-image: url(/resources/image/switch/switch_button_off.png);
     /* background-color: #fff; */
     background-size: cover;
     background-repeat: no-repeat;
@@ -319,7 +319,7 @@ button.active {
 }
 
 .switch.clicked {
-    background-image: url(./resources/switch_button_on.png);
+    background-image: url(/resources/image/switch/switch_button_on.png);
 }
 
 .slider-container {
