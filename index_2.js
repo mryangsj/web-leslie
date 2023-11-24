@@ -1,57 +1,57 @@
 //upload audio
 function openFileUploader() {
-    document.getElementById('fileInput').click();
-    }
-    
-    function handleFileSelect(event) {
-      const fileInput = event.target;
-      const files = fileInput.files;
-    
-      if (files.length > 0) {
-        const selectedFile = files[0];
-        console.log('Selected File:', selectedFile);
-    
-        const audioPlayer = document.getElementById('audioPlayer');
-    
-        const audioSource = URL.createObjectURL(selectedFile);
-        audioPlayer.src = audioSource;
-      }
-    }
+  document.getElementById('fileInput').click();
+}
+
+function handleFileSelect(event) {
+  const fileInput = event.target;
+  const files = fileInput.files;
+
+  if (files.length > 0) {
+    const selectedFile = files[0];
+    console.log('Selected File:', selectedFile);
+
+    const audioPlayer = document.getElementById('audioPlayer');
+
+    const audioSource = URL.createObjectURL(selectedFile);
+    audioPlayer.src = audioSource;
+  }
+}
 
 //button control
-    let activeButton = null;
+let activeButton = null;
 
-    document.addEventListener('DOMContentLoaded', function () {
-      // Select the first button and set it as active by default
-      const firstButton = document.querySelector('.button_container button');
-      toggleColor(firstButton, 0);
-    });
-    
-    function toggleColor(button, containerIndex) {
-      if (activeButton) {
-          activeButton.classList.remove('active');
-      }
-    
-      if (activeButton !== button) {
-          button.classList.add('active');
-          activeButton = button;
-      } else {
-          activeButton = null;
-      }
-    
-      // Hide all knob containers
-      const knobContainers = document.querySelectorAll('.knob_container');
-      knobContainers.forEach((container, index) => {
-          if (index === containerIndex) {
-              // Show the selected knob container
-              //container.style.display = 'block';
-              container.classList.remove('knob_container_hide');
-          } else {
-              // Hide other knob containers
-              container.classList.add('knob_container_hide')
-          }
-      });
+document.addEventListener('DOMContentLoaded', function () {
+  // Select the first button and set it as active by default
+  const firstButton = document.querySelector('.button_container button');
+  toggleColor(firstButton, 0);
+});
+
+function toggleColor(button, containerIndex) {
+  if (activeButton) {
+    activeButton.classList.remove('active');
+  }
+
+  if (activeButton !== button) {
+    button.classList.add('active');
+    activeButton = button;
+  } else {
+    activeButton = null;
+  }
+
+  // Hide all knob containers
+  const knobContainers = document.querySelectorAll('.knob_container');
+  knobContainers.forEach((container, index) => {
+    if (index === containerIndex) {
+      // Show the selected knob container
+      //container.style.display = 'block';
+      container.classList.remove('knob_container_hide');
+    } else {
+      // Hide other knob containers
+      container.classList.add('knob_container_hide')
     }
+  });
+}
 
 // slider control
 // 全局变量用于存储激活状态和handle-horn-r的位置
@@ -104,7 +104,7 @@ function initSlider(sliderId, handleId, syncHandleId, containerElementId, textEl
         handleDrumRPosition = handlePosition;
       }
     }
-     
+
     if (textElement) {
       textElement.style.display = 'none';
     }
@@ -145,32 +145,32 @@ function initSlider(sliderId, handleId, syncHandleId, containerElementId, textEl
 
       // Log the value to the console
       console.log(value);
-      
+
       // 如果激活状态，更新handle-horn-r的位置
       if (isSyncActivatedHorn && syncHandle) {
-        if(sliderId ==='slider-horn-l' || sliderId === 'slider-horn-r'){
+        if (sliderId === 'slider-horn-l' || sliderId === 'slider-horn-r') {
           handleHornRPosition = handle.offsetTop;
           syncHandle.style.top = `${handleHornRPosition}px`;
         }
       }
 
       if (isSyncActivatedDrum && syncHandle) {
-        if(sliderId ==='slider-drum-l' || sliderId === 'slider-drum-r'){
-        handleDrumRPosition = handle.offsetTop;
-        syncHandle.style.top = `${handleDrumRPosition}px`;
+        if (sliderId === 'slider-drum-l' || sliderId === 'slider-drum-r') {
+          handleDrumRPosition = handle.offsetTop;
+          syncHandle.style.top = `${handleDrumRPosition}px`;
         }
       }
-      
+
       // Update handle position
       handle.style.top = `${handlePosition}px`;
-      
+
       // 更新对应元素的值
       const elementsToUpdate = [
         { element: syncHandle, value: value },
       ];
- 
-        // 否则只更新单个元素
-        updateElementValues(containerElement, elementsToUpdate);   
+
+      // 否则只更新单个元素
+      updateElementValues(containerElement, elementsToUpdate);
     }
   });
 }
@@ -184,7 +184,7 @@ function initSliders() {
   initSlider('slider-drum-l', 'handle-drum-l', 'handle-drum-r', '.drum_HZ', '.drum_text');
   initSlider('slider-drum-r', 'handle-drum-r', 'handle-drum-l', '.drum_HZ', '.drum_text');
   // Initialize other sliders without synchronization
-  initSlider('slider-output', 'handle-output', '','.output_HZ', '.output_text');
+  initSlider('slider-output', 'handle-output', '', '.output_HZ', '.output_text');
 }
 
 // 初始化所有 sliders
@@ -204,7 +204,7 @@ function toggleButton() {
   if (this === button_link1) {
     isSyncActivatedHorn = this.classList.contains('active');
     console.log(isSyncActivatedHorn)
-  } 
+  }
   if (this === button_link2) {
     isSyncActivatedDrum = this.classList.contains('active');
     console.log(isSyncActivatedDrum)
@@ -216,7 +216,7 @@ function toggleButton() {
 //switch button
 const switchButton = document.getElementById('switchButton');
 
-switchButton.addEventListener('click', function() {
+switchButton.addEventListener('click', function () {
   // 切换点击状态
   switchButton.classList.toggle('clicked');
 

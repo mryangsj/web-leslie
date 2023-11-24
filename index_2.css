@@ -1,15 +1,16 @@
-*{
+* {
     margin: 0;
     padding: 0;
     user-select: none;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     background-color: #262626;
-  }
+}
 
-.header{
+.header {
     height: 10%;
     background-color: #252625;
     position: relative;
@@ -20,9 +21,10 @@ html, body {
     display: none;
 }
 
-   /* 样式化文本框 */
+/* 样式化文本框 */
 #textInput {
-    outline: none; /* 删除默认边框样式 */
+    outline: none;
+    /* 删除默认边框样式 */
     position: absolute;
     padding: 10px;
     border: 0px;
@@ -44,16 +46,16 @@ audio {
     border-radius: 0px;
 }
 
-.main{
+.main {
     height: 80%;
     display: flex;
     position: relative;
 }
 
-.decoration{
+.decoration {
     background-image: url(./icon/wooden.png);
     background-size: 60px 500px;
-    background-repeat:repeat-y;
+    background-repeat: repeat-y;
     width: 10%;
     height: 100%;
     /* transform: rotate(90deg); */
@@ -66,7 +68,7 @@ audio {
 
 .left_control,
 .middle_control,
-.right_control{
+.right_control {
     display: flex;
     flex: 1;
     height: 100%;
@@ -76,13 +78,13 @@ audio {
     position: relative;
 }
 
-.left_control{
+.left_control {
     background-image: linear-gradient(to left, #393733, #51504e);
     flex-direction: column;
-    position:relative;
+    position: relative;
 }
 
-.button_container{
+.button_container {
     width: 90%;
     height: 15%;
     padding-left: 10%;
@@ -92,7 +94,7 @@ audio {
     place-items: center;
 }
 
-button{
+button {
     width: 80%;
     height: 50%;
     color: #D4CEAF;
@@ -108,121 +110,128 @@ button.active {
     border-bottom: 2px solid #545454;
 }
 
-.knob_container{
+.knob_container {
     display: grid;
-    grid-template-rows: repeat(3, 1fr); 
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 10px; /* 间隔大小，可根据需要调整 */
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    /* 间隔大小，可根据需要调整 */
     height: 75%;
     width: 90%;
     padding-left: 10%;
 }
 
-.knob_container_hide{
+.knob_container_hide {
     display: none;
-  }
+}
 
 
 
-  .item::before {
+.item::before {
     /* background-color: #ddd; */
     margin-top: 5%;
     /* margin-left: 10%; */
     color: #D4CEAF;
     content: "";
-    display: block; 
+    display: block;
     text-align: center;
 }
 
 
 #knobSpring,
-#knobGain{
+#knobGain {
     position: absolute;
     left: 30%;
     top: 32%;
 }
 
 #knobMicDistance,
-#knobVolume{
+#knobVolume {
     position: absolute;
     left: 70%;
     top: 32%;
 }
 
 #knobLowSpeed,
-#knobHPF{
+#knobHPF {
     position: absolute;
     left: 30%;
     top: 54%;
 }
 
 #knobAcce,
-#knobLow{
+#knobLow {
     position: absolute;
     left: 70%;
     top: 54%;
 }
 
 #knobFastSpeed,
-#knobMid{
+#knobMid {
     position: absolute;
     left: 30%;
     top: 76%;
 }
 
 #knobDece,
-#knobHigh{
+#knobHigh {
     position: absolute;
     left: 70%;
     top: 76%;
 }
 
-#knobHighF{
+#knobHighF {
     position: absolute;
     left: 30%;
     top: 32%;
 }
-#knobHighG{
+
+#knobHighG {
     position: absolute;
     left: 80%;
     top: 32%;
 }
-#knobMidF{
+
+#knobMidF {
     position: absolute;
     left: 30%;
     top: 54%;
 }
-#knobMidQ{
+
+#knobMidQ {
     position: absolute;
     left: 55%;
     top: 54%;
 }
-#knobMidG{
+
+#knobMidG {
     position: absolute;
     left: 80%;
     top: 54%;
 }
-#knobLowF{
+
+#knobLowF {
     position: absolute;
     left: 30%;
     top: 76%;
 }
-#knobLowG{
+
+#knobLowG {
     position: absolute;
     left: 80%;
     top: 76%;
 }
 
 
-.middle_control{
+.middle_control {
     background-image: url(./resources/BG_0.png);
-    background-size: cover;  
-    background-repeat: no-repeat;  
-    background-position: center; 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     position: relative;
 }
 
-.rotor{
+.rotor {
     width: 100%;
     height: 16%;
     /* background-color: #fff; */
@@ -234,65 +243,65 @@ button.active {
     background-position: 0 0;
 }
 
-.right_control{
+.right_control {
     background-image: linear-gradient(to left, #51504e, #393733);
     flex-direction: row;
-    position:relative;
-    align-items:center;
+    position: relative;
+    align-items: center;
     justify-content: center;
 }
 
 .link1,
 .link2,
-.output{
+.output {
     display: flex;
     flex-direction: column;
     height: 100%;
     flex: 1;
 }
 
-.button_contain_right{
+.button_contain_right {
     width: 100%;
     height: 8%;
     margin-top: 25%;
 }
 
-.button_link{
+.button_link {
     width: 65%;
     height: 100%;
     margin-left: 15%;
 }
 
-.knob_contain_right{
+.knob_contain_right {
     width: 100%;
     height: 20%;
 }
 
-#knobLinkLR1{
+#knobLinkLR1 {
     position: absolute;
     left: 8%;
     top: 26%;
 }
 
-#knobLinkLR2{
+#knobLinkLR2 {
     position: absolute;
     left: 24%;
     top: 26%;
 }
 
-#knobLinkLR3{
+#knobLinkLR3 {
     position: absolute;
     left: 42%;
     top: 26%;
 }
 
-#knobLinkLR4{
+#knobLinkLR4 {
     position: absolute;
     left: 58%;
     top: 26%;
 }
 
-.switch{
+.switch {
     border: none;
     outline: none;
     background: none;
@@ -311,42 +320,42 @@ button.active {
 
 .switch.clicked {
     background-image: url(./resources/switch_button_on.png);
-  }
+}
 
 .slider-container {
-    width:70%;
+    width: 70%;
     height: 50%;
     margin-left: 12%;
     margin-top: 10%;
-  }
+}
 
-  .slider-dec {
+.slider-dec {
     height: 100%;
     display: flex;
     align-items: center;
     gap: 70%;
     position: relative;
-    padding:0px 20%;
+    padding: 0px 20%;
 }
 
-  .slider-output {
+.slider-output {
     position: relative;
     background-color: #282826;
     border: 1px solid #53514D;
     height: 95%;
     width: 8px;
     z-index: 2;
-  }
+}
 
-  .slider-tracks {
+.slider-tracks {
     width: 8px;
     height: 180px;
     position: relative;
     background-color: #282826;
     border: 1px solid #53514D;
-  }
+}
 
-  .slider_inside {
+.slider_inside {
     width: 3px;
     position: absolute;
     background-color: #000;
@@ -354,20 +363,20 @@ button.active {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-  }
+}
 
-  .slider-handle {
+.slider-handle {
     width: 23px;
     height: 38px;
     background-image: url(./icon/slider-handle.png);
-    background-size: cover; 
+    background-size: cover;
     position: absolute;
     cursor: pointer;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     border-radius: 2px;
-  }
+}
 
 
 .slider-dec::after {
@@ -378,45 +387,45 @@ button.active {
     top: 0;
     bottom: 0;
     background: repeating-linear-gradient(to bottom, #B1AA96 0px, #B1AA96 1px, transparent 2px, transparent 9%);
-    pointer-events: none; 
+    pointer-events: none;
     /* z-index: -1;  */
-  }
+}
 
 .horn_text,
 .drum_text,
-.output_text{
+.output_text {
     text-align: center;
     color: #D4CEAF;
     width: 80%;
     height: 10%;
-    font-size:large;
+    font-size: large;
     margin-top: 5%;
     margin-left: 5%;
 }
 
 .horn_HZ,
-.drum_HZ{
+.drum_HZ {
     width: 85%;
     height: 10%;
     display: grid;
-    grid-template-columns: 1fr 1fr; 
+    grid-template-columns: 1fr 1fr;
     margin-top: 5%;
     margin-left: 30%;
     /* gap: 10px; */
 }
 
-.output_text{
+.output_text {
     margin-left: -8%;
 }
 
-.footer-text{
-  position: absolute;
-  left: -55%;
-  bottom: -10%;
-  height: 50px;
-  width: 50px;
-  text-align: center;
-  font-size: 30px;
-  color: #D4CEAF;
-  line-height: 60px;
+.footer-text {
+    position: absolute;
+    left: -55%;
+    bottom: -10%;
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    font-size: 30px;
+    color: #D4CEAF;
+    line-height: 60px;
 }

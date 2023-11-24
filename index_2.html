@@ -1,132 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="index_2.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="index_2.css">
 </head>
+
 <body>
-    <div class="header">
-        <input type="text" id="textInput" onclick="openFileUploader()" readonly placeholder="Load Preset">
-        <input type="file" id="fileInput" accept=".mp3, .wav, .ogg, .aac" onchange="handleFileSelect(event)">
-        <audio controls id="audioPlayer">
-          Your browser does not support the audio element.
-        </audio>
+  <div class="header">
+    <input type="text" id="textInput" onclick="openFileUploader()" readonly placeholder="Load Preset">
+    <input type="file" id="fileInput" accept=".mp3, .wav, .ogg, .aac" onchange="handleFileSelect(event)">
+    <audio controls id="audioPlayer">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+  <div class="main">
+    <!-- <div class="decoration"></div> -->
+    <!-- <div class="decoration" style="right: 0;"></div> -->
+    <div class="left_control">
+      <div class="decoration" style="left: 0;"></div>
+      <div class="button_container">
+        <button onclick="toggleColor(this,0)">SETUP</button>
+        <button onclick="toggleColor(this,1)">AMP</button>
+        <button onclick="toggleColor(this,2)">EQ</button>
+      </div>
+      <div class="knob_container knob_container_hide" id="knob_container1">
+        <div id="knobSpring"></div>
+        <div id="knobMicDistance"></div>
+        <div id="knobLowSpeed"></div>
+        <div id="knobAcce"></div>
+        <div id="knobFastSpeed"></div>
+        <div id="knobDece"></div>
+      </div>
+
+      <div class="knob_container knob_container_hide" id="knob_container2">
+        <div id="knobGain"></div>
+        <div id="knobVolume"></div>
+        <div id="knobHPF"></div>
+        <div id="knobLow"></div>
+        <div id="knobMid"></div>
+        <div id="knobHigh"></div>
+      </div>
+
+      <div class="knob_container knob_container_hide" id="knob_container3">
+        <div id="knobHighF"></div>
+        <div id="knobHighG"></div>
+        <div id="knobMidF"></div>
+        <div id="knobMidQ"></div>
+        <div id="knobMidG"></div>
+        <div id="knobLowF"></div>
+        <div id="knobLowG"></div>
+      </div>
+
     </div>
-    <div class="main">
-      <!-- <div class="decoration"></div> -->
-      <!-- <div class="decoration" style="right: 0;"></div> -->
-      <div class="left_control">
-        <div class="decoration" style="left: 0;"></div>
-        <div class="button_container">
-          <button onclick="toggleColor(this,0)">SETUP</button>
-          <button onclick="toggleColor(this,1)">AMP</button>
-          <button onclick="toggleColor(this,2)">EQ</button>
+    <div class="middle_control">
+      <div class="rotor"></div>
+    </div>
+    <div class="right_control">
+      <div class="link1">
+        <div class="button_contain_right">
+          <button class="button_link" id="button_link1">Link</button>
         </div>
-        <div class="knob_container knob_container_hide" id="knob_container1">
-          <div id="knobSpring"></div>
-          <div id="knobMicDistance"></div>
-          <div id="knobLowSpeed"></div>
-          <div id="knobAcce"></div>
-          <div id="knobFastSpeed"></div>
-          <div id="knobDece"></div>
+        <div class="knob_contain_right">
+          <div id="knobLinkLR1"></div>
+          <div id="knobLinkLR2"></div>
         </div>
-
-        <div class="knob_container knob_container_hide" id="knob_container2">
-          <div id="knobGain"></div>
-          <div id="knobVolume"></div>
-          <div id="knobHPF"></div>
-          <div id="knobLow"></div>
-          <div id="knobMid"></div>
-          <div id="knobHigh"></div>
-        </div>
-
-        <div class="knob_container knob_container_hide" id="knob_container3">
-          <div id="knobHighF"></div>
-          <div id="knobHighG"></div>
-          <div id="knobMidF"></div>
-          <div id="knobMidQ"></div>
-          <div id="knobMidG"></div>
-          <div id="knobLowF"></div>
-          <div id="knobLowG"></div>
-        </div>
-
-      </div>
-      <div class="middle_control">
-        <div class="rotor"></div>
-      </div>
-      <div class="right_control">
-        <div class="link1">
-          <div class="button_contain_right">
-            <button class="button_link" id="button_link1">Link</button>
-          </div>
-          <div class="knob_contain_right">
-            <div id="knobLinkLR1"></div>
-            <div id="knobLinkLR2"></div>
-          </div>
-          <div class="slider-container">
-            <div class="slider-dec">
-              <div class="slider-output" id="slider-horn-l">
-                <div class="slider_inside"></div>
-                <div class="slider-handle" id="handle-horn-l"></div>
-              </div>
-              <div class="slider-output" id="slider-horn-r">
-                <div class="slider_inside"></div>
-                <div class="slider-handle" id="handle-horn-r"></div>
-              </div>
+        <div class="slider-container">
+          <div class="slider-dec">
+            <div class="slider-output" id="slider-horn-l">
+              <div class="slider_inside"></div>
+              <div class="slider-handle" id="handle-horn-l"></div>
+            </div>
+            <div class="slider-output" id="slider-horn-r">
+              <div class="slider_inside"></div>
+              <div class="slider-handle" id="handle-horn-r"></div>
             </div>
           </div>
-          <div class="horn_text" >HORN</div>
-          <div class="horn_HZ"  style="display: none;">
+        </div>
+        <div class="horn_text">HORN</div>
+        <div class="horn_HZ" style="display: none;">
+        </div>
+      </div>
+      <div class="link2">
+        <div class="button_contain_right">
+          <button class="button_link" id="button_link2">Link</button>
+        </div>
+        <div class="knob_contain_right">
+          <div id="knobLinkLR3"></div>
+          <div id="knobLinkLR4"></div>
+        </div>
+        <div class="slider-container">
+          <div class="slider-dec">
+            <div class="slider-output" id="slider-drum-l">
+              <div class="slider_inside"></div>
+              <div class="slider-handle" id="handle-drum-l"></div>
+            </div>
+            <div class="slider-output" id="slider-drum-r">
+              <div class="slider_inside"></div>
+              <div class="slider-handle" id="handle-drum-r"></div>
+            </div>
           </div>
         </div>
-        <div class="link2">
-          <div class="button_contain_right">
-            <button class="button_link" id="button_link2">Link</button>
-          </div>
-          <div class="knob_contain_right">
-            <div id="knobLinkLR3"></div>
-            <div id="knobLinkLR4"></div>
-          </div>
-          <div class="slider-container">
-            <div class="slider-dec" >
-              <div class="slider-output" id="slider-drum-l">
-                <div class="slider_inside"></div>
-                <div class="slider-handle" id="handle-drum-l"></div>
-              </div>
-              <div class="slider-output" id="slider-drum-r">
-                <div class="slider_inside"></div>
-                <div class="slider-handle" id="handle-drum-r"></div>
-              </div>
-            </div> 
-          </div>
-          <div class="drum_text">DRUM</div>
-          <div class="drum_HZ"  style="display: none;">
-          </div>
+        <div class="drum_text">DRUM</div>
+        <div class="drum_HZ" style="display: none;">
         </div>
-        <div class="output">
-          <div class="button_contain_right" >
-            <button class="switch" id="switchButton"></button>
-          </div>
-          <div class="knob_contain_right">
-          </div>
-          <div class="slider-container">
-            <div class="slider-dec" style="width: 20%; padding: 0px 16% 0px 23%;">
-              <div class="slider-output" id="slider-output">
+      </div>
+      <div class="output">
+        <div class="button_contain_right">
+          <button class="switch" id="switchButton"></button>
+        </div>
+        <div class="knob_contain_right">
+        </div>
+        <div class="slider-container">
+          <div class="slider-dec" style="width: 20%; padding: 0px 16% 0px 23%;">
+            <div class="slider-output" id="slider-output">
               <div class="slider_inside"></div>
               <div class="slider-handle" id="handle-output"></div>
             </div>
           </div>
           <div class="output_text">OUTPUT</div>
-          <div class="output_HZ"  style="display: none; margin-left: 15%;">
+          <div class="output_HZ" style="display: none; margin-left: 15%;">
           </div>
         </div>
         <div class="decoration " style="right: 0;"></div>
-    </div>
-    <div class="footer-text">LESLIE</div>
-    <script src="index_2.js"></script>
-    <script type="module" src="./knobInit.js"></script>
+      </div>
+      <div class="footer-text">LESLIE</div>
+      <script src="index_2.js"></script>
+      <script type="module" src="./knobInit.js"></script>
 </body>
-</html>
 
+</html>

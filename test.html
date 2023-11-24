@@ -1,47 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
 <style>
-  *{
+  * {
     background-color: grey;
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
   }
+
   .rotor {
-    width: 1920px; /* 精灵图宽度 */
-  height: 1080px; /* 单张图标高度 */
-  background-image: url('./resources/output1.png');
-  /* background-position: 0 0; */
-  animation: spriteAnimation 0.05s steps(72) infinite;
-      /* animation: spriteAnimation 1s steps(72) infinite; 定义动画，切换每张图标的时间为2秒 */
-    }
+    width: 1920px;
+    /* 精灵图宽度 */
+    height: 1080px;
+    /* 单张图标高度 */
+    background-image: url('./resources/output1.png');
+    /* background-position: 0 0; */
+    animation: spriteAnimation 0.05s steps(72) infinite;
+    /* animation: spriteAnimation 1s steps(72) infinite; 定义动画，切换每张图标的时间为2秒 */
+  }
 
- /* 设置每个图标的样式 */
   /* 设置每个图标的样式 */
- 
+  /* 设置每个图标的样式 */
 
-    @keyframes spriteAnimation {
-      0% {
-        background-position: 0 0;
-      }
-      100% {
-        background-position: 0 -77760px; /* 切换到最后一张图标的位置 */
-      }
+
+  @keyframes spriteAnimation {
+    0% {
+      background-position: 0 0;
     }
 
-
+    100% {
+      background-position: 0 -77760px;
+      /* 切换到最后一张图标的位置 */
+    }
+  }
 </style>
+
 <body>
   <div class="rotor">
     <!-- <div class="icon"></div> -->
   </div>
 </body>
+
 </html>
 
 
@@ -538,7 +544,7 @@
   handleSliderMovement(knob, pointer, slider);
   handleSliderMovement(knob1, pointer1, slider1); -->
 
-    <!-- // let allowMouseMove = false;
+<!-- // let allowMouseMove = false;
     // let counter = 0;
 
     // knob.addEventListener('click', () => {
@@ -830,7 +836,7 @@
     <div class="right-aligned-area">
       <div class="inner-content">
         Your content goes here -->
-      <!-- </div>
+<!-- </div>
     </div>
   </div>
   <div class="bottom-layer_1"></div>
