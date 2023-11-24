@@ -1,6 +1,8 @@
 import Knob from './js/Knob.js';
 
-//knob control
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+// get container
 const containerSpring = document.getElementById('knobSpring')
 const containerMicDistance = document.getElementById('knobMicDistance')
 const containerLowSpeed = document.getElementById('knobLowSpeed')
@@ -28,63 +30,75 @@ const containerLinkLR2 = document.getElementById('knobLinkLR2')
 const containerLinkLR3 = document.getElementById('knobLinkLR3')
 const containerLinkLR4 = document.getElementById('knobLinkLR4')
 
-function createKnob(container, knobName, spritePath, spriteLength) {
-  // Calculate the width-to-height ratio
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  const ratio = width / height;
-  // const container = document.getElementById(containerId);
-  let knobSize = 70;
 
-  if (ratio > 1.5 && window.innerWidth > 1500) {
-    // Increase knob size for larger width-to-height ratios
-    knobSize = 100;
-  }
-  if (ratio > 1.3 && window.innerWidth > 1200) {
-    // Increase knob size for larger width-to-height ratios
-    knobSize = 80;
-  }
-  // if (window.innerWidth > 1500) {
-  //   knobSize = 120;
-  // } else if (window.innerWidth > 1200) {
-  //   knobSize = 90;
-  // }
-  // 创建新的 Knob 实例
-  const knob = new Knob(knobSize, knobName, 0, 1, 0.5, 2, `dB`, spritePath, spriteLength);
-  knob.style.top = `50%`;
-  knob.style.left = `30%`;
-  knob.style.transform = `translate(-50%, -50%)`;
-  document.body.style.cursor = `grabbing`;
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+// caculate suitable knob size
+// calculate the width-to-height ratio
+const width = window.innerWidth;
+const height = window.innerHeight;
+const ratio = width / height;
+// const container = document.getElementById(containerId);
+let knobSize = 70;
 
-  // 添加到容器中
-  container.appendChild(knob);
-  return knob;
-
+if (ratio > 1.5 && window.innerWidth > 1500) {
+  // increase knob size for larger width-to-height ratios
+  knobSize = 100;
+} else if (ratio > 1.3 && window.innerWidth > 1200) {
+  // increase knob size for larger width-to-height ratios
+  knobSize = 80;
 }
 
-createKnob(containerSpring, 'SPRING');
-createKnob(containerMicDistance, 'MIC-DISTANCE');
-createKnob(containerLowSpeed, 'LOW-SPEED');
-createKnob(containerAcce, 'ACCELERATION');
-createKnob(containerFastSpeed, 'FAST-SPEED');
-createKnob(containerDece, 'DECELERATION');
+// if (window.innerWidth > 1500) {
+//   knobSize = 120;
+// } else if (window.innerWidth > 1200) {
+//   knobSize = 90;
+// }
 
-createKnob(containerGain, 'GAIN');
-createKnob(containerVolume, 'VOLUME');
-createKnob(containerHPF, 'INPUT-HPF');
-createKnob(containerLow, 'LOW');
-createKnob(containerMid, 'MID');
-createKnob(containerHigh, 'HIGH');
 
-createKnob(containerHighF, 'GAIN');
-createKnob(containerHighG, 'VOLUME');
-createKnob(containerMidF, 'INPUT-HPF');
-createKnob(containerMidQ, 'LOW');
-createKnob(containerMidG, 'MID');
-createKnob(containerLowF, 'HIGH');
-createKnob(containerLowG, 'HIGH');
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+function createKnob(container, knobLabel, valueStart, valueEnd, defaultValue, numberDecimals, suffix, spritePath, spriteLength, midValue, devMode = true) {
+  // create knob object
+  const knobObj = new Knob(knobSize, knobLabel, valueStart, valueEnd, defaultValue, numberDecimals, suffix, spritePath, spriteLength, devMode);
+  const knobDom = knobObj.dom;
+  // set skew factor
+  if (midValue) { knobObj.setSkewFactorByMidValue(midValue); }
+  // configure knob position
+  knobDom.style.top = '50%';
+  knobDom.style.left = '30%';
+  knobDom.style.transform = 'translate(-50%, -50%)';
+  // add knob to container
+  container.appendChild(knobDom);
+  return knobObj;
+}
 
-createKnob(containerLinkLR1, 'LinkLR1', 'resources/KnobMid.png', 129);
-createKnob(containerLinkLR2, 'LinkLR2', 'resources/KnobMid.png', 129);
-createKnob(containerLinkLR3, 'LinkLR3', 'resources/KnobMid.png', 129);
-createKnob(containerLinkLR4, 'LinkLR4', 'resources/KnobMid.png', 129);
+
+//-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+const knobSpringObj = createKnob(containerSpring, 'SPRING', 0, 10, 0, 1, '', 'resources/KnobMid.png', 129);
+const knobMidDistanceObj = createKnob(containerMicDistance, 'MIC DISTANCE', 1, 10, 1, 1, '', 'resources/KnobMid.png', 129);
+const knobSlowSpeedObj = createKnob(containerLowSpeed, 'SLOW SPEED', -20, 20, 0, 0, '%', 'resources/KnobMid.png', 129);
+const knobAccelerationObj = createKnob(containerAcce, 'ACCELERATION', 0.25, 4, 1, 2, 'x', 'resources/KnobMid.png', 129, 1);
+const knobFastSpeedObj = createKnob(containerFastSpeed, 'FAST SPEED', -20, 20, 0, 0, '%', 'resources/KnobMid.png', 129);
+const knobDecelerationObj = createKnob(containerDece, 'DECELERATION', 0.25, 4, 1, 2, 'x', 'resources/KnobMid.png', 129, 1);
+//-----------------------------------------------------------------------------------------
+const knobGainObj = createKnob(containerGain, 'GAIN', 1.0, 10, 4.4, 1, '', 'resources/KnobMid.png', 129);
+const knobVolumeObj = createKnob(containerVolume, 'VOLUME', 1, 10, 4.1, 1, '', 'resources/KnobMid.png', 129);
+const knobHPFObj = createKnob(containerHPF, 'INPUT HPF', 20, 200, 20, 0, 'Hz', 'resources/KnobMid.png', 129);
+const knobLowObj = createKnob(containerLow, 'LOW', 0, 10, 5, 1, '', 'resources/KnobMid.png', 129);
+const knobMidObj = createKnob(containerMid, 'MID', 0, 10, 5, 1, '', 'resources/KnobMid.png', 129);
+const knobHighObj = createKnob(containerHigh, 'HIGH', 0, 10, 5, 1, '', 'resources/KnobMid.png', 129);
+//-----------------------------------------------------------------------------------------
+const knobHighFreqObj = createKnob(containerHighF, 'HIGH FREQ', 1.5, 18, 4, 2, 'KHz', 'resources/KnobMid.png', 129, 3.5);
+const knobHighGainObj = createKnob(containerHighG, 'HIGH GAIN', -15, 15, 0, 1, 'dB', 'resources/KnobMid.png', 129);
+const knobMidFreqObj = createKnob(containerMidF, 'MID FREQ', 100, 15000, 1000, 1, 'Hz', 'resources/KnobMid.png', 129, 2000);
+const knobMidQObj = createKnob(containerMidQ, 'MID Q', 0.1, 5, 1, 1, '', 'resources/KnobMid.png', 129, 0.7);
+const knobMidGainObj = createKnob(containerMidG, 'MID GAIN', -15, 15, 0, 1, 'dB', 'resources/KnobMid.png', 129);
+const knobLowFreqObj = createKnob(containerLowF, 'LOW FREQ', 20, 400, 100, 0, 'Hz', 'resources/KnobMid.png', 129, 80);
+const knobLowGainObj = createKnob(containerLowG, 'LOW GAIN', -15, 15, 0, 1, 'dB', 'resources/KnobMid.png', 129);
+//-----------------------------------------------------------------------------------------
+createKnob(containerLinkLR1, 'C', -1.0, 1.0, 0, 1, '', 'resources/KnobMid.png', 129);
+createKnob(containerLinkLR2, 'C', -1.0, 1.0, 0, 1, '', 'resources/KnobMid.png', 129);
+createKnob(containerLinkLR3, 'C', -1.0, 1.0, 0, 1, '', 'resources/KnobMid.png', 129);
+createKnob(containerLinkLR4, 'C', -1.0, 1.0, 0, 1, '', 'resources/KnobMid.png', 129);

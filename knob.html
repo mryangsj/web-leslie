@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knob</title>
+
+  <style>
+    /* 移除所有预设样式 */
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    /* 填充body到整个屏幕 */
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .knobDev {
+      display: none;
+    }
+
+    .knobLeft {
+      position: relative;
+      left: 10%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="div1"></div>
+  <div id="div2"></div>
+
+  <!-- 由于knob.js是一个模块，所以需要使用type="module"来引入-->
+  <!-- 建议通过通过initKnob()来初始化knob，而不是直接使用Knob类 -->
+  <script type="module" src="./knobInit.js"></script>
+
+  <!-- 如果要直接使用Knob类，使用下面的代码 -->
+  <!-- <script type="module">
+    import Knob from './js/Knob.js';
+    const knobObj = new Knob(100, 'Volume', 0, 1, 0.5, 3, 'dB');
+    const knob = knobObj.dom;
+    console.log(knob);
+  </script> -->
+
+</body>
+
+</html>
