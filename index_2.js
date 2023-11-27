@@ -1,8 +1,12 @@
-//upload audio
+//-----------------------------------------------------------------------------------------
+// 模拟点击#fileInput
 function openFileUploader() {
   document.getElementById('fileInput').click();
 }
 
+
+//-----------------------------------------------------------------------------------------
+// 将用户上传的音频文件添加到audioPlayer
 function handleFileSelect(event) {
   const fileInput = event.target;
   const files = fileInput.files;
@@ -21,12 +25,17 @@ function handleFileSelect(event) {
 //button control
 let activeButton = null;
 
+
+//-----------------------------------------------------------------------------------------
+// 当DOM加载完成时，设置第一个按钮为默认激活状态
 document.addEventListener('DOMContentLoaded', function () {
-  // Select the first button and set it as active by default
   const firstButton = document.querySelector('.button_container button');
   toggleColor(firstButton, 0);
 });
 
+
+//-----------------------------------------------------------------------------------------
+// 切换按钮的激活状态
 function toggleColor(button, containerIndex) {
   if (activeButton) {
     activeButton.classList.remove('active');
@@ -53,6 +62,8 @@ function toggleColor(button, containerIndex) {
   });
 }
 
+
+//-----------------------------------------------------------------------------------------
 // slider control
 // 全局变量用于存储激活状态和handle-horn-r的位置
 let isSyncActivatedHorn = false;
@@ -227,4 +238,3 @@ switchButton.addEventListener('click', function () {
     console.log(0); // 输出状态码 0
   }
 });
-

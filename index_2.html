@@ -4,47 +4,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="index_2.css">
+  <title>Leslie Speaker</title>
+  <link rel="stylesheet" href="/css/index_2.css">
 </head>
 
 <body>
+  <!-- header -->
   <div class="header">
+    <!-- 'Load Preset' button -->
     <input type="text" id="textInput" onclick="openFileUploader()" readonly placeholder="Load Preset">
     <input type="file" id="fileInput" accept=".mp3, .wav, .ogg, .aac" onchange="handleFileSelect(event)">
     <audio controls id="audioPlayer">
       Your browser does not support the audio element.
     </audio>
   </div>
+  <!-- end of header -->
+
+
+  <!-- main -->
   <div class="main">
-    <!-- <div class="decoration"></div> -->
-    <!-- <div class="decoration" style="right: 0;"></div> -->
-    <div class="left_control">
-      <div class="decoration" style="left: 0;"></div>
-      <div class="button_container">
+    <!-- 左修饰木块 -->
+    <div class="decoration" id="decoration-left"></div>
+
+
+
+    <!-- left(setup) panel -->
+    <div class="panal" id="panal-left">
+      <div class="block" id="block-switch">
+        <div id="switch-container-power"></div>
+      </div>
+
+      <div class="block" id="block-input">
+        <div id="knob-container-gain"></div>
+      </div>
+
+      <div class="block" id="block-EQ">
+        <div id="knob-container-inputHPF"></div>
+        <div id="knob-container-inputLPF"></div>
+        <div id="knob-container-highFreq"></div>
+        <div id="knob-container-highGain"></div>
+        <div id="knob-container-midFreq"></div>
+        <div id="knob-container-midGain"></div>
+        <div id="knob-container-lowFreq"></div>
+        <div id="knob-container-lowGain"></div>
+      </div>
+
+      <div class="block" id="block-hornControl">
+        <div id="wheel-container-hornSpeed"></div>
+        <div id="knob-container-hornAcceleration"></div>
+        <div id="knob-container-hornDeceleration"></div>
+      </div>
+
+      <div class="block" id="block-drumControl">
+        <div id="wheel-container-drumSpeed"></div>
+        <div id="knob-container-drumAcceleration"></div>
+        <div id="knob-container-drumDeceleration"></div>
+      </div>
+
+      <div class="block" id="block-mode">
+
+      </div>
+
+
+      <!-- 三个按钮 -->
+      <!-- <div class="button_container">
         <button onclick="toggleColor(this,0)">SETUP</button>
         <button onclick="toggleColor(this,1)">AMP</button>
         <button onclick="toggleColor(this,2)">EQ</button>
-      </div>
-      <div class="knob_container knob_container_hide" id="knob_container1">
+      </div> -->
+
+
+      <!-- <div class="knob_container knob_container_hide" id="knob_container1">
         <div id="knobSpring"></div>
         <div id="knobMicDistance"></div>
         <div id="knobLowSpeed"></div>
         <div id="knobAcce"></div>
         <div id="knobFastSpeed"></div>
         <div id="knobDece"></div>
-      </div>
+      </div> -->
 
-      <div class="knob_container knob_container_hide" id="knob_container2">
+      <!-- <div class="knob_container knob_container_hide" id="knob_container2">
         <div id="knobGain"></div>
         <div id="knobVolume"></div>
         <div id="knobHPF"></div>
         <div id="knobLow"></div>
         <div id="knobMid"></div>
         <div id="knobHigh"></div>
-      </div>
+      </div> -->
 
-      <div class="knob_container knob_container_hide" id="knob_container3">
+      <!-- <div class="knob_container knob_container_hide" id="knob_container3">
         <div id="knobHighF"></div>
         <div id="knobHighG"></div>
         <div id="knobMidF"></div>
@@ -52,16 +100,22 @@
         <div id="knobMidG"></div>
         <div id="knobLowF"></div>
         <div id="knobLowG"></div>
-      </div>
+      </div> -->
 
     </div>
+    <!-- end of left panel -->
 
-    <div class="middle_control">
-      <div class="rotor"></div>
+
+    <!-- middle(leslie) panel -->
+    <div class="panal" id="panal-mid">
+      <!-- <div class="rotor"></div> -->
     </div>
+    <!-- end of middle panel -->
 
-    <div class="right_control">
-      <div class="link1">
+
+    <!-- right(mixing) panel -->
+    <div class="panal" id="panal-right">
+      <!-- <div class="link1">
         <div class="button_contain_right">
           <button class="button_link" id="button_link1">Link</button>
         </div>
@@ -85,6 +139,7 @@
         <div class="horn_HZ" style="display: none;">
         </div>
       </div>
+
       <div class="link2">
         <div class="button_contain_right">
           <button class="button_link" id="button_link2">Link</button>
@@ -109,6 +164,7 @@
         <div class="drum_HZ" style="display: none;">
         </div>
       </div>
+
       <div class="output">
         <div class="button_contain_right">
           <button class="switch" id="switchButton"></button>
@@ -125,12 +181,25 @@
           <div class="output_text">OUTPUT</div>
           <div class="output_HZ" style="display: none; margin-left: 15%;">
           </div>
-        </div>
-        <div class="decoration " style="right: 0;"></div>
-      </div>
-      <div class="footer-text">LESLIE</div>
-      <script src="index_2.js"></script>
-      <script type="module" src="./knobInit.js"></script>
+        </div> -->
+    </div>
+    <!-- end of right panel -->
+
+
+
+    <!-- 右修饰木块 -->
+    <div class="decoration" id="decoration-right"></div>
+  </div>
+
+
+  <!-- <div class="footer-text">LESLIE</div> -->
+
+
+  <!-- end of main -->
+
+  <script src="index_2.js"></script>
+  <script type="module" src="./knobInit.js"></script>
+
 </body>
 
 </html>
