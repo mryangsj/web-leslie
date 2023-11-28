@@ -99,7 +99,7 @@ export default class Knob {
     this.domLabel.style.width = 'auto';
     this.domLabel.style.height = 'auto';
     this.domLabel.style.position = 'absolute';
-    this.domLabel.style.bottom = '-5%';
+    this.domLabel.style.bottom = '-4%';
     this.domLabel.style.left = '50%';
     this.domLabel.style.transform = 'translate(-50%, 0%)';
 
