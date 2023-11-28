@@ -113,7 +113,6 @@ audio {
 #block-input {
     grid-row: 3 / span 3;
     grid-column: 2 / span 4;
-    background-color: gold;
 }
 
 /* ----------------------------------------------- */
@@ -170,7 +169,6 @@ audio {
 #block-hornControl {
     grid-row: 2 / span 6;
     grid-column: 6 / span 5;
-    background-color: pink;
 
     display: grid;
     grid-template-rows: repeat(6, 1fr);
@@ -186,13 +184,11 @@ audio {
 #knob-container-hornAcceleration {
     grid-row: 1 / span 3;
     grid-column: 4 / span 2;
-    background-color: #bbb;
 }
 
 #knob-container-hornDeceleration {
     grid-row: 4 / span 3;
     grid-column: 4 / span 2;
-    background-color: #ccc;
 }
 
 /* ----------------------------------------------- */
@@ -214,13 +210,11 @@ audio {
 #knob-container-drumAcceleration {
     grid-row: 1 / span 3;
     grid-column: 4 / span 2;
-    background-color: #eee;
 }
 
 #knob-container-drumDeceleration {
     grid-row: 4 / span 3;
     grid-column: 4 / span 2;
-    background-color: #fff;
 }
 
 /* ----------------------------------------------- */
@@ -230,172 +224,11 @@ audio {
     background-color: green;
 }
 
-/* ----------------------------------------------- */
-/* 设置右侧面板背景图片、布局 */
-#panal-right {
-    background-image: url(/resources/image/panal/right_panal.png);
-}
-
-.left_control {
-    flex-direction: column;
-    position: relative;
-}
-
-
-/* ----------------------------------------------------------------------------------------- */
-/* 左侧控制面板三按钮布局 */
-.button_container {
-    width: 90%;
-    height: 15%;
-    padding-left: 10%;
-    /* margin: 5%; */
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    place-items: center;
-}
-
-/* ----------------------------------------------- */
-/* 左侧控制面板三按钮样式 */
-button {
-    width: 80%;
-    height: 50%;
-    color: #D4CEAF;
-    background-color: #201E1B;
-    font-size: 100%;
-}
-
-/* ----------------------------------------------- */
-/* 左侧控制面板三按钮激活样式 */
-button.active {
-    color: #C1433B;
-    border-left: 2px solid #000000;
-    border-top: 2px solid #000000;
-    border-right: 2px solid #545454;
-    border-bottom: 2px solid #545454;
-}
-
-/* ----------------------------------------------- */
-/* 左侧控制面板knob布局（grid布局） */
-.knob_container {
-    display: grid;
-    grid-template-rows: repeat(3, 1fr);
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    /* 间隔大小，可根据需要调整 */
-    height: 75%;
-    width: 90%;
-    padding-left: 10%;
-}
-
-/* ----------------------------------------------- */
-/* 设置左侧控制面板knob隐藏（用于三种状态之间切换） */
-.knob_container_hide {
-    display: none;
-}
-
-
-
-.item::before {
-    /* background-color: #ddd; */
-    margin-top: 5%;
-    /* margin-left: 10%; */
-    color: #D4CEAF;
-    content: "";
-    display: block;
-    text-align: center;
-}
-
-/* ----------------------------------------------- */
-/* 左侧控制面板各个knob的定位 */
-#knobSpring,
-#knobGain {
-    position: absolute;
-    left: 30%;
-    top: 32%;
-}
-
-#knobMicDistance,
-#knobVolume {
-    position: absolute;
-    left: 70%;
-    top: 32%;
-}
-
-#knobLowSpeed,
-#knobHPF {
-    position: absolute;
-    left: 30%;
-    top: 54%;
-}
-
-#knobAcce,
-#knobLow {
-    position: absolute;
-    left: 70%;
-    top: 54%;
-}
-
-#knobFastSpeed,
-#knobMid {
-    position: absolute;
-    left: 30%;
-    top: 76%;
-}
-
-#knobDece,
-#knobHigh {
-    position: absolute;
-    left: 70%;
-    top: 76%;
-}
-
-#knobHighF {
-    position: absolute;
-    left: 30%;
-    top: 32%;
-}
-
-#knobHighG {
-    position: absolute;
-    left: 80%;
-    top: 32%;
-}
-
-#knobMidF {
-    position: absolute;
-    left: 30%;
-    top: 54%;
-}
-
-#knobMidQ {
-    position: absolute;
-    left: 55%;
-    top: 54%;
-}
-
-#knobMidG {
-    position: absolute;
-    left: 80%;
-    top: 54%;
-}
-
-#knobLowF {
-    position: absolute;
-    left: 30%;
-    top: 76%;
-}
-
-#knobLowG {
-    position: absolute;
-    left: 80%;
-    top: 76%;
-}
-
 
 /* ----------------------------------------------------------------------------------------- */
 /* 中间控制面板 */
-.middle_control {
-    background-image: url(/resources/leslie/background.png);
+#panal-mid {
+    background-image: url(/resources/leslie/background.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -418,13 +251,134 @@ button.active {
 
 
 /* ----------------------------------------------------------------------------------------- */
-/* 右侧控制面板 */
-.right_control {
-    background-image: linear-gradient(to left, #51504e, #393733);
-    flex-direction: row;
-    position: relative;
-    align-items: center;
-    justify-content: center;
+/* 设置右侧面板背景图片、布局 */
+#panal-right {
+    background-image: url(/resources/image/panal/right_panal.png);
+    display: grid;
+    grid-template-rows: [start] 8% [controls-start] repeat(13, 1fr) [controls-end] 8% [end];
+    grid-template-columns: repeat(11, 1fr);
+}
+
+/* ----------------------------------------------- */
+#block-hornMic {
+    grid-row: 2 / span 4;
+    grid-column: 2 / span 4;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+}
+
+#meter-container-hornCorrelation {
+    grid-row: 1 / span 1;
+    grid-column: 1 / span 1;
+    background-color: #aaa;
+}
+
+#slider-container-hornMicWidth {
+    grid-row: 2 / span 1;
+    grid-column: 1 / span 1;
+    background-color: #bbb;
+}
+
+/* ----------------------------------------------- */
+#block-drumMic {
+    grid-row: 2 / span 4;
+    grid-column: 7 /span 4;
+    background-color: #bbb;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+}
+
+#meter-container-drumCorrelation {
+    grid-row: 1 / span 1;
+    grid-column: 1 / span 1;
+    background-color: #ccc;
+}
+
+#slider-container-drumMicWidth {
+    grid-row: 2 / span 1;
+    grid-column: 1 / span 1;
+    background-color: #ddd;
+}
+
+/* ----------------------------------------------- */
+#block-hornMix {
+    grid-row: 6 / span 6;
+    grid-column: 2 / span 4;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+}
+
+#knob-container-hornMicPan_L {
+    grid-row: 1 / span 2;
+    grid-column: 1 / span 2;
+}
+
+#slider-container-hornMicLevel_L {
+    grid-row: 3 / span 4;
+    grid-column: 1 / span 2;
+    background-color: #eee;
+}
+
+#knob-container-hornMicPan_R {
+    grid-row: 1 / span 2;
+    grid-column: 3 / span 2;
+}
+
+#slider-container-hornMicLevel_R {
+    grid-row: 3 / span 4;
+    grid-column: 3 / span 2;
+    background-color: #aaa;
+}
+
+/* ----------------------------------------------- */
+#block-drumMix {
+    grid-row: 6 / span 6;
+    grid-column: 7 /span 4;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+}
+
+#knob-container-drumMicPan_L {
+    grid-row: 1 / span 2;
+    grid-column: 1 / span 2;
+}
+
+#slider-container-drumMicLevel_L {
+    grid-row: 3 / span 4;
+    grid-column: 1 / span 2;
+    background-color: #ccc;
+}
+
+#knob-container-drumMicPan_R {
+    grid-row: 1 / span 2;
+    grid-column: 3 / span 2;
+}
+
+#slider-container-drumMicLevel_R {
+    grid-row: 3 / span 4;
+    grid-column: 3 / span 2;
+    background-color: #fff;
+}
+
+/* ----------------------------------------------- */
+#block-output {
+    grid-row: 12 / span 3;
+    grid-column: 2 / span 4;
+}
+
+/* ----------------------------------------------- */
+#block-vu {
+    grid-row: 12 / span 3;
+    grid-column: 7 / span 4;
+    background-color: #aaa;
 }
 
 .link1,

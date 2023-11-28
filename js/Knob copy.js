@@ -1,23 +1,21 @@
 export default class Knob {
-  constructor(container, knobLabel = 'New Knob', valueStart = 20, valueEnd = 20000, defaultValue = 1000, numberDecimals = 1, suffix = 'Hz', spritePath = 'resources/KnobMid.png', spriteLength = 129, devMode = true) {
+  constructor(container, sizeRatio = 0.8, knobLabel = 'New Knob', devMode = false) {
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
     this.domContainer = container;
-    this.knobName = knobLabel;
+    this.sizeRatio = sizeRatio;
+    this.knobLabel = knobLabel;
 
-    this.valueStart = valueStart;
-    this.valueEnd = valueEnd;
-    this.defaultValue = defaultValue;
-    this.currentValue = defaultValue;
+    this.valueStart = 0;
+    this.valueEnd = 1;
+    this.defaultValue = 0.5;
+    this.currentValue = 0.5;
 
     this.stateValue = 0; // 0~1
     this.skewFactor = 1; // 当skewFactor为1时，knob是线性控件；非1时为非线性控件。除非极为特殊的情况，否则skewFactor应该大于0。
 
-    this.numberDecimals = numberDecimals;
-    this.suffix = suffix;
-
-    this.spritePath = spritePath;
-    this.spriteLength = spriteLength;
+    this.numberDecimals = 2;
+    this.suffix = '';
 
     this.isCursorOnIndicator = false;
     this.isCursorOnFrame = false;
@@ -37,15 +35,35 @@ export default class Knob {
     // 设置dom的样式
     this.devMode ? this.domContainer.style.border = '0.5px solid red' : null;
 
+    //-----------------------------------------------------------------------------------------
+    // 创建indicatorBox节点
+    this.domIndicatorBox = document.createElement('div');
+    this.domContainer.appendChild(this.domIndicatorBox);
+
+    // 设置indicatorBox基本属性
+    this.domIndicatorBox.className = 'knob-indicator-box';
+    this.domIndicatorBox.id = this.domIndicatorBox.className + '-' + this.knobLabel;
+
+    // 设置indicatorBox尺寸、布局、定位
+    this.domIndicatorBox.style.width = `${this.sizeRatio * 100}%`;
+    this.domIndicatorBox.style.aspectRatio = '1/1';
+    this.domIndicatorBox.style.position = 'relative';
+    this.domIndicatorBox.style.top = '50%';
+    this.domIndicatorBox.style.left = '50%';
+    this.domIndicatorBox.style.transform = 'translate(-50%, -50%)';
+
+    // 设置indicatorBox样式
+    this.devMode ? this.domIndicatorBox.style.border = '0.5px solid pink' : null;
+
 
     //-----------------------------------------------------------------------------------------
     // 创建indicator节点
     this.domIndicator = document.createElement('div');
-    this.domContainer.append(this.domIndicator);
+    this.domIndicatorBox.append(this.domIndicator);
 
     // 设置indicator基本属性
     this.domIndicator.className = 'knob-indicator';
-    this.domIndicator.id = this.domIndicator.className + '-' + knobLabel;
+    this.domIndicator.id = this.domIndicator.className + '-' + this.knobLabel;
 
     // 设置indicator尺寸、布局、定位
     this.domIndicator.style.width = '100%';
@@ -56,50 +74,24 @@ export default class Knob {
     this.domIndicator.style.transform = 'translate(-50%, -50%)';
 
     // 设置indicator基本样式
-    this.domIndicator.style.background = `url(${this.spritePath})`;
-    this.domIndicator.style.backgroundSize = '100% auto';
     this.domIndicator.style.zIndex = 2;
     this.devMode ? this.domIndicator.style.border = '0.5px solid blue' : null;
-
-    //-----------------------------------------------------------------------------------------
-    // 创建scale节点
-    this.domScale = document.createElement('div');
-    this.domContainer.appendChild(this.domScale);
-
-    // 设置scale基本属性
-    this.domScale.className = 'knob-scale';
-    this.domScale.id = this.domScale.className + '-' + knobLabel;
-
-    // 设置scale尺寸、布局、定位
-    this.domScale.style.width = '85%';
-    this.domScale.style.aspectRatio = '1/1';
-    this.domScale.style.position = 'absolute';
-    this.domScale.style.top = '50%';
-    this.domScale.style.left = '50%';
-    this.domScale.style.transform = 'translate(-50%, -50%)';
-
-    // 设置scale样式
-    this.domScale.style.background = 'url(/resources/image/knob/knob_mid_scale.png)';
-    this.domScale.style.backgroundSize = '100% auto';
-    this.domScale.style.backgroundRepeat = 'no-repeat';
-    this.domScale.style.zIndex = 1;
-    this.devMode ? this.domScale.style.border = '0.5px solid green' : null;
 
 
     //-----------------------------------------------------------------------------------------
     // 创建label节点
     this.domLabel = document.createElement('span');
-    this.domContainer.appendChild(this.domLabel);
+    this.domIndicatorBox.appendChild(this.domLabel);
 
     // 设置label基本属性
     this.domLabel.className = 'knob-label';
-    this.domLabel.id = this.domLabel.className + '-' + knobLabel;
+    this.domLabel.id = this.domLabel.className + '-' + this.knobLabel;
 
     // 设置label尺寸、布局、定位
     this.domLabel.style.width = 'auto';
     this.domLabel.style.height = 'auto';
     this.domLabel.style.position = 'absolute';
-    this.domLabel.style.bottom = '-4%';
+    this.domLabel.style.top = '90%';
     this.domLabel.style.left = '50%';
     this.domLabel.style.transform = 'translate(-50%, 0%)';
 
@@ -119,14 +111,26 @@ export default class Knob {
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
-    // 通过默认值初始化
-    this.setIndicatorByValue(this.defaultValue);
+    // 添加鼠标移入事件
+    this.domContainer.addEventListener('mouseenter', () => {
+      // 更新信号量
+      this.isCursorOnFrame = true;
+    })
+
+    //-----------------------------------------------------------------------------------------
+    // 注册鼠标移出事件
+    this.domContainer.addEventListener('mouseleave', () => {
+      // 更新信号量
+      this.isCursorOnFrame = false;
+    })
 
     //-----------------------------------------------------------------------------------------
     // 给indicator注册鼠标移入事件
     this.domIndicator.addEventListener('mouseenter', e => {
       // 更新信号量
       this.isCursorOnIndicator = true;
+      // 当label不在编辑状态时，label显示当前值
+      if (!this.isEditing) this.setLabelShowValue();
       // 鼠标不在拖动状态时，鼠标样式为grab；在拖动状态时，鼠标样式为grabbing
       document.body.style.cursor = this.isDragging ? 'grabbing' : 'grab';
     });
@@ -136,6 +140,11 @@ export default class Knob {
     this.domIndicator.addEventListener('mouseleave', e => {
       // 更新信号量
       this.isCursorOnIndicator = false;
+      // 当label不在编辑状态时，label显示控件名称
+      if (!this.isEditing) {
+        this.setLabelShowName();
+        this.domLabel.setAttribute('contenteditable', false);
+      }
       // 鼠标不在拖动状态时，鼠标样式恢复默认；在拖动状态时，鼠标样式为grabbing
       document.body.style.cursor = this.isDragging ? 'grabbing' : 'default';
     });
@@ -235,27 +244,61 @@ export default class Knob {
     this.domContainer.addEventListener('contextmenu', e => {
       e.preventDefault(); // 阻止默认的右键菜单弹出
     }, false);
+  }
 
-    //-----------------------------------------------------------------------------------------
-    // 添加鼠标移入事件
-    this.domContainer.addEventListener('mouseenter', () => {
-      // 更新信号量
-      this.isCursorOnFrame = true;
-      // 当label不在编辑状态时，label显示当前值
-      if (!this.isEditing) this.setLabelShowValue();
-    })
+  //-----------------------------------------------------------------------------------------
+  // 设置value范围及默认值
+  setValueConfig(valueStart, valueEnd, defaultValue) {
+    this.valueStart = valueStart;
+    this.valueEnd = valueEnd;
+    this.defaultValue = defaultValue;
+    this.currentValue = defaultValue;
+    this.setIndicatorByValue(this.defaultValue);
+  }
 
-    //-----------------------------------------------------------------------------------------
-    // 注册鼠标移出事件
-    this.domContainer.addEventListener('mouseleave', () => {
-      // 更新信号量
-      this.isCursorOnFrame = false;
-      // 当label不在编辑状态时，label显示控件名称
-      if (!this.isEditing) {
-        this.setLabelShowName();
-        this.domLabel.setAttribute('contenteditable', false);
-      }
-    })
+  //-----------------------------------------------------------------------------------------
+  // 设置value显示的小数位数
+  setValueDecimals(numberDecimals) { this.numberDecimals = numberDecimals; }
+
+  //-----------------------------------------------------------------------------------------
+  // 设置value的显示单位
+  setValueSuffix(suffix) { this.suffix = suffix; }
+
+  //-----------------------------------------------------------------------------------------
+  // 配置indicator的sprite
+  setIndicatorSprite(spritePath) {
+    const img = new Image();
+    img.onload = () => {
+      this.spriteLength = img.height / img.width;
+      this.domIndicator.style.background = `url(${spritePath})`;
+      this.domIndicator.style.backgroundSize = '100% auto';
+      this.setIndicatorByValue(this.currentValue);
+    }
+    img.src = spritePath;
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 设置scale
+  setScale(scalePath, sizeRatio = 0.85) {
+    // 创建scale节点
+    this.domScale = document.createElement('div');
+    this.domIndicatorBox.appendChild(this.domScale);
+    // 设置scale基本属性
+    this.domScale.className = 'knob-scale';
+    this.domScale.id = this.domScale.className + '-' + this.knobLabel;
+    // 设置scale尺寸、布局、定位
+    this.domScale.style.width = `${sizeRatio * 100}%`;
+    this.domScale.style.aspectRatio = '1/1';
+    this.domScale.style.position = 'absolute';
+    this.domScale.style.top = '50%';
+    this.domScale.style.left = '50%';
+    this.domScale.style.transform = 'translate(-50%, -50%)';
+    // 设置scale样式
+    this.domScale.style.background = `url(${scalePath})`;
+    this.domScale.style.backgroundSize = '100% auto';
+    this.domScale.style.backgroundRepeat = 'no-repeat';
+    this.domScale.style.zIndex = 1;
+    this.devMode ? this.domScale.style.border = '0.5px solid green' : null;
   }
 
   //-----------------------------------------------------------------------------------------
@@ -331,7 +374,7 @@ export default class Knob {
 
   //-----------------------------------------------------------------------------------------
   setLabelShowName() {
-    this.domLabel.innerHTML = this.knobName;
+    this.domLabel.innerHTML = this.knobLabel;
   }
 
   //-----------------------------------------------------------------------------------------
