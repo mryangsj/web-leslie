@@ -1,16 +1,27 @@
+@font-face {
+    font-family: 'Azoft Sans Bold';
+    src: url('/resources/font/AzoftSans-Bold.woff2') format('woff2'),
+        url('/resources/font/AzoftSans-Bold.woff') format('woff'),
+        url('/resources/font/AzoftSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
 /* ----------------------------------------------------------------------------------------- */
 /* 全局样式 */
 * {
     margin: 0;
     padding: 0;
     user-select: none;
+    /*for Safari*/
+    -webkit-user-select: none;
 }
 
 html,
 body {
     height: 100%;
-    /* background-color: #262626; */
-    background-color: pink;
+    background-color: #262626;
+    /* background-color: pink; */
 }
 
 
@@ -56,8 +67,7 @@ audio {
 /* ----------------------------------------------------------------------------------------- */
 /* 主体部分（素材原尺寸：2000px * 900px） */
 .main {
-    /* width: 100vw; */
-    width: 100%;
+    width: 100vw;
     aspect-ratio: 2000 / 900;
     display: flex;
     flex-direction: row;
@@ -84,6 +94,35 @@ audio {
     background-image: url(/resources/image/decoration/right_decoration.png);
 }
 
+/* ----------------------------------------------------------------------------------------- */
+/* 微调small knob样式 */
+.small-knob {
+    top: 88%;
+    font-size: 0.8vw;
+    font-family: "Azoft Sans Bold", sans-serif;
+    font-weight: bold;
+    color: rgb(255, 255, 255, 0.6)
+}
+
+/* ----------------------------------------------------------------------------------------- */
+/* 微调mid knob样式 */
+.mid-knob {
+    top: 90%;
+    font-size: 0.9vw;
+    font-family: "Azoft Sans Bold", sans-serif;
+    font-weight: bold;
+    color: rgb(255, 255, 255, 0.6)
+}
+
+/* ----------------------------------------------------------------------------------------- */
+/* 微调big knob样式 */
+.big-knob {
+    top: 92%;
+    font-size: 0.9vw;
+    font-family: "Azoft Sans Bold", sans-serif;
+    font-weight: bold;
+    color: rgb(255, 255, 255, 0.6)
+}
 
 /* ----------------------------------------------------------------------------------------- */
 /* 设置控制面板尺寸 */
