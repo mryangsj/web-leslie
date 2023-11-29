@@ -1,78 +1,61 @@
 export default class Knob {
-  constructor(width = 100, knobLabel = 'New Knob', valueStart = 20, valueEnd = 20000, defaultValue = 1000, numberDecimals = 1, suffix = 'Hz', spritePath = 'resources/KnobMid.png', spriteLength = 129, devMode = true) {
-    //-----------------------------------------------------------------------------------------
-    //-----------------------------------------------------------------------------------------
-    this.ratioSizeDom = 1.2;
-    this.widthDom = width;
-    this.heightDom = this.widthDom * this.ratioSizeDom;
-    this.knobName = knobLabel;
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  constructor(container, sizeRatio = 0.8, knobName = 'NEWKNOB', devMode = false) {
+    this.domContainer = container;
+    this.sizeRatio = sizeRatio;
+    this.knobName = knobName;
 
-    this.valueStart = valueStart;
-    this.valueEnd = valueEnd;
-    this.defaultValue = defaultValue;
-    this.currentValue = defaultValue;
+    this.valueStart = 0;
+    this.valueEnd = 1;
+    this.defaultValue = 0.5;
+    this.currentValue = 0.5;
 
     this.stateValue = 0; // 0~1
     this.skewFactor = 1; // 当skewFactor为1时，knob是线性控件；非1时为非线性控件。除非极为特殊的情况，否则skewFactor应该大于0。
 
-    this.numberDecimals = numberDecimals;
-    this.suffix = suffix;
-
-    this.spritePath = spritePath;
-    this.spriteLength = spriteLength;
+    this.isLabelResponsive = false;
+    this.isLabelEditable = false;
+    this.isLabelEditing = false;
 
     this.isCursorOnIndicator = false;
-    this.isCursorOnFrame = false;
     this.isMouseDownOnIndicator = false;
-    this.isDragging = false;
-    this.isEditing = false;
+    this.isIndicatorDragging = false;
 
     this.devMode = devMode;
 
+
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
-    // 创建DOM文档节点
-    this.dom = document.createElement('div');
-    document.body.insertBefore(this.dom, document.body.firstChild);
-
-    // 设置dom基本属性
-    this.dom.className = 'knob';
-    this.dom.id = this.dom.className + '-' + knobLabel;
-
     // 设置dom的尺寸、布局、定位
-    this.dom.style.width = this.widthDom + 'px';
-    this.dom.style.height = this.heightDom + 'px';
-    this.dom.style.display = 'flex';
-    this.dom.style.flexDirection = 'column';
-    this.dom.style.justifyContent = 'flex-start';
-    this.dom.style.alignItems = 'center';
-    this.dom.style.position = 'absolute';
-    this.dom.style.overflow = 'visible';
+    this.domContainer.style.width = '100%';
+    this.domContainer.style.height = '100%';
+    this.domContainer.style.position = 'relative';
 
     // 设置dom的样式
-    devMode ? this.dom.style.backgroundColor = 'gray' : null;
-    devMode ? this.dom.style.border = '1px solid black' : null;
+    this.devMode ? this.domContainer.style.border = '0.5px solid red' : null;
 
     //-----------------------------------------------------------------------------------------
     // 创建indicatorBox节点
     this.domIndicatorBox = document.createElement('div');
-    this.dom.appendChild(this.domIndicatorBox);
+    this.domContainer.appendChild(this.domIndicatorBox);
 
-    // 设置indicatorBox的基本属性
-    this.domIndicatorBox.className = 'indicator-box';
-    this.domIndicatorBox.id = this.domIndicatorBox.className + '-' + knobLabel;
+    // 设置indicatorBox基本属性
+    this.domIndicatorBox.className = 'knob-indicator-box';
+    this.domIndicatorBox.id = this.domIndicatorBox.className + '-' + this.knobName;
 
-    // 设置indicatorBox的尺寸、布局、定位
-    this.domIndicatorBox.style.width = this.widthDom + 'px';
-    this.domIndicatorBox.style.height = this.widthDom + 'px';
-    this.domIndicatorBox.style.boxSizing = 'border-box';
-    this.domIndicatorBox.style.display = 'flex';
-    this.domIndicatorBox.style.flexDirection = 'column';
-    this.domIndicatorBox.style.justifyContent = 'center';
-    this.domIndicatorBox.style.alignItems = 'center';
+    // 设置indicatorBox尺寸、布局、定位
+    this.domIndicatorBox.style.width = `${this.sizeRatio * 100}%`;
+    this.domIndicatorBox.style.aspectRatio = '1/1';
+    this.domIndicatorBox.style.position = 'relative';
+    this.domIndicatorBox.style.top = '50%';
+    this.domIndicatorBox.style.left = '50%';
+    this.domIndicatorBox.style.transform = 'translate(-50%, -50%)';
 
-    // 设置indicatorBox基本样式
-    devMode ? this.domIndicatorBox.style.backgroundColor = 'pink' : null;
+    // 设置indicatorBox样式
+    this.devMode ? this.domIndicatorBox.style.border = '0.5px solid pink' : null;
+
 
     //-----------------------------------------------------------------------------------------
     // 创建indicator节点
@@ -81,210 +64,304 @@ export default class Knob {
 
     // 设置indicator基本属性
     this.domIndicator.className = 'knob-indicator';
-    this.domIndicator.id = this.domIndicator.className + '-' + knobLabel;
+    this.domIndicator.id = this.domIndicator.className + '-' + this.knobName;
 
     // 设置indicator尺寸、布局、定位
-    this.ratioSizeIndicator = 1;
-    this.widthIndicator = this.widthDom * this.ratioSizeIndicator;
-    this.heightIndicator = this.widthDom * this.ratioSizeIndicator;
-    this.domIndicator.style.width = this.widthIndicator + 'px';
-    this.domIndicator.style.height = this.heightIndicator + 'px';
-    this.domIndicator.style.boxSizing = 'border-box';
-    this.domIndicator.style.display = 'flex';
-    this.domIndicator.style.flexDirection = 'column';
-    this.domIndicator.style.justifyContent = 'center';
-    this.domIndicator.style.alignItems = 'center';
+    this.domIndicator.style.width = '100%';
+    this.domIndicator.style.aspectRatio = '1/1';
+    this.domIndicator.style.position = 'absolute';
+    this.domIndicator.style.top = '50%';
+    this.domIndicator.style.left = '50%';
+    this.domIndicator.style.transform = 'translate(-50%, -50%)';
 
     // 设置indicator基本样式
-    this.domIndicator.style.overflow = 'default';
-    this.domIndicator.style.background = `url(${this.spritePath})`;
-    this.domIndicator.style.backgroundSize = '100% auto';
+    this.domIndicator.style.zIndex = 2;
+    // this.devMode ? this.domIndicator.style.border = '0.5px solid blue' : null;
 
-    //-----------------------------------------------------------------------------------------
-    // 创建labelBox节点
-    this.domLabelBox = document.createElement('div');
-    this.dom.appendChild(this.domLabelBox);
-
-    // 设置labelBox基本属性
-    this.domLabelBox.className = 'knob-label-box';
-    this.domLabelBox.id = this.domLabelBox.className + '-' + knobLabel;
-
-    // 设置labelBox尺寸、布局定位
-    this.domLabelBox.style.width = '100%';
-    this.domLabelBox.style.flex = 1;
-    this.domLabelBox.style.boxSizing = 'border-box';
-    this.domLabelBox.style.display = 'flex';
-    this.domLabelBox.style.flexDirection = 'column';
-    this.domLabelBox.style.justifyContent = 'flex-start';
-    this.domLabelBox.style.alignItems = 'center';
-
-    // 设置labelBox样式
-    devMode ? this.domLabelBox.style.backgroundColor = 'skyblue' : null;
-
-    //-----------------------------------------------------------------------------------------
-    // 创建label节点
-    this.domLabel = document.createElement('span');
-    this.domLabelBox.appendChild(this.domLabel);
-
-    // 设置label基本属性
-    this.domLabel.className = 'knob-label';
-    this.domLabel.id = this.domLabel.className + '-' + knobLabel;
-
-    // 设置label尺寸、布局、定位
-    this.domLabel.style.width = 'auto';
-    this.domLabel.style.height = 'auto';
-    this.domLabel.style.boxSizing = 'border-box';
-    this.domLabel.style.display = 'flex';
-
-    // 设置label样式
-    this.setLabelShowName();
-    this.domLabel.style.textAlign = 'center';
-    this.domLabel.style.whiteSpace = 'nowrap';
-    this.domLabel.style.fontSize = `${this.widthDom * 0.13}px`;
-    document.body.style.cursor = 'default';
-    this.domLabel.style.userSelect = 'none';
-    this.domLabel.style.webkitUserSelect = 'none'; // for Safari
-    devMode ? this.domLabel.style.backgroundColor = 'gold' : null;
 
     //-----------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------
-    // 通过默认值初始化
-    this.setIndicatorByValue(this.defaultValue);
-
-    //-----------------------------------------------------------------------------------------
-    // 给indicator注册鼠标移入事件
-    this.domIndicator.addEventListener('mouseenter', e => {
-      // 更新信号量
-      this.isCursorOnIndicator = true;
-      // 鼠标不在拖动状态时，鼠标样式为grab；在拖动状态时，鼠标样式为grabbing
-      document.body.style.cursor = this.isDragging ? 'grabbing' : 'grab';
-    });
-
-    //-----------------------------------------------------------------------------------------
-    // 给indicator注册鼠标移出事件
-    this.domIndicator.addEventListener('mouseleave', e => {
-      // 更新信号量
-      this.isCursorOnIndicator = false;
-      // 鼠标不在拖动状态时，鼠标样式恢复默认；在拖动状态时，鼠标样式为grabbing
-      document.body.style.cursor = this.isDragging ? 'grabbing' : 'default';
-    });
+    // 给indicator注册鼠标移入移出事件
+    this.boundMouseEnterIndicatorHandler = this.mouseEnterIndicatorHandler.bind(this);
+    this.boundMouseLeaveIndicatorHandler = this.mouseLeaveIndicatorHandler.bind(this);
+    this.domIndicator.addEventListener('mouseenter', this.boundMouseEnterIndicatorHandler);
+    this.domIndicator.addEventListener('mouseleave', this.boundMouseLeaveIndicatorHandler);
 
     //-----------------------------------------------------------------------------------------
     // 给indicator注册鼠标按下事件
-    this.domIndicator.addEventListener('mousedown', e => {
+    this.domIndicator.addEventListener('mousedown', event => {
       // 更新信号量
       this.isMouseDownOnIndicator = true;
       // 鼠标在indicator中时，鼠标样式为grabbing
       document.body.style.cursor = 'grabbing';
+      // 触发start-interacting事件
+      document.body.dispatchEvent(new CustomEvent('start-interacting'));
+    });
+
+    //-----------------------------------------------------------------------------------------
+    // 当用户正在操作其它控件时，屏蔽鼠标事件
+    document.body.addEventListener('start-interacting', event => {
+      if (!this.isMouseDownOnIndicator) {
+        this.domIndicator.removeEventListener('mouseenter', this.boundMouseEnterIndicatorHandler);
+        this.domIndicator.removeEventListener('mouseleave', this.boundMouseLeaveIndicatorHandler);
+      }
+    });
+
+    //-----------------------------------------------------------------------------------------
+    // 当用户停止操作其它控件时，恢复鼠标事件
+    document.body.addEventListener('stop-interacting', event => {
+      if (!this.isMouseDownOnIndicator) {
+        this.domIndicator.addEventListener('mouseenter', this.boundMouseEnterIndicatorHandler);
+        this.domIndicator.addEventListener('mouseleave', this.boundMouseLeaveIndicatorHandler);
+      }
     });
 
     //-----------------------------------------------------------------------------------------
     // 注册鼠标移动事件
-    document.addEventListener('mousemove', e => {
+    document.addEventListener('mousemove', event => {
       // 判定鼠标拖动事件
       if (this.isMouseDownOnIndicator) {
         // 更新信号量
-        this.isDragging = true;
+        this.isIndicatorDragging = true;
         // 计算增量：indicator的增量与鼠标Y轴移动速度关联
-        const increment = Math.abs(e.movementY);
-        const sign = Math.sign(-e.movementY);
+        const increment = Math.abs(event.movementY);
+        const sign = Math.sign(-event.movementY);
         let nextState = this.stateValue + sign * Math.pow(increment, 1) * 0.005;
         // 判断是否已达indicator的边界
-        nextState = nextState <= 0 ? 0 : nextState;
-        nextState = nextState >= 1 ? 1 : nextState;
+        if (nextState < 0) { nextState = 0; }
+        if (nextState > 1) { nextState = 1; }
         // 设置indicator的角度
         this.setIndicatorByState(nextState);
         // label显示当前值
-        this.setLabelShowValue();
+        if (this.domLabel && this.isLabelResponsive) { this.setLabelShowValue(); }
       }
     });
 
     //-----------------------------------------------------------------------------------------
     // 鼠标释放事件（即拖动时也会释放拖动事件）
-    document.addEventListener('mouseup', e => {
-      // 更新信号量
-      this.isMouseDownOnIndicator = false;
-      this.isDragging = false;
-      // 鼠标不在frame中时，label显示控件名称
-      if (!this.isCursorOnFrame) this.setLabelShowName();
-      // 鼠标不在indicator中时，鼠标样式恢复默认；在indicator中时，鼠标样式为grab
-      document.body.style.cursor = this.isCursorOnIndicator ? 'grab' : 'default';
+    document.addEventListener('mouseup', event => {
+      if (this.isMouseDownOnIndicator) {
+        // 更新信号量
+        this.isMouseDownOnIndicator = false;
+        this.isIndicatorDragging = false;
+        // 鼠标在indicator中时，鼠标样式为grabbing
+        document.body.style.cursor = this.isCursorOnIndicator ? 'grab' : 'default';
+        // 当label需要响应鼠标事件时，若鼠标不在knob上，label显示标签
+        if (this.domLabel && this.isLabelResponsive && !this.isCursorOnIndicator) { this.setLabelShowInnerText(); }
+        // 触发stop-interacting事件
+        document.body.dispatchEvent(new CustomEvent('stop-interacting'));
+      }
     });
 
     //-----------------------------------------------------------------------------------------
     // 给indicator注册键盘+点击事件：按住command键(MacOS)、ctrl键(Windows)、alt键单击恢复默认值
-    this.domIndicator.addEventListener('click', e => {
-      if (e.altKey || e.metaKey || e.ctrlKey) this.setIndicatorByValue(this.defaultValue);
-      this.setLabelShowValue();
-    });
-
-    //-----------------------------------------------------------------------------------------
-    // 注册双击事件：手动输入值
-    this.dom.addEventListener('dblclick', e => {
-      // 更新信号量
-      this.isEditing = true;
-      // 激活label可编辑状态
-      this.domLabel.setAttribute('contenteditable', true);
-      // 去掉单位
-      this.setLabelShowValue(false);
-      // 获取光标并全选label
-      const selection = window.getSelection();
-      const range = document.createRange();
-      range.selectNodeContents(this.domLabel);
-      selection.removeAllRanges();
-      selection.addRange(range);
-    });
-
-    //-----------------------------------------------------------------------------------------
-    // 给label注册回车事件
-    this.domLabel.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        // 防止换行
-        e.preventDefault();
-        // 触发blur事件
-        this.domLabel.blur();
+    this.domIndicator.addEventListener('click', event => {
+      if (event.altKey || event.metaKey || event.ctrlKey) {
+        this.setIndicatorByValue(this.defaultValue);
+        if (this.domLabel && this.isLabelResponsive) { this.setLabelShowValue() };
       }
     });
-
-    //-----------------------------------------------------------------------------------------
-    // 给label注册失焦事件
-    this.domLabel.addEventListener('blur', e => {
-      // 更新信号量
-      this.isEditing = false;
-      // 根据输入数据调整indicator
-      this.setIndicatorByText(this.domLabel.innerHTML);
-      // 取消label可编辑状态
-      this.domLabel.setAttribute('contenteditable', false);
-      // 更新label
-      this.isCursorOnFrame ? this.setLabelShowValue() : this.setLabelShowName();
-    })
 
     //-----------------------------------------------------------------------------------------
     // 屏蔽右键菜单
-    this.dom.addEventListener('contextmenu', e => {
-      e.preventDefault(); // 阻止默认的右键菜单弹出
+    this.domContainer.addEventListener('contextmenu', event => {
+      event.preventDefault(); // 阻止默认的右键菜单弹出
     }, false);
+  }
 
-    //-----------------------------------------------------------------------------------------
-    // 添加鼠标移入事件
-    this.dom.addEventListener('mouseenter', () => {
-      // 更新信号量
-      this.isCursorOnFrame = true;
-      // 当label不在编辑状态时，label显示当前值
-      if (!this.isEditing) this.setLabelShowValue();
-    })
 
-    //-----------------------------------------------------------------------------------------
-    // 注册鼠标移出事件
-    this.dom.addEventListener('mouseleave', () => {
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  mouseEnterIndicatorHandler() {
+    // 更新信号量
+    this.isCursorOnIndicator = true;
+    // 鼠标不在拖动状态时，鼠标样式为grab；在拖动状态时，鼠标样式为grabbing
+    document.body.style.cursor = this.isIndicatorDragging ? 'grabbing' : 'grab';
+    // 当label需要响应鼠标事件时，若不在编辑状态，label显示当前值
+    if (this.domLabel && this.isLabelResponsive && !this.isLabelEditing) { this.setLabelShowValue(); };
+  }
+
+  //-----------------------------------------------------------------------------------------
+  mouseLeaveIndicatorHandler() {
+    // 更新信号量
+    this.isCursorOnIndicator = false;
+    // 鼠标不在拖动状态时，鼠标样式恢复默认；在拖动状态时，鼠标样式为grabbing
+    document.body.style.cursor = this.isIndicatorDragging ? 'grabbing' : 'default';
+    // 当label需要响应鼠标事件时，若不在编辑状态，label显示标签且撤回可编辑状态
+    if (this.domLabel && this.isLabelResponsive && !this.isLabelEditing) {
+      this.setLabelShowInnerText();
+      this.domLabel.setAttribute('contenteditable', false);
+    };
+  }
+
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  // 设置value范围及默认值
+  setValueConfig(valueStart, valueEnd, defaultValue) {
+    this.valueStart = valueStart;
+    this.valueEnd = valueEnd;
+    this.defaultValue = defaultValue;
+    this.currentValue = defaultValue;
+    this.setIndicatorByValue(this.defaultValue);
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 设置中间值来非线性地调整knob
+  setSkewFactorByMidValue(midValue) {
+    if (midValue > this.valueStart && midValue < this.valueEnd) {
+      this.skewFactor = Math.log((midValue - this.valueStart) / (this.valueEnd - this.valueStart)) / Math.log(0.5);
+      this.setIndicatorByValue(this.currentValue);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 配置indicator的sprite
+  setIndicatorSprite(spritePath) {
+    const img = new Image();
+    img.onload = () => {
+      this.spriteLength = img.height / img.width;
+      this.domIndicator.style.background = `url(${spritePath})`;
+      this.domIndicator.style.backgroundSize = '100% auto';
+      this.setIndicatorByValue(this.currentValue);
+    }
+    img.src = spritePath;
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 设置scale
+  setScale(scalePath, sizeRatio = 0.85) {
+    // 创建scale节点
+    this.domScale = document.createElement('div');
+    this.domIndicatorBox.appendChild(this.domScale);
+    // 设置scale基本属性
+    this.domScale.className = 'knob-scale';
+    this.domScale.id = this.domScale.className + '-' + this.knobName;
+    // 设置scale尺寸、布局、定位
+    this.domScale.style.width = `${sizeRatio * 100}%`;
+    this.domScale.style.aspectRatio = '1/1';
+    this.domScale.style.position = 'absolute';
+    this.domScale.style.top = '50%';
+    this.domScale.style.left = '50%';
+    this.domScale.style.transform = 'translate(-50%, -50%)';
+    // 设置scale样式
+    this.domScale.style.background = `url(${scalePath})`;
+    this.domScale.style.backgroundSize = '100% auto';
+    this.domScale.style.backgroundRepeat = 'no-repeat';
+    this.domScale.style.zIndex = 1;
+    this.devMode ? this.domScale.style.border = '0.5px solid green' : null;
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 设置label
+  setLabel(innerText, className) {
+    // 创建label节点
+    this.domLabel = document.createElement('span');
+    this.domIndicatorBox.appendChild(this.domLabel);
+    // 设置label基本属性
+    this.domLabel.className = 'knob-label';
+    this.domLabel.id = this.domLabel.className + '-' + this.knobName;
+    // 设置label尺寸、布局、定位
+    this.domLabel.style.width = 'auto';
+    this.domLabel.style.height = 'auto';
+    // 设置label必要样式
+    this.labelInnerText = innerText;
+    this.setLabelShowInnerText();
+    this.domLabel.style.position = 'absolute';
+    this.domLabel.style.textAlign = 'center';
+    this.domLabel.style.left = '50%';
+    this.domLabel.style.transform = 'translate(-50%, 0%)';
+    this.domLabel.style.whiteSpace = 'nowrap';
+    this.domLabel.style.zIndex = 1;
+    this.devMode ? this.domLabel.style.border = '0.5px solid yellow' : null;
+
+    // 建议的自定义属性
+    // this.domLabel.style.top = '100%';
+    // this.domLabel.style.fontSize = '0.7vw';
+    // this.domLabel.style.fontFamily = "'Azoft Sans Bold', sans-serif";
+    // this.domLabel.style.fontWeight = 'bold';
+    // this.domLabel.style.color = 'rgba(255, 255, 255, 0.5)';
+
+    if (className) { this.domLabel.classList.add(className); }
+  }
+
+  //-----------------------------------------------------------------------------------------
+  setLabelShowInnerText() { this.domLabel.innerHTML = this.labelInnerText; }
+
+  //-----------------------------------------------------------------------------------------
+  setLabelShowValue(withSuffix = true) {
+    if (withSuffix) { this.domLabel.innerHTML = this.currentValue.toFixed(this.numberDecimals) + this.suffix; }
+    else { this.domLabel.innerHTML = this.currentValue.toFixed(this.numberDecimals); }
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 设置label是否响应鼠标事件
+  setLabelResponsive(isLabelResponsive, numberDecimals = 2, suffix = '') {
+    if (isLabelResponsive) {
+      this.isLabelResponsive = isLabelResponsive;
+      this.numberDecimals = numberDecimals;
+      this.suffix = suffix;
+    }
+    else {
+      this.isLabelResponsive = false;
+    }
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 设置label是否可编辑
+  setLabelEditable(isLabelEditable) {
+    if (this.domLabel && isLabelEditable) {
       // 更新信号量
-      this.isCursorOnFrame = false;
-      // 当label不在编辑状态时，label显示控件名称
-      if (!this.isEditing) {
-        this.setLabelShowName();
+      this.isLabelEditable = isLabelEditable;
+
+      // 注册双击事件：手动输入值
+      this.domIndicator.addEventListener('dblclick', event => {
+        if (this.domLabel && this.isLabelEditable) {
+          // 更新信号量
+          this.isLabelEditing = true;
+          // 激活label可编辑状态
+          this.domLabel.setAttribute('contenteditable', true);
+          // 去掉单位
+          this.setLabelShowValue(false);
+          // 获取光标并全选label
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(this.domLabel);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      });
+
+      // 给label注册回车事件
+      this.domLabel.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+          // 防止换行
+          event.preventDefault();
+          // 触发blur事件
+          this.domLabel.blur();
+        }
+      });
+
+      // 给label注册失焦事件
+      this.domLabel.addEventListener('blur', event => {
+        // 更新信号量
+        this.isLabelEditing = false;
+        // 根据输入数据调整indicator
+        this.setIndicatorByText(this.domLabel.innerHTML);
+        // 取消label可编辑状态
         this.domLabel.setAttribute('contenteditable', false);
-      }
-    })
+        // 更新label
+        this.isCursorOnIndicator ? this.setLabelShowValue() : this.setLabelShowInnerText();
+      });
+    }
+    else {
+      this.isLabelEditable = false;
+    }
   }
 
   //-----------------------------------------------------------------------------------------
@@ -295,9 +372,9 @@ export default class Knob {
     // 更新当前状态值
     this.stateValue = this.valueToState(this.currentValue);
     // 根据目标角度更新indicator的样式（精灵图）
-    this.domIndicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
+    this.domIndicator.style.backgroundPosition = `0% ${this.getIndexSprite() / (this.spriteLength - 1) * 100}%`;
     // 触发changed事件
-    this.dom.dispatchEvent(new CustomEvent('changed'));
+    this.domContainer.dispatchEvent(new CustomEvent('changed'));
   }
 
   //-----------------------------------------------------------------------------------------
@@ -308,9 +385,9 @@ export default class Knob {
     // 更新当前值
     this.currentValue = this.stateToValue(this.stateValue);
     // 根据目标角度更新indicator的样式（精灵图）
-    this.domIndicator.style.backgroundPosition = `0 ${-this.getIndexSprite() * this.widthIndicator}px`;
+    this.domIndicator.style.backgroundPosition = `0% ${this.getIndexSprite() / (this.spriteLength - 1) * 100}%`;
     // 触发changed事件
-    this.dom.dispatchEvent(new CustomEvent('changed'));
+    this.domContainer.dispatchEvent(new CustomEvent('changed'));
   }
 
   //-----------------------------------------------------------------------------------------
@@ -321,22 +398,9 @@ export default class Knob {
     // 处理数字
     if (!isNaN(targetNumber) && targetNumber >= this.valueStart && targetNumber <= this.valueEnd) {
       this.setIndicatorByValue(targetNumber);
-      this.dom.dispatchEvent(new CustomEvent('changed')); // 触发changed事件
+      this.domContainer.dispatchEvent(new CustomEvent('changed')); // 触发changed事件
     } else if (this.isCursorOnFrame) {
       this.setLabelShowValue(false);
-    }
-  }
-
-  //-----------------------------------------------------------------------------------------
-  // 设置中间值来非线性地调整knob
-  setSkewFactorByMidValue(midValue) {
-    if (midValue > this.valueStart && midValue < this.valueEnd) {
-      this.midValue = midValue;
-      this.skewFactor = Math.log((midValue - this.valueStart) / (this.valueEnd - this.valueStart)) / Math.log(0.5);
-      this.setIndicatorByValue(this.currentValue);
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -356,16 +420,5 @@ export default class Knob {
   // 由indicator的角度获取sprite的index
   getIndexSprite() {
     return Math.round(this.stateValue * (this.spriteLength - 1));
-  }
-
-  //-----------------------------------------------------------------------------------------
-  setLabelShowName() {
-    this.domLabel.innerHTML = this.knobName;
-  }
-
-  //-----------------------------------------------------------------------------------------
-  setLabelShowValue(withSuffix = true) {
-    const targetText = withSuffix ? this.currentValue.toFixed(this.numberDecimals) + this.suffix : this.currentValue.toFixed(this.numberDecimals);
-    this.domLabel.innerHTML = targetText;
   }
 }
