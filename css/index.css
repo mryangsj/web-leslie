@@ -95,43 +95,66 @@ audio {
 }
 
 /* ----------------------------------------------------------------------------------------- */
+/* 设置label样式 */
+.small-knob-label,
+.mid-knob-label,
+.big-knob-label,
+.wheel-label,
+.slider-ver-label,
+.led-correlation-label,
+.switch-label {
+    font-size: 0.8vw;
+    font-family: "Azoft Sans Bold", sans-serif;
+    font-weight: bold;
+    color: rgb(255, 255, 255, 0.6)
+}
+
+/* ----------------------------------------------------------------------------------------- */
 /* 微调small knob的label样式 */
 .small-knob-label {
     top: 88%;
     font-size: 0.75vw;
-    font-family: "Azoft Sans Bold", sans-serif;
-    font-weight: bold;
-    color: rgb(255, 255, 255, 0.6)
 }
 
 /* ----------------------------------------------------------------------------------------- */
 /* 微调mid knob的label样式 */
 .mid-knob-label {
     top: 85%;
-    font-size: 0.8vw;
-    font-family: "Azoft Sans Bold", sans-serif;
-    font-weight: bold;
-    color: rgb(255, 255, 255, 0.6)
 }
 
 /* ----------------------------------------------------------------------------------------- */
 /* 微调big knob的label样式 */
 .big-knob-label {
     top: 92%;
-    font-size: 0.85vw;
-    font-family: "Azoft Sans Bold", sans-serif;
-    font-weight: bold;
-    color: rgb(255, 255, 255, 0.6)
 }
 
 /* ----------------------------------------------------------------------------------------- */
 /* 微调wheel的label样式 */
 .wheel-label {
     top: 89%;
+}
+
+/* ----------------------------------------------------------------------------------------- */
+/* 微调slider的label样式 */
+.slider-ver-label {
+    top: 95%;
+}
+
+/* ----------------------------------------------------------------------------------------- */
+/* 微调correlation led的label样式 */
+.led-correlation-label {
+    bottom: 75%;
     font-size: 0.8vw;
-    font-family: "Azoft Sans Bold", sans-serif;
-    font-weight: bold;
-    color: rgb(255, 255, 255, 0.6)
+}
+
+/* ----------------------------------------------------------------------------------------- */
+/* 微调switch的label样式 */
+.switch-label_bottom {
+    top: 85%;
+}
+
+.switch-label_top {
+    bottom: 100%;
 }
 
 /* ----------------------------------------------------------------------------------------- */
@@ -154,7 +177,6 @@ audio {
 #block-switch {
     grid-row: 1 / span 3;
     grid-column: 2 / span 1;
-    background-color: #fff;
     z-index: 1;
 }
 
@@ -319,20 +341,17 @@ audio {
 #meter-container-hornCorrelation {
     grid-row: 1 / span 1;
     grid-column: 1 / span 1;
-    background-color: #aaa;
 }
 
 #slider-container-hornMicWidth {
     grid-row: 2 / span 1;
     grid-column: 1 / span 1;
-    background-color: #bbb;
 }
 
 /* ----------------------------------------------- */
 #block-drumMic {
     grid-row: 2 / span 4;
     grid-column: 7 /span 4;
-    background-color: #bbb;
 
     display: grid;
     grid-template-columns: 1fr;
@@ -342,13 +361,11 @@ audio {
 #meter-container-drumCorrelation {
     grid-row: 1 / span 1;
     grid-column: 1 / span 1;
-    background-color: #ccc;
 }
 
 #slider-container-drumMicWidth {
     grid-row: 2 / span 1;
     grid-column: 1 / span 1;
-    background-color: #ddd;
 }
 
 /* ----------------------------------------------- */
@@ -369,7 +386,6 @@ audio {
 #slider-container-hornMicLevel_L {
     grid-row: 3 / span 4;
     grid-column: 1 / span 2;
-    background-color: #eee;
 }
 
 #knob-container-hornMicPan_R {
@@ -380,13 +396,12 @@ audio {
 #slider-container-hornMicLevel_R {
     grid-row: 3 / span 4;
     grid-column: 3 / span 2;
-    background-color: #aaa;
 }
 
 #switch-container-hornMicLevelLink {
     grid-row: 3 / span 1;
     grid-column: 2 / span 2;
-    background-color: green;
+    /* background-color: green; */
 }
 
 /* ----------------------------------------------- */
@@ -407,7 +422,6 @@ audio {
 #slider-container-drumMicLevel_L {
     grid-row: 3 / span 4;
     grid-column: 1 / span 2;
-    background-color: #ccc;
 }
 
 #knob-container-drumMicPan_R {
@@ -418,13 +432,12 @@ audio {
 #slider-container-drumMicLevel_R {
     grid-row: 3 / span 4;
     grid-column: 3 / span 2;
-    background-color: #fff;
 }
 
 #switch-container-drumMicLevelLink {
     grid-row: 3 / span 1;
     grid-column: 2 / span 2;
-    background-color: green;
+    /* background-color: green; */
 }
 
 /* ----------------------------------------------- */

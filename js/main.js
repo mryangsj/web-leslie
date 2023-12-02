@@ -1,4 +1,4 @@
-import Knob from './knob.js';
+import Knob from '/js/Knob.js';
 // import Switch from './switch.js';
 
 //-----------------------------------------------------------------------------------------

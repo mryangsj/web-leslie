@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leslie Speaker</title>
+  <link rel="shortcut icon" href="#">
   <link rel="stylesheet" href="/css/index.css">
 </head>
 
@@ -14,7 +15,7 @@
     <!-- 'Load Preset' button -->
     <input type="text" id="textInput" onclick="openFileUploader()" readonly placeholder="Load Preset">
     <input type="file" id="fileInput" accept=".mp3, .wav, .ogg, .aac" onchange="handleFileSelect(event)">
-    <audio controls id="audioPlayer">
+    <audio controls id="audioPlayer" src="/resources/audio/test-audio.wav">
       Your browser does not support the audio element.
     </audio>
   </div>
@@ -64,43 +65,6 @@
       <div class="block" id="block-mode">
 
       </div>
-
-
-      <!-- 三个按钮 -->
-      <!-- <div class="button_container">
-        <button onclick="toggleColor(this,0)">SETUP</button>
-        <button onclick="toggleColor(this,1)">AMP</button>
-        <button onclick="toggleColor(this,2)">EQ</button>
-      </div> -->
-
-
-      <!-- <div class="knob_container knob_container_hide" id="knob_container1">
-        <div id="knobSpring"></div>
-        <div id="knobMicDistance"></div>
-        <div id="knobLowSpeed"></div>
-        <div id="knobAcce"></div>
-        <div id="knobFastSpeed"></div>
-        <div id="knobDece"></div>
-      </div> -->
-
-      <!-- <div class="knob_container knob_container_hide" id="knob_container2">
-        <div id="knobGain"></div>
-        <div id="knobVolume"></div>
-        <div id="knobHPF"></div>
-        <div id="knobLow"></div>
-        <div id="knobMid"></div>
-        <div id="knobHigh"></div>
-      </div> -->
-
-      <!-- <div class="knob_container knob_container_hide" id="knob_container3">
-        <div id="knobHighF"></div>
-        <div id="knobHighG"></div>
-        <div id="knobMidF"></div>
-        <div id="knobMidQ"></div>
-        <div id="knobMidG"></div>
-        <div id="knobLowF"></div>
-        <div id="knobLowG"></div>
-      </div> -->
 
     </div>
     <!-- end of left panel -->
@@ -166,8 +130,12 @@
 
 
   <script src="/js/index.js"></script>
+  <script type="module" src="/js/main.js"></script>
+  <script type="module" src="/js/switchInit.js"></script>
   <script type="module" src="/js/knobInit.js"></script>
   <script type="module" src="/js/wheelInit.js"></script>
+  <script type="module" src="/js/sliderInit.js"></script>
+  <script type="module" src="/js/meterInit.js"></script>
 
 </body>
 
