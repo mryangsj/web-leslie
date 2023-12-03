@@ -17,7 +17,7 @@ const labelCSSSwitch_top = 'switch-label_top';
 const labelCSSSwitch_bottom = 'switch-label_bottom';
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
-const switchPowerObj = new Switch(containerPower, sizeRatioSwitch, 'power', devMode);
+export const switchPowerObj = new Switch(containerPower, sizeRatioSwitch, 'power', devMode);
 switchPowerObj.setIndicatorSprite(spritePathSwitch, spriteFillDirection);
 switchPowerObj.setValueConfig(0, 1, 0);
 switchPowerObj.createLabelStatic('ON', labelCSSSwitch_top);

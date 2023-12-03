@@ -102,7 +102,9 @@ audio {
 .wheel-label,
 .slider-ver-label,
 .led-correlation-label,
-.switch-label {
+.switch-label,
+#hornRate,
+#drumRate {
     font-size: 0.8vw;
     font-family: "Azoft Sans Bold", sans-serif;
     font-weight: bold;

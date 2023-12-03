@@ -36,7 +36,7 @@ const labelCSSSlider = 'slider-ver-label';
 
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
-const sliderHornMicWidthObj = new Slider(containerHornMicWidth, sizeRatioSliderHor, 'hornMicWidth', devMode);
+export const sliderHornMicWidthObj = new Slider(containerHornMicWidth, sizeRatioSliderHor, 'hornMicWidth', devMode);
 sliderHornMicWidthObj.setIndicatorSprite(spritePathSliderHor, spriteFillDirectionHor, positionTopLeftFinetuneSiliderHor);
 sliderHornMicWidthObj.setScale(spritePathScaleSliderHor, sizeRatioScaleSliderHor, positionTopLeftFinetuneScaleSiliderHor);
 sliderHornMicWidthObj.setValueConfig(0, 90, 45);
@@ -45,7 +45,7 @@ sliderHornMicWidthObj.setLabelResponsive(true, 1, '°');
 sliderHornMicWidthObj.setLabelEditable(true);
 sliderHornMicWidthObj.setDerectionResponseToMouse('horizontal');
 //-----------------------------------------------------------------------------------------
-const sliderDrumMicWidthObj = new Slider(containerDrumMicWidth, sizeRatioSliderHor, 'drumMicWidth', devMode);
+export const sliderDrumMicWidthObj = new Slider(containerDrumMicWidth, sizeRatioSliderHor, 'drumMicWidth', devMode);
 sliderDrumMicWidthObj.setIndicatorSprite(spritePathSliderHor, spriteFillDirectionHor, positionTopLeftFinetuneSiliderHor);
 sliderDrumMicWidthObj.setScale(spritePathScaleSliderHor, sizeRatioScaleSliderHor, positionTopLeftFinetuneScaleSiliderHor);
 sliderDrumMicWidthObj.setValueConfig(0, 90, 45);
@@ -57,7 +57,7 @@ sliderDrumMicWidthObj.setDerectionResponseToMouse('horizontal');
 
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
-const sliderHornMicLevelObj_L = new Slider(containerHornMicLevel_L, sizeRatioSliderVer, 'hornMic_L', devMode);
+export const sliderHornMicLevelObj_L = new Slider(containerHornMicLevel_L, sizeRatioSliderVer, 'hornMic_L', devMode);
 sliderHornMicLevelObj_L.setIndicatorSprite(spritePathSliderVer, spriteFillDirectionVer, positionTopLeftFinetuneSiliderVer);
 sliderHornMicLevelObj_L.setScale(spritePathScaleSliderVer, sizeRatioScaleSliderVer, positionTopLeftFinetuneScaleSiliderVer);
 sliderHornMicLevelObj_L.setValueConfig(-120, 6, 0);
@@ -66,7 +66,7 @@ sliderHornMicLevelObj_L.setLabel('L', labelCSSSlider);
 sliderHornMicLevelObj_L.setLabelResponsive(true, 1, 'dB');
 sliderHornMicLevelObj_L.setLabelEditable(true);
 //-----------------------------------------------------------------------------------------
-const sliderHornMicLevelObj_R = new Slider(containerHornMicLevel_R, sizeRatioSliderVer, 'hornMic_R', devMode);
+export const sliderHornMicLevelObj_R = new Slider(containerHornMicLevel_R, sizeRatioSliderVer, 'hornMic_R', devMode);
 sliderHornMicLevelObj_R.setIndicatorSprite(spritePathSliderVer, spriteFillDirectionVer, positionTopLeftFinetuneSiliderVer);
 sliderHornMicLevelObj_R.setScale(spritePathScaleSliderVer, sizeRatioScaleSliderVer, positionTopLeftFinetuneScaleSiliderVer);
 sliderHornMicLevelObj_R.setValueConfig(-120, 6, 0);
@@ -75,7 +75,7 @@ sliderHornMicLevelObj_R.setLabel('R', labelCSSSlider);
 sliderHornMicLevelObj_R.setLabelResponsive(true, 1, 'dB');
 sliderHornMicLevelObj_R.setLabelEditable(true);
 //-----------------------------------------------------------------------------------------
-const sliderDrumMicLevelObj_L = new Slider(containerDrumMicLevel_L, sizeRatioSliderVer, 'drumMic_L', devMode);
+export const sliderDrumMicLevelObj_L = new Slider(containerDrumMicLevel_L, sizeRatioSliderVer, 'drumMic_L', devMode);
 sliderDrumMicLevelObj_L.setIndicatorSprite(spritePathSliderVer, spriteFillDirectionVer, positionTopLeftFinetuneSiliderVer);
 sliderDrumMicLevelObj_L.setScale(spritePathScaleSliderVer, sizeRatioScaleSliderVer, positionTopLeftFinetuneScaleSiliderVer);
 sliderDrumMicLevelObj_L.setValueConfig(-120, 6, 0);
@@ -84,7 +84,7 @@ sliderDrumMicLevelObj_L.setLabel('L', labelCSSSlider);
 sliderDrumMicLevelObj_L.setLabelResponsive(true, 1, 'dB');
 sliderDrumMicLevelObj_L.setLabelEditable(true);
 //-----------------------------------------------------------------------------------------
-const sliderDrumMicLevelObj_R = new Slider(containerDrumMicLevel_R, sizeRatioSliderVer, 'drumMic_R', devMode);
+export const sliderDrumMicLevelObj_R = new Slider(containerDrumMicLevel_R, sizeRatioSliderVer, 'drumMic_R', devMode);
 sliderDrumMicLevelObj_R.setIndicatorSprite(spritePathSliderVer, spriteFillDirectionVer, positionTopLeftFinetuneSiliderVer);
 sliderDrumMicLevelObj_R.setScale(spritePathScaleSliderVer, sizeRatioScaleSliderVer, positionTopLeftFinetuneScaleSiliderVer);
 sliderDrumMicLevelObj_R.setValueConfig(-120, 6, 0);

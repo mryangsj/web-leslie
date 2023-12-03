@@ -26,6 +26,8 @@ export default class Knob {
     this.isMouseDownOnIndicator = false;
     this.isIndicatorDragging = false;
 
+    this.eventTarget = new EventTarget();
+
     this.devMode = devMode;
 
 
@@ -240,7 +242,6 @@ export default class Knob {
     this.valueStart = valueStart;
     this.valueEnd = valueEnd;
     this.defaultValue = defaultValue;
-    this.currentValue = defaultValue;
     this.setIndicatorByValue(this.defaultValue);
   }
 
@@ -304,7 +305,7 @@ export default class Knob {
         this.domIndicator.style.background = `url(${spritePath})`;
         this.domIndicator.style.backgroundSize = `100% auto`;
         this.domIndicator.style.backgroundRepeat = 'no-repeat';
-        this.setIndicatorByValue(this.currentValue);
+        this.setIndicatorByValue(this.currentValue, true);
       };
       imgSprite.src = spritePath;
     }
@@ -454,51 +455,61 @@ export default class Knob {
 
   //-----------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------
-  // 通过目标值来旋转indicator
-  setIndicatorByValue(targetValue) {
-    // 更新当前值
-    this.currentValue = targetValue;
-    // 更新当前状态值
-    this.stateValue = this.valueToState(this.currentValue);
-    // 根据目标角度更新indicator的样式（精灵图）
-    this.domIndicator.style.backgroundPosition = `0% ${this.getIndexSprite() / (this.spriteLength - 1) * 100}%`;
-    // 触发changed事件
-    this.domContainer.dispatchEvent(new CustomEvent('changed'));
+  // 通过targe value来更新indicator状态
+  setIndicatorByValue(targetValue, isForceUpdate = false) {
+    //判定是否有必要更新
+    if (targetValue != this.currentValue || isForceUpdate) {
+      const prevValue = this.currentValue;
+      const prevStateValue = this.stateValue;
+      this.currentValue = targetValue;
+      this.stateValue = this.valueToState(this.currentValue);
+
+      // 判断是否要更新indicator的sprite
+      const preIndex = this.getSpriteIndexByStateValue(prevStateValue);
+      const curIndex = this.getSpriteIndexByStateValue();
+      if (preIndex != curIndex || isForceUpdate) {
+        this.domIndicator.style.backgroundPosition = `0% ${curIndex / (this.spriteLength - 1) * 100}%`;
+      }
+
+      // 触发changed事件
+      const eventChanged = new CustomEvent('changed', {
+        detail: {
+          // previousValue: prevValue,
+          value: targetValue
+        }
+      });
+      this.domContainer.dispatchEvent(eventChanged);
+      this.eventTarget.dispatchEvent(eventChanged);
+    }
   }
 
   //-----------------------------------------------------------------------------------------
-  // 通过目标状态值来旋转indicator
+  // 通过targe state value来更新indicator状态
   setIndicatorByState(targetState) {
-    // 更新当前状态值
-    this.stateValue = targetState;
-    // 更新当前值
-    this.currentValue = this.stateToValue(this.stateValue);
-    // 根据目标角度更新indicator的样式（精灵图）
-    this.domIndicator.style.backgroundPosition = `0% ${this.getIndexSprite() / (this.spriteLength - 1) * 100}%`;
-    // 触发changed事件
-    this.domContainer.dispatchEvent(new CustomEvent('changed'));
+    this.setIndicatorByValue(this.stateToValue(targetState));
   }
 
   //-----------------------------------------------------------------------------------------
-  // 由indicator的角度获取sprite的index
-  getIndexSprite() {
-    return Math.round(this.stateValue * (this.spriteLength - 1));
+  // 获取sprite的index
+  getSpriteIndexByStateValue(stateValue = this.stateValue) {
+    return Math.round(stateValue * (this.spriteLength - 1));
   }
 
-
   //-----------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------
-  // 通过文本来设置indicator的角度
+  // 通过text number来更新indicator状态
   setIndicatorByText(inputText) {
-    // 接收数字
     const targetNumber = parseFloat(inputText); // 尝试将输入转换为浮点数
-    // 处理数字
     if (!isNaN(targetNumber) && targetNumber >= this.valueStart && targetNumber <= this.valueEnd) {
       this.setIndicatorByValue(targetNumber);
-      this.domContainer.dispatchEvent(new CustomEvent('changed')); // 触发changed事件
-    } else if (this.isCursorOnFrame) {
-      this.setLabelShowValue(false);
+    } else if (this.isCursorOnIndicator) {
+      console.warn(this.componentType + ': inputText should be a number between valueStart and valueEnd.');
     }
+  }
+
+  //-----------------------------------------------------------------------------------------
+  // 捕获事件
+  addEventListener(eventName, eventHandler) {
+    this.eventTarget.addEventListener(eventName, eventHandler);
   }
 
 

@@ -19,7 +19,7 @@ const spritePathScaleWheel = '/resources/image/wheel/wheel_scale.png';
 const labelCSSWheel = 'wheel-label';
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
-const wheelHornSpeedObj = new Wheel(containerHornSpeed, sizeRatioWheel, 'hornSpeed', devMode);
+export const wheelHornSpeedObj = new Wheel(containerHornSpeed, sizeRatioWheel, 'hornSpeed', devMode);
 wheelHornSpeedObj.setIndicatorSprite(spritePathWheel, spriteFillDirection);
 wheelHornSpeedObj.setScale(spritePathScaleWheel, sizeRatioScaleWheel);
 wheelHornSpeedObj.setValueConfig(-50, 50, 0);
@@ -27,7 +27,7 @@ wheelHornSpeedObj.setLabel('HORN<br>SPEED', labelCSSWheel);
 wheelHornSpeedObj.setLabelResponsive(true, 1, '%');
 wheelHornSpeedObj.setLabelEditable(true);
 //-----------------------------------------------------------------------------------------
-const wheelDrumSpeedObj = new Wheel(containerDrumSpeed, sizeRatioWheel, 'drumSpeed', devMode);
+export const wheelDrumSpeedObj = new Wheel(containerDrumSpeed, sizeRatioWheel, 'drumSpeed', devMode);
 wheelDrumSpeedObj.setIndicatorSprite(spritePathWheel, spriteFillDirection);
 wheelDrumSpeedObj.setScale(spritePathScaleWheel, sizeRatioScaleWheel);
 wheelDrumSpeedObj.setValueConfig(-50, 50, 0);

@@ -18,10 +18,12 @@ const positionTopLeftFinetuneLEDCorrelation = [0.2, -0.0016];
 const labelCSSWheel = 'led-correlation-label';
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
-const ledHornCorrelationObj = new Knob(containerHornMicCorrelation, sizeRatioLED, 'hornCorrelation', devMode);
+export const ledHornCorrelationObj = new Knob(containerHornMicCorrelation, sizeRatioLED, 'hornCorrelation', devMode);
 ledHornCorrelationObj.setIndicatorSprite(spritePathLED, spriteFillDirection, positionTopLeftFinetuneLEDCorrelation);
 ledHornCorrelationObj.setLabel('HORN MIC CORRELATION', labelCSSWheel);
+ledHornCorrelationObj.setValueConfig(-1, 1, 0);
 //-----------------------------------------------------------------------------------------
-const ledDrumCorrelationObj = new Knob(containerDrumMicCorrelation, sizeRatioLED, 'drumCorrelation', devMode);
+export const ledDrumCorrelationObj = new Knob(containerDrumMicCorrelation, sizeRatioLED, 'drumCorrelation', devMode);
 ledDrumCorrelationObj.setIndicatorSprite(spritePathLED, spriteFillDirection, positionTopLeftFinetuneLEDCorrelation);
 ledDrumCorrelationObj.setLabel('DRUM MIC CORRELATION', labelCSSWheel);
+ledDrumCorrelationObj.setValueConfig(-1, 1, 0);
