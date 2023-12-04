@@ -28,7 +28,7 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
 
     //-----------------------------------------------------------------------------------------
     // 控制rotor旋转的振荡器参数
-    this.rotorSlowFrequency = 1; // Hz
+    this.rotorSlowFrequency = 6; // Hz
     this.rotorFastFrequency = 6; // Hz
     // horn振荡器
     this.hornRotorFrequency = this.rotorSlowFrequency;

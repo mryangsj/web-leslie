@@ -13,22 +13,20 @@
     margin: 0;
     padding: 0;
     user-select: none;
-    /*for Safari*/
     -webkit-user-select: none;
 }
 
 html,
 body {
     height: 100%;
-    background-color: #262626;
-    /* background-color: pink; */
+    background-color: #171717;
 }
 
 
 /* ----------------------------------------------------------------------------------------- */
 /* 顶部导航栏 */
 .header {
-    height: 60px;
+    height: 5vw;
     background-color: #252625;
     position: relative;
 }
@@ -68,6 +66,7 @@ audio {
 /* 主体部分（素材原尺寸：2000px * 900px） */
 .main {
     width: 100vw;
+    height: calc(100vw * (900 / 2000));
     aspect-ratio: 2000 / 900;
     display: flex;
     flex-direction: row;
@@ -77,7 +76,7 @@ audio {
 /* ----------------------------------------------------------------------------------------- */
 /* 设置两侧修饰木板尺寸(素材原尺寸：72px * 900px) */
 .decoration {
-    width: calc(100% * (72 / 2000));
+    width: calc(100% * (70 / 2000));
     height: 100%;
     background-size: 100% 100%;
 }
@@ -108,7 +107,7 @@ audio {
     font-size: 0.8vw;
     font-family: "Azoft Sans Bold", sans-serif;
     font-weight: bold;
-    color: rgb(255, 255, 255, 0.6)
+    color: rgb(255, 255, 255, 0.7)
 }
 
 /* ----------------------------------------------------------------------------------------- */
@@ -146,7 +145,6 @@ audio {
 /* 微调correlation led的label样式 */
 .led-correlation-label {
     bottom: 75%;
-    font-size: 0.8vw;
 }
 
 /* ----------------------------------------------------------------------------------------- */
@@ -253,6 +251,21 @@ audio {
     grid-column: 1 / span 3;
 }
 
+#label-container-hornRate {
+    grid-row: 1 / span 2;
+    grid-column: 1 / span 3;
+    position: relative;
+}
+
+#hornRate {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 100%;
+    text-align: center;
+}
+
 #knob-container-hornAcceleration {
     grid-row: 1 / span 3;
     grid-column: 4 / span 2;
@@ -278,6 +291,22 @@ audio {
     grid-column: 1 / span 3;
 }
 
+#label-container-drumRate {
+    grid-row: 1 / span 2;
+    grid-column: 1 / span 3;
+
+    position: relative;
+}
+
+#drumRate {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 100%;
+    text-align: center;
+}
+
 #knob-container-drumAcceleration {
     grid-row: 1 / span 3;
     grid-column: 4 / span 2;
@@ -292,32 +321,45 @@ audio {
 #block-mode {
     grid-row: 8 / span 1;
     grid-column: 6 / span 5;
-    background-color: green;
+    /* background-color: green; */
 }
 
 
 /* ----------------------------------------------------------------------------------------- */
 /* 中间控制面板 */
 #panal-mid {
-    background-image: url(/resources/leslie/background.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
     position: relative;
 }
 
-/* ----------------------------------------------- */
-/* rotor样式 */
-.rotor {
-    width: 100%;
-    height: 16%;
-    /* background-color: #fff; */
-    background-image: url(/resources/leslie/horn.png);
-    /* background-size: cover;  */
+#leslie-frame {
+    width: 101%;
+    height: 100%;
+    background-image: url(/resources/image/leslie/leslie_frame.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
     position: absolute;
-    top: 0%;
-    left: 0%;
-    background-position: 0 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+#leslie-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url(/resources/image/leslie/leslie_background.png);
+    background-size: cover;
+    z-index: 0;
+}
+
+#leslie-horn {
+    width: 100%;
+    aspect-ratio: 620 / 181;
+    position: absolute;
+    top: 20%;
+    z-index: 1;
 }
 
 
@@ -455,172 +497,6 @@ audio {
     background-color: #aaa;
 }
 
-.link1,
-.link2,
-.output {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    flex: 1;
-}
-
-.button_contain_right {
-    width: 100%;
-    height: 8%;
-    margin-top: 25%;
-}
-
-.button_link {
-    width: 65%;
-    height: 100%;
-    margin-left: 15%;
-}
-
-.knob_contain_right {
-    width: 100%;
-    height: 20%;
-}
-
-#knobLinkLR1 {
-    position: absolute;
-    left: 8%;
-    top: 26%;
-}
-
-#knobLinkLR2 {
-    position: absolute;
-    left: 24%;
-    top: 26%;
-}
-
-#knobLinkLR3 {
-    position: absolute;
-    left: 42%;
-    top: 26%;
-}
-
-#knobLinkLR4 {
-    position: absolute;
-    left: 58%;
-    top: 26%;
-}
-
-.switch {
-    border: none;
-    outline: none;
-    background: none;
-    position: absolute;
-    width: 12%;
-    height: 0;
-    padding-bottom: 12%;
-    /* margin-left: 5%; */
-    background-image: url(/resources/image/switch/switch_button_off.png);
-    /* background-color: #fff; */
-    background-size: cover;
-    background-repeat: no-repeat;
-    transition: background-image 0.3s ease;
-    cursor: pointer;
-}
-
-.switch.clicked {
-    background-image: url(/resources/image/switch/switch_button_on.png);
-}
-
-.slider-container {
-    width: 70%;
-    height: 50%;
-    margin-left: 12%;
-    margin-top: 10%;
-}
-
-.slider-dec {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    gap: 70%;
-    position: relative;
-    padding: 0px 20%;
-}
-
-.slider-output {
-    position: relative;
-    background-color: #282826;
-    border: 1px solid #53514D;
-    height: 95%;
-    width: 8px;
-    z-index: 2;
-}
-
-.slider-tracks {
-    width: 8px;
-    height: 180px;
-    position: relative;
-    background-color: #282826;
-    border: 1px solid #53514D;
-}
-
-.slider_inside {
-    width: 3px;
-    position: absolute;
-    background-color: #000;
-    height: 96%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.slider-handle {
-    width: 23px;
-    height: 38px;
-    background-image: url(./icon/slider-handle.png);
-    background-size: cover;
-    position: absolute;
-    cursor: pointer;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 2px;
-}
-
-
-.slider-dec::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: repeating-linear-gradient(to bottom, #B1AA96 0px, #B1AA96 1px, transparent 2px, transparent 9%);
-    pointer-events: none;
-    /* z-index: -1;  */
-}
-
-.horn_text,
-.drum_text,
-.output_text {
-    text-align: center;
-    color: #D4CEAF;
-    width: 80%;
-    height: 10%;
-    font-size: large;
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.horn_HZ,
-.drum_HZ {
-    width: 85%;
-    height: 10%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-top: 5%;
-    margin-left: 30%;
-    /* gap: 10px; */
-}
-
-.output_text {
-    margin-left: -8%;
-}
 
 .footer-text {
     position: absolute;

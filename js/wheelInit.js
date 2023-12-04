@@ -8,8 +8,8 @@ const containerDrumSpeed = document.getElementById('wheel-container-drumSpeed');
 
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
-const devMode = true;
-// const devMode = false;
+// const devMode = true;
+const devMode = false;
 //-----------------------------------------------------------------------------------------
 const sizeRatioWheel = 0.76;
 const spritePathWheel = '/resources/image/wheel/wheel_vertical.png';

@@ -2,6 +2,7 @@ import { switchPowerObj } from "/js/switchInit.js";
 import { knobInputGainObj } from "/js/knobInit.js";
 import { wheelHornSpeedObj, wheelDrumSpeedObj } from "/js/wheelInit.js";
 import { knobHornAccelerationObj, knobHornDecelerationObj, knobDrumAccelerationObj, knobDrumDecelerationObj } from "/js/knobInit.js";
+import { leslieHornObj } from "/js/meterInit.js";
 import { ledHornCorrelationObj, ledDrumCorrelationObj } from "/js/meterInit.js";
 import { knobDrumMicPanObj_L, knobDrumMicPanObj_R, knobHornMicPanObj_L, knobHornMicPanObj_R } from "/js/knobInit.js";
 import { sliderHornMicWidthObj, sliderDrumMicWidthObj } from "/js/sliderInit.js";
@@ -169,13 +170,7 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
   leslieNode.port.onmessage = (event) => {
     switch (event.data.type) {
       case 'rotorInstantDegree':
-        // hornRotor.style.transform = `rotate(${event.data.value[0]}deg)`;
-        // drumRotor.style.transform = `rotate(${event.data.value[1]}deg)`;
-        // console.log(event.data.value);
-
-        // const hornDegree = event.data.value[0];
-        // const index = Math.round(hornDegree / 360 * (72 - 1));
-        // hornImg.style.backgroundPosition = `0 ${-index * 1080}px`;
+        leslieHornObj.setIndicatorByValue(event.data.value[0]);
         break;
       case 'rotorInstantRate':
         hornRate.innerText = `${event.data.value[0].toFixed(2)}Hz`;

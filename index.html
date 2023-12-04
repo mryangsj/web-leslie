@@ -7,6 +7,7 @@
   <title>Leslie Speaker</title>
   <link rel="shortcut icon" href="#">
   <link rel="stylesheet" href="/css/index.css">
+  <link rel="preload" href="/css/index.css" as="style">
 </head>
 
 <body>
@@ -15,7 +16,7 @@
     <!-- 'Load Preset' button -->
     <input type="text" id="textInput" onclick="openFileUploader()" readonly placeholder="Load Preset">
     <input type="file" id="fileInput" accept=".mp3, .wav, .ogg, .aac" onchange="handleFileSelect(event)">
-    <audio controls id="audioPlayer" src="/resources/audio/dev-audio.wav">
+    <audio controls id="audioPlayer" src="/resources/audio/test-audio.mp3">
       Your browser does not support the audio element.
     </audio>
   </div>
@@ -54,14 +55,18 @@
         <div id="wheel-container-hornSpeed"></div>
         <div id="knob-container-hornAcceleration"></div>
         <div id="knob-container-hornDeceleration"></div>
-        <span id="hornRate">0.00Hz</span>
+        <div id="label-container-hornRate">
+          <span id="hornRate">0.00Hz</span>
+        </div>
       </div>
 
       <div class="block" id="block-drumControl">
         <div id="wheel-container-drumSpeed"></div>
         <div id="knob-container-drumAcceleration"></div>
         <div id="knob-container-drumDeceleration"></div>
-        <span id="drumRate">0.00Hz</span>
+        <div id="label-container-drumRate">
+          <span id="drumRate">0.00Hz</span>
+        </div>
       </div>
 
       <div class="block" id="block-mode">
@@ -74,6 +79,11 @@
 
     <!-- middle(leslie) panel -->
     <div class="panal" id="panal-mid">
+      <div id="leslie-frame"></div>
+      <div id="leslie-background"></div>
+      <div id="leslie-horn">
+        <div id="meter-container-leslieHorn"></div>
+      </div>
       <!-- <div class="rotor"></div> -->
     </div>
     <!-- end of middle panel -->

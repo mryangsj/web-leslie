@@ -30,8 +30,8 @@ const containerOutputGain = document.getElementById('knob-container-outputGain')
 const devMode = false
 //-----------------------------------------------------------------------------------------
 const sizeRatioKnobSamll = 0.8;
-const spritePathKnobSmall = 'resources/image/knob/knob_small.png';
-const pathScaleKnobSmall = 'resources/image/knob/knob_small_scale.png'
+const spritePathKnobSmall = '/resources/image/knob/knob_small.png';
+const pathScaleKnobSmall = '/resources/image/knob/knob_small_scale.png'
 const sizeRatioScaleKnobSmall = 0.85;
 const positionTopAndLeftFinetuneScaleKnobSmall = [-0.05, 0];
 const labelCSSSmall = 'small-knob-label'

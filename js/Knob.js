@@ -303,8 +303,8 @@ export default class Knob {
 
         // 设置indicator的sprite
         this.domIndicator.style.background = `url(${spritePath})`;
-        this.domIndicator.style.backgroundSize = `100% auto`;
-        this.domIndicator.style.backgroundRepeat = 'no-repeat';
+        this.domIndicator.style.backgroundSize = `100%`;
+        // this.domIndicator.style.backgroundRepeat = 'no-repeat';
         this.setIndicatorByValue(this.currentValue, true);
       };
       imgSprite.src = spritePath;
@@ -338,7 +338,7 @@ export default class Knob {
     // 设置scale样式
     this.domScale.style.background = `url(${scalePath})`;
     this.domScale.style.backgroundSize = '100% auto';
-    this.domScale.style.backgroundRepeat = 'no-repeat';
+    // this.domScale.style.backgroundRepeat = 'no-repeat';
     this.domScale.style.zIndex = 1;
     this.devMode ? this.domScale.style.border = '0.5px solid green' : null;
   }
@@ -469,6 +469,7 @@ export default class Knob {
       const curIndex = this.getSpriteIndexByStateValue();
       if (preIndex != curIndex || isForceUpdate) {
         this.domIndicator.style.backgroundPosition = `0% ${curIndex / (this.spriteLength - 1) * 100}%`;
+        this.domIndicator.style.backgroundRepeat = 'repeat-y';
       }
 
       // 触发changed事件
