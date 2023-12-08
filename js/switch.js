@@ -1,4 +1,4 @@
-export default class Knob {
+export default class Switch {
   constructor(container, sizeRatio = 0.8, switchName = 'newSwitch', devMode = false, componentType = 'switch') {
     this.componentType = componentType;
     this.className = this.componentType;

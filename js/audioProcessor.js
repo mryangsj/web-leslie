@@ -54,7 +54,7 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
 
     //-----------------------------------------------------------------------------------------
     // FM与AM参数
-    this.gloabalAmDepth = 0.3; // % 0~1
+    this.gloabalAmDepth = 0.35; // % 0~1
     this.gloabalFmDepth = 1; // %
 
     this.hornLength = 37; // cm
@@ -79,7 +79,7 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     this.hornMicWidth = Math.PI / 4; // rad
     this.drumMicWidth = Math.PI / 4; // rad
 
-    this.correlationBufferLength = Math.round(0.1 * sampleRate);
+    this.correlationBufferLength = Math.round(0.3 * sampleRate);
     this.hornCorrelationBuffer_L = new Float32Array(this.correlationBufferLength);
     this.hornCorrelationBuffer_R = new Float32Array(this.correlationBufferLength);
     this.drumCorrelationBuffer_L = new Float32Array(this.correlationBufferLength);
