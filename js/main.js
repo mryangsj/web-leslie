@@ -27,7 +27,7 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 //-----------------------------------------------------------------------------------------
 // add audio processor and connect audio context nodes
 (async function () {
-  await audioContext.audioWorklet.addModule('./js/audioProcessor.js')
+  await audioContext.audioWorklet.addModule('/js/audioProcessor.js')
 })().then(() => {
   //---------------------------------------------------
   // input block

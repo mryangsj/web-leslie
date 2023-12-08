@@ -402,6 +402,8 @@ export default class Switch {
           value: this.currentValue
         }
       });
+      this.domContainer.dispatchEvent(eventChanged);
+      this.eventTarget.dispatchEvent(eventChanged);
     }
   }
 
