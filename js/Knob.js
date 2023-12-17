@@ -54,6 +54,7 @@ export default class Knob extends EventTarget {
     this.devMode ? this.domContainer.style.border = '0.5px solid red' : null;
   }
 
+
   #domIndicatorBox_init() {
     // 创建indicatorBox节点
     this.domIndicatorBox = document.createElement('div');
@@ -220,14 +221,12 @@ export default class Knob extends EventTarget {
   //-----------------------------------------------------------------------------------------
   #mouseEnterIndicatorHandler() {
     this.#isMouseOnIndicator = true;
-    console.log('on');
     this.dispatchEvent(new CustomEvent('mouse-enter-indicator'));
   }
 
   //-----------------------------------------------------------------------------------------
   #mouseLeaveIndicatorHandler() {
     this.#isMouseOnIndicator = false;
-    console.log('off');
     this.dispatchEvent(new CustomEvent('mouse-leave-indicator'));
   }
 
@@ -573,4 +572,6 @@ export default class Knob extends EventTarget {
   stateToValue(stateValue) { return (this.#valueEnd - this.#valueStart) * Math.pow(stateValue, this.#skewFactor) + this.#valueStart; }
   valueToState(value) { return Math.pow((value - this.#valueStart) / (this.#valueEnd - this.#valueStart), 1 / this.#skewFactor); }
   getSpriteIndexByStateValue(stateValue = this.#stateValue) { return Math.round(stateValue * (this.spriteLength - 1)); }
+  getDefaultValue() { return this.#defaultValue; }
+  getValue() { return this.currentValue; }
 }

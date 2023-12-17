@@ -18,7 +18,7 @@
 
 html,
 body {
-    height: 100%;
+    /* height: 100%; */
     background-color: #171717;
 }
 
@@ -498,7 +498,16 @@ audio {
 }
 
 
-.footer-text {
+/* ----------------------------------------------------------------------------------------- */
+.threeDPanner {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    background: #fff;
+}
+
+
+/* .footer-text {
     position: absolute;
     left: -55%;
     bottom: -10%;
@@ -508,4 +517,4 @@ audio {
     font-size: 30px;
     color: #D4CEAF;
     line-height: 60px;
-}
+} */

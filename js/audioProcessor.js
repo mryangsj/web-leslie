@@ -13,55 +13,52 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     // 初始化可调参数
     // rotor旋转模式参数
     this.rotorMode = 0; // 0: slow模式 1: fast模式
-    this.rotorBrake = false; // 0: 旋转模式 1: 刹车模式
+    this.isBrakeOn = false; // 0: 旋转模式 1: 刹车模式
     // horn速度微调参数
-    this.hornSlowSpeedFineTune = 0; // %
-    this.hornFastSpeedFineTune = 0; // %
-    this.hornAccelerationFineTune = 1; // x
-    this.hornDecelerationFineTune = 1; // x
+    this.hornSlowFreqFineTune = 0; // %
+    this.hornFastFreqFineTune = 0; // %
+    this.hornAccFineTune = 1; // x
+    this.hornDecFineTune = 1; // x
     // drum速度微调参数
-    this.drumSlowSpeedFineTune = 0; // %
-    this.drumFastSpeedFineTune = 0; // %
-    this.drumAccelerationFineTune = 1; // x
-    this.drumDecelerationFineTune = 1; // x
+    this.drumSlowFreqFineTune = 0; // %
+    this.drumFastFreqFineTune = 0; // %
+    this.drumAccFineTune = 1; // x
+    this.drumDecFineTune = 1; // x
 
 
     //-----------------------------------------------------------------------------------------
     // 控制rotor旋转的振荡器参数
-    this.rotorSlowFrequency = 6; // Hz
-    this.rotorFastFrequency = 6; // Hz
+    this.slowFreqDefault = 6; // Hz
+    this.fastFreqDefault = 6; // Hz
+    this.freqDiff = 0.11; // Hz
     // horn振荡器
-    this.hornRotorFrequency = this.rotorSlowFrequency;
-    this.hornRotorAngularAccelerationDefault = 4 * Math.PI; // rad/s^2
-    this.hornRotorAngularDecelerationDefault = 3 * Math.PI; // rad/s^2
-    this.hornRotorAngularAcceleration = 0; // rad/s^2
-    this.hornRotorAngularDeceleration = 0; // rad/s^2
-    this.hornRotorCurrentAngularSpeed = 0; // rad/s
-    // this.hornRotorAngularSpeedTarget = 0; // rad/s
-    this.hornRotorInstantPhase = Math.random(); // rad
-    // this.hornRotorInstantPhase = 0; // rad
+    this.hornFreqTarget = this.slowFreqDefault;
+    this.hornSpeedCurrent = 0; // rad/s
+    this.hornPhaseCurrent = Math.random(); // rad
+    this.hornAccDefault = 4 * Math.PI; // rad/s^2
+    this.hornDecDefault = 3 * Math.PI; // rad/s^2
+    this.hornAccTarget = 0; // rad/s^2
+    this.hornDecTarget = 0; // rad/s^2
     // drum振荡器
-    this.drumRotorFrequency = this.rotorSlowFrequency;
-    this.drumRotorAngularAccelerationDefault = 2 * Math.PI; // rad/s^2
-    this.drumRotorAngularDecelerationDefault = 0.5 * Math.PI; // rad/s^2
-    this.drumRotorAngularAcceleration = 0; // rad/s^2
-    this.drumRotorAngularDeceleration = 0; // rad/s^2
-    this.drumRotorCurrentAngularSpeed = 0; // rad/s
-    // this.drumRotorAngularSpeedTarget = 0; // rad/s
-    this.drumRotorInstantPhase = Math.random(); // rad
-    // this.drumRotorInstantPhase = 0; // rad
+    this.drumFreqTarget = this.slowFreqDefault;
+    this.drumSpeedCurrent = 0; // rad/s
+    this.drumPhaseCurrent = Math.random(); // rad
+    this.drumAccDefault = 2 * Math.PI; // rad/s^2
+    this.drumDecDefault = 0.5 * Math.PI; // rad/s^2
+    this.drumAccTarget = 0; // rad/s^2
+    this.drumDecTarget = 0; // rad/s^2
 
 
     //-----------------------------------------------------------------------------------------
     // FM与AM参数
-    this.gloabalAmDepth = 0.35; // % 0~1
-    this.gloabalFmDepth = 1; // %
+    this.amDepth = 0.35; // % 0~1
+    this.fmDepth = 1; // %
 
     this.hornLength = 37; // cm
     this.drumLength = 35; // cm
     this.soundSpeed = 340; // m/s
-    this.hornFmDepth = this.gloabalFmDepth * this.hornLength / 100 / this.soundSpeed * sampleRate; // samples
-    this.drumFmDepth = this.gloabalFmDepth * this.drumLength / 100 / this.soundSpeed * sampleRate; // samples
+    this.hornFmLength = this.fmDepth * this.hornLength / 100 / this.soundSpeed * sampleRate; // samples
+    this.drumFmLength = this.fmDepth * this.drumLength / 100 / this.soundSpeed * sampleRate; // samples
 
 
     //-----------------------------------------------------------------------------------------
@@ -69,8 +66,6 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     this.delayLineLength = Math.round(1.0 * sampleRate);
     this.hornDelayLine = new Float32Array(this.delayLineLength);
     this.drumDelayLine = new Float32Array(this.delayLineLength);
-    this.hornDelayLineReadPointerMid = 0;
-    this.drumDelayLineReadPointerMid = 0;
     this.hornDelayLineWptr = 0;
     this.drumDelayLineWptr = 0;
 
@@ -79,21 +74,21 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     this.hornMicWidth = Math.PI / 4; // rad
     this.drumMicWidth = Math.PI / 4; // rad
 
-    this.correlationBufferLength = Math.round(0.3 * sampleRate);
-    this.hornCorrelationBuffer_L = new Float32Array(this.correlationBufferLength);
-    this.hornCorrelationBuffer_R = new Float32Array(this.correlationBufferLength);
-    this.drumCorrelationBuffer_L = new Float32Array(this.correlationBufferLength);
-    this.drumCorrelationBuffer_R = new Float32Array(this.correlationBufferLength);
-    this.correlationBufferPointerHead = 0;
-    this.correlationBufferPointerEnd = 1;
+    this.corBufferLength = Math.round(0.3 * sampleRate);
+    this.hornCorBuffer_L = new Float32Array(this.corBufferLength);
+    this.hornCorBuffer_R = new Float32Array(this.corBufferLength);
+    this.drumCorBuffer_L = new Float32Array(this.corBufferLength);
+    this.drumCorBuffer_R = new Float32Array(this.corBufferLength);
+    this.corBufferPtrHead = 0;
+    this.corBufferPtrEnd = 1;
     this.hornMicNormSquare_L = 0;
     this.hornMicNormSquare_R = 0;
     this.hornMicDotProduct = 0;
-    this.hornMicCorrelation = 1;
+    this.hornMicCor = 1;
     this.drumMicNormSquare_L = 0;
     this.drumMicNormSquare_R = 0;
     this.drumMicDotProduct = 0;
-    this.drumMicCorrelation = 1;
+    this.drumMicCor = 1;
 
 
 
@@ -108,7 +103,7 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
           this.port.postMessage({ type: 'rotorInstantRate', value: this.getCurrentRotorFrequency() });
           break;
         case 'getMicCorrelation':
-          this.port.postMessage({ type: 'micCorrelation', value: [this.hornMicCorrelation, this.drumMicCorrelation] });
+          this.port.postMessage({ type: 'micCorrelation', value: [this.hornMicCor, this.drumMicCor] });
           break;
         case 'setRotorMode':
           this.rotorMode = event.data.value;
@@ -116,42 +111,42 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
           this.updateDrumTargetSpeed();
           break;
         case 'setRotorBrake':
-          this.rotorBrake = event.data.value;
+          this.isBrakeOn = event.data.value;
           this.updateHornTargetSpeed();
           this.updateDrumTargetSpeed();
           break;
         case 'setHornSpeedFineTune':
           if (this.rotorMode === 0) { // slow模式
-            this.hornSlowSpeedFineTune = event.data.value;
+            this.hornSlowFreqFineTune = event.data.value;
             this.updateHornTargetSpeed();
           } else if (this.rotorMode === 1) { // fast模式
-            this.hornFastSpeedFineTune = event.data.value;
+            this.hornFastFreqFineTune = event.data.value;
             this.updateHornTargetSpeed();
           }
           break;
         case 'setDrumSpeedFineTune':
           if (this.rotorMode === 0) { // slow模式
-            this.drumSlowSpeedFineTune = event.data.value;
+            this.drumSlowFreqFineTune = event.data.value;
             this.updateDrumTargetSpeed();
           } else if (this.rotorMode === 1) { // fast模式
-            this.drumFastSpeedFineTune = event.data.value;
+            this.drumFastFreqFineTune = event.data.value;
             this.updateDrumTargetSpeed();
           }
           break;
         case 'setHornAccelerationFineTune':
-          this.hornAccelerationFineTune = event.data.value;
+          this.hornAccFineTune = event.data.value;
           this.updateHornTargetSpeed();
           break;
         case 'setDrumAccelerationFineTune':
-          this.drumAccelerationFineTune = event.data.value;
+          this.drumAccFineTune = event.data.value;
           this.updateDrumTargetSpeed();
           break;
         case 'setHornDecelerationFineTune':
-          this.hornDecelerationFineTune = event.data.value;
+          this.hornDecFineTune = event.data.value;
           this.updateHornTargetSpeed();
           break;
         case 'setDrumDecelerationFineTune':
-          this.drumDecelerationFineTune = event.data.value;
+          this.drumDecFineTune = event.data.value;
           this.updateDrumTargetSpeed();
           break;
         case 'setHornMicWidth':
@@ -235,55 +230,55 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
 
       //-----------------------------------------------------------------------------------------
       // 更新horn振荡器状态
-      if (Math.abs(this.hornRotorTargetAngularSpeed - this.hornRotorCurrentAngularSpeed) < 1e-8) { // 稳定状态
-        this.hornRotorCurrentAngularSpeed = this.hornRotorTargetAngularSpeed;
-      } else if (this.hornRotorCurrentAngularSpeed < this.hornRotorTargetAngularSpeed) { // 加速状态
-        this.hornRotorCurrentAngularSpeed += this.hornRotorAngularAcceleration * this.T;
+      if (Math.abs(this.hornSpeedCurrent - this.hornSpeedTarget) < 1e-8) { // 稳定状态
+        this.hornSpeedCurrent = this.hornSpeedTarget;
+      } else if (this.hornSpeedCurrent < this.hornSpeedTarget) { // 加速状态
+        this.hornSpeedCurrent += this.hornAccTarget * this.T;
       } else { // 减速状态
-        this.hornRotorCurrentAngularSpeed -= this.hornRotorAngularDeceleration * this.T;
+        this.hornSpeedCurrent -= this.hornDecTarget * this.T;
       }
-      this.hornRotorInstantPhase -= this.hornRotorCurrentAngularSpeed * this.T;
-      if (this.hornRotorInstantPhase < 0) { this.hornRotorInstantPhase += 2 * Math.PI; }
+      this.hornPhaseCurrent -= this.hornSpeedCurrent * this.T;
+      if (this.hornPhaseCurrent < 0) { this.hornPhaseCurrent += 2 * Math.PI; }
 
 
       //-----------------------------------------------------------------------------------------
       // 更新drum振荡器状态
-      if (Math.abs(this.drumRotorTargetAngularSpeed - this.drumRotorCurrentAngularSpeed) < 1e-8) { // 稳定状态
-        this.drumRotorCurrentAngularSpeed = this.drumRotorTargetAngularSpeed;
-      } else if (this.drumRotorCurrentAngularSpeed < this.drumRotorTargetAngularSpeed) { // 加速状态
-        this.drumRotorCurrentAngularSpeed += this.drumRotorAngularAcceleration * this.T;
+      if (Math.abs(this.drumSpeedCurrent - this.drumSpeedTarget) < 1e-8) { // 稳定状态
+        this.drumSpeedCurrent = this.drumSpeedTarget;
+      } else if (this.drumSpeedCurrent < this.drumSpeedTarget) { // 加速状态
+        this.drumSpeedCurrent += this.drumAccTarget * this.T;
       } else { // 减速状态
-        this.drumRotorCurrentAngularSpeed -= this.drumRotorAngularDeceleration * this.T;
+        this.drumSpeedCurrent -= this.drumDecTarget * this.T;
       }
-      this.drumRotorInstantPhase += this.drumRotorCurrentAngularSpeed * this.T;
-      if (this.drumRotorInstantPhase > 2 * Math.PI) { this.drumRotorInstantPhase -= 2 * Math.PI; }
+      this.drumPhaseCurrent += this.drumSpeedCurrent * this.T;
+      if (this.drumPhaseCurrent > 2 * Math.PI) { this.drumPhaseCurrent -= 2 * Math.PI; }
 
 
       //-----------------------------------------------------------------------------------------
       // 计算振荡器输出（distance）
       const phaseOffset = - Math.PI / 2;
-      hornDistanceLFO_L = Math.sin(this.hornRotorInstantPhase + phaseOffset - this.hornMicWidth);
-      hornDistanceLFO_R = Math.sin(this.hornRotorInstantPhase + phaseOffset + this.hornMicWidth);
-      drumDistanceLFO_L = Math.sin(this.drumRotorInstantPhase + phaseOffset - this.drumMicWidth);
-      drumDistanceLFO_R = Math.sin(this.drumRotorInstantPhase + phaseOffset + this.drumMicWidth);
+      hornDistanceLFO_L = Math.sin(this.hornPhaseCurrent + phaseOffset - this.hornMicWidth);
+      hornDistanceLFO_R = Math.sin(this.hornPhaseCurrent + phaseOffset + this.hornMicWidth);
+      drumDistanceLFO_L = Math.sin(this.drumPhaseCurrent + phaseOffset - this.drumMicWidth);
+      drumDistanceLFO_R = Math.sin(this.drumPhaseCurrent + phaseOffset + this.drumMicWidth);
 
 
       //-----------------------------------------------------------------------------------------
       // 计算duopler效应必要参数(即延时长度)
       // horn左mic
-      hornDelayTotalLength_L = (hornDistanceLFO_L + 1) / 2 * this.hornFmDepth;
+      hornDelayTotalLength_L = (hornDistanceLFO_L + 1) / 2 * this.hornFmLength;
       hornDelayIntegralLength_L = Math.floor(hornDelayTotalLength_L);
       hornDelayFractionalLength_L = hornDelayTotalLength_L - hornDelayIntegralLength_L;
       // horn右mic
-      hornDelayTotalLength_R = (hornDistanceLFO_R + 1) / 2 * this.hornFmDepth;
+      hornDelayTotalLength_R = (hornDistanceLFO_R + 1) / 2 * this.hornFmLength;
       hornDelayIntegralLength_R = Math.floor(hornDelayTotalLength_R);
       hornDelayFractionalLength_R = hornDelayTotalLength_R - hornDelayIntegralLength_R;
       // drum左mic
-      drumDelayTotalLength_L = (drumDistanceLFO_L + 1) / 2 * this.drumFmDepth;
+      drumDelayTotalLength_L = (drumDistanceLFO_L + 1) / 2 * this.drumFmLength;
       drumDelayIntegralLength_L = Math.floor(drumDelayTotalLength_L);
       drumDelayFractionalLength_L = drumDelayTotalLength_L - drumDelayIntegralLength_L;
       // drum右mic
-      drumDelayTotalLength_R = (drumDistanceLFO_R + 1) / 2 * this.drumFmDepth;
+      drumDelayTotalLength_R = (drumDistanceLFO_R + 1) / 2 * this.drumFmLength;
       drumDelayIntegralLength_R = Math.floor(drumDelayTotalLength_R);
       drumDelayFractionalLength_R = drumDelayTotalLength_R - drumDelayIntegralLength_R;
 
@@ -343,60 +338,60 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
       //-----------------------------------------------------------------------------------------
       // 应用AM
       // horn左声道
-      hornAmAmpLeft = 0.5 * this.gloabalAmDepth * (-hornDistanceLFO_L - 1) + 1;
+      hornAmAmpLeft = 0.5 * this.amDepth * (-hornDistanceLFO_L - 1) + 1;
       inputHorn_L *= hornAmAmpLeft;
       // horn右声道
-      hornAmAmpRight = 0.5 * this.gloabalAmDepth * (-hornDistanceLFO_R - 1) + 1;
+      hornAmAmpRight = 0.5 * this.amDepth * (-hornDistanceLFO_R - 1) + 1;
       inputHorn_R *= hornAmAmpRight;
 
       // drum左声道
-      drumAmAmp_L = 0.5 * this.gloabalAmDepth * (-drumDistanceLFO_L - 1) + 1;
+      drumAmAmp_L = 0.5 * this.amDepth * (-drumDistanceLFO_L - 1) + 1;
       inputDrum_L *= drumAmAmp_L;
       // drum右声道
-      drumAmAmp_R = 0.5 * this.gloabalAmDepth * (-drumDistanceLFO_R - 1) + 1;
+      drumAmAmp_R = 0.5 * this.amDepth * (-drumDistanceLFO_R - 1) + 1;
       inputDrum_R *= drumAmAmp_R;
 
 
       //-----------------------------------------------------------------------------------------
       // 保存当前值用于计算mic correlation
-      this.hornCorrelationBuffer_L[this.correlationBufferPointerHead] = inputHorn_L;
-      this.hornCorrelationBuffer_R[this.correlationBufferPointerHead] = inputHorn_R;
-      this.drumCorrelationBuffer_L[this.correlationBufferPointerHead] = inputDrum_L;
-      this.drumCorrelationBuffer_R[this.correlationBufferPointerHead] = inputDrum_R;
+      this.hornCorBuffer_L[this.corBufferPtrHead] = inputHorn_L;
+      this.hornCorBuffer_R[this.corBufferPtrHead] = inputHorn_R;
+      this.drumCorBuffer_L[this.corBufferPtrHead] = inputDrum_L;
+      this.drumCorBuffer_R[this.corBufferPtrHead] = inputDrum_R;
 
-      this.hornMicNormSquare_L = this.hornMicNormSquare_L + inputHorn_L ** 2 - this.hornCorrelationBuffer_L[this.correlationBufferPointerEnd] ** 2;
-      this.hornMicNormSquare_R = this.hornMicNormSquare_R + inputHorn_R ** 2 - this.hornCorrelationBuffer_R[this.correlationBufferPointerEnd] ** 2;
+      this.hornMicNormSquare_L = this.hornMicNormSquare_L + inputHorn_L ** 2 - this.hornCorBuffer_L[this.corBufferPtrEnd] ** 2;
+      this.hornMicNormSquare_R = this.hornMicNormSquare_R + inputHorn_R ** 2 - this.hornCorBuffer_R[this.corBufferPtrEnd] ** 2;
       this.hornMicNorm_L = Math.sqrt(this.hornMicNormSquare_L);
       this.hornMicNorm_R = Math.sqrt(this.hornMicNormSquare_R);
-      this.hornMicDotProduct = this.hornMicDotProduct + inputHorn_L * inputHorn_R - this.hornCorrelationBuffer_L[this.correlationBufferPointerEnd] * this.hornCorrelationBuffer_R[this.correlationBufferPointerEnd];
-      this.hornMicCorrelation = this.hornMicDotProduct / (this.hornMicNorm_L * this.hornMicNorm_R);
-      if (this.hornMicCorrelation > 1) this.hornMicCorrelation = 1;
-      else if (this.hornMicCorrelation < -1) this.hornMicCorrelation = -1;
-      else if (isNaN(this.hornMicCorrelation)) this.hornMicCorrelation = 0;
+      this.hornMicDotProduct = this.hornMicDotProduct + inputHorn_L * inputHorn_R - this.hornCorBuffer_L[this.corBufferPtrEnd] * this.hornCorBuffer_R[this.corBufferPtrEnd];
+      this.hornMicCor = this.hornMicDotProduct / (this.hornMicNorm_L * this.hornMicNorm_R);
+      if (this.hornMicCor > 1) this.hornMicCor = 1;
+      else if (this.hornMicCor < -1) this.hornMicCor = -1;
+      else if (isNaN(this.hornMicCor)) this.hornMicCor = 0;
 
-      this.drumMicNormSquare_L = this.drumMicNormSquare_L + inputDrum_L ** 2 - this.drumCorrelationBuffer_L[this.correlationBufferPointerEnd] ** 2;
-      this.drumMicNormSquare_R = this.drumMicNormSquare_R + inputDrum_R ** 2 - this.drumCorrelationBuffer_R[this.correlationBufferPointerEnd] ** 2;
+      this.drumMicNormSquare_L = this.drumMicNormSquare_L + inputDrum_L ** 2 - this.drumCorBuffer_L[this.corBufferPtrEnd] ** 2;
+      this.drumMicNormSquare_R = this.drumMicNormSquare_R + inputDrum_R ** 2 - this.drumCorBuffer_R[this.corBufferPtrEnd] ** 2;
       this.drumMicNorm_L = Math.sqrt(this.drumMicNormSquare_L);
       this.drumMicNorm_R = Math.sqrt(this.drumMicNormSquare_R);
-      this.drumMicDotProduct = this.drumMicDotProduct + inputDrum_L * inputDrum_R - this.drumCorrelationBuffer_L[this.correlationBufferPointerEnd] * this.drumCorrelationBuffer_R[this.correlationBufferPointerEnd];
+      this.drumMicDotProduct = this.drumMicDotProduct + inputDrum_L * inputDrum_R - this.drumCorBuffer_L[this.corBufferPtrEnd] * this.drumCorBuffer_R[this.corBufferPtrEnd];
       if (Math.abs(this.drumMicNorm_L) < 1e-6 || Math.abs(this.drumMicNorm_R) < 1e-6) {
-        this.drumMicCorrelation = 0;
+        this.drumMicCor = 0;
       } else {
-        this.drumMicCorrelation = this.drumMicDotProduct / (this.drumMicNorm_L * this.drumMicNorm_R);
-        if (this.drumMicCorrelation > 1) this.drumMicCorrelation = 1;
-        else if (this.drumMicCorrelation < -1) this.drumMicCorrelation = -1;
-        else if (isNaN(this.drumMicCorrelation)) this.drumMicCorrelation = 0;
+        this.drumMicCor = this.drumMicDotProduct / (this.drumMicNorm_L * this.drumMicNorm_R);
+        if (this.drumMicCor > 1) this.drumMicCor = 1;
+        else if (this.drumMicCor < -1) this.drumMicCor = -1;
+        else if (isNaN(this.drumMicCor)) this.drumMicCor = 0;
       }
 
-      if (this.correlationBufferPointerHead === this.correlationBufferLength - 1) {
-        this.correlationBufferPointerHead = 0;
-        this.correlationBufferPointerEnd++;
-      } else if (this.correlationBufferPointerEnd === this.correlationBufferLength - 1) {
-        this.correlationBufferPointerEnd = 0;
-        this.correlationBufferPointerHead++;
+      if (this.corBufferPtrHead === this.corBufferLength - 1) {
+        this.corBufferPtrHead = 0;
+        this.corBufferPtrEnd++;
+      } else if (this.corBufferPtrEnd === this.corBufferLength - 1) {
+        this.corBufferPtrEnd = 0;
+        this.corBufferPtrHead++;
       } else {
-        this.correlationBufferPointerHead++;
-        this.correlationBufferPointerEnd++;
+        this.corBufferPtrHead++;
+        this.corBufferPtrEnd++;
       }
 
 
@@ -416,54 +411,56 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
   }
 
   getCurrentRotorDegree() {
-    const hornDegree = 360 / (2 * Math.PI) * this.hornRotorInstantPhase;
-    const drumDegree = 360 / (2 * Math.PI) * this.drumRotorInstantPhase;
-    return [hornDegree, drumDegree];
+    const hornDeg = 360 / (2 * Math.PI) * this.hornPhaseCurrent;
+    const drumDeg = 360 / (2 * Math.PI) * this.drumPhaseCurrent;
+    return [hornDeg, drumDeg];
   }
 
   getCurrentRotorFrequency() {
-    const hornFrequency = this.hornRotorCurrentAngularSpeed / (2 * Math.PI);
-    const drumFrequency = this.drumRotorCurrentAngularSpeed / (2 * Math.PI);
-    return [hornFrequency, drumFrequency];
+    const hornFreq = this.hornSpeedCurrent / (2 * Math.PI);
+    const drumFreq = this.drumSpeedCurrent / (2 * Math.PI);
+    return [hornFreq, drumFreq];
   }
 
   updateHornTargetSpeed() {
-    if (this.rotorBrake === false) { // 旋转模式
+    if (this.isBrakeOn === false) { // 旋转模式
       // 计算rotor目标频率
       if (this.rotorMode === 0) { // slow模式
-        this.hornRotorFrequency = (this.rotorSlowFrequency + 0.11) * (1 + this.hornSlowSpeedFineTune / 100); // 由于horn质量较小，故在慢速模式下，horn的转速比drum快0.11Hz
+        this.hornFreqTarget = (this.slowFreqDefault + this.freqDiff) * (1 + this.hornSlowFreqFineTune / 100); // 由于horn质量较小，故在慢速模式下，horn的转速比drum快0.11Hz
       } else if (this.rotorMode === 1) { // fast模式
-        this.hornRotorFrequency = this.rotorFastFrequency * (1 + this.hornFastSpeedFineTune / 100);
+        this.hornFreqTarget = this.fastFreqDefault * (1 + this.hornFastFreqFineTune / 100);
       }
       // 计算rotor目标角加速度
-      this.hornRotorAngularAcceleration = this.hornRotorAngularAccelerationDefault * this.hornAccelerationFineTune;
-      this.hornRotorAngularDeceleration = this.hornRotorAngularDecelerationDefault * this.hornDecelerationFineTune;
+      this.hornAccTarget = this.hornAccDefault * this.hornAccFineTune;
+      this.hornDecTarget = this.hornDecDefault * this.hornDecFineTune;
     }
-    else if (this.rotorBrake === true) { // 刹车模式
-      this.hornRotorFrequency = 0;
-      this.hornRotorAngularDeceleration = 2 * this.hornRotorAngularDecelerationDefault;
+    else if (this.isBrakeOn === true) { // 刹车模式
+      this.hornFreqTarget = 0;
+      this.hornAccTarget = 0;
+      this.hornDecTarget = 2 * this.hornDecDefault;
     }
     // 更新rotor目标角速度
-    this.hornRotorTargetAngularSpeed = 2 * Math.PI * this.hornRotorFrequency;
+    this.hornSpeedTarget = 2 * Math.PI * this.hornFreqTarget;
   }
 
   updateDrumTargetSpeed() {
-    if (this.rotorBrake === false) { // 旋转模式
+    if (this.isBrakeOn === false) { // 旋转模式
       // 计算rotor目标频率
       if (this.rotorMode === 0) { // slow模式
-        this.drumRotorFrequency = this.rotorSlowFrequency * (1 + this.drumSlowSpeedFineTune / 100);
+        this.drumFreqTarget = this.slowFreqDefault * (1 + this.drumSlowFreqFineTune / 100);
       } else if (this.rotorMode === 1) { // fast模式
-        this.drumRotorFrequency = (this.rotorFastFrequency - 0.11) * (1 + this.drumFastSpeedFineTune / 100); // 由于drum质量较大，故在快速模式下，drum的转速比horn慢0.11Hz
+        this.drumFreqTarget = (this.fastFreqDefault - this.freqDiff) * (1 + this.drumFastFreqFineTune / 100); // 由于drum质量较大，故在快速模式下，drum的转速比horn慢0.11Hz
       }
       // 计算rotor目标角加速度
-      this.drumRotorAngularAcceleration = this.drumRotorAngularAccelerationDefault * this.drumAccelerationFineTune;
-      this.drumRotorAngularDeceleration = this.drumRotorAngularDecelerationDefault * this.drumDecelerationFineTune;
+      this.drumAccTarget = this.drumAccDefault * this.drumAccFineTune;
+      this.drumDecTarget = this.drumDecDefault * this.drumDecFineTune;
     }
-    else if (this.rotorBrake === true) { // 刹车模式
-      this.drumRotorFrequency = 0;
-      this.drumRotorAngularDeceleration = 2 * this.drumRotorAngularDecelerationDefault;
+    else if (this.isBrakeOn === true) { // 刹车模式
+      this.drumFreqTarget = 0;
+      this.drumAccTarget = 0;
+      this.drumDecTarget = 2 * this.drumDecDefault;
     }
     // 更新rotor目标角速度
-    this.drumRotorTargetAngularSpeed = 2 * Math.PI * this.drumRotorFrequency;
+    this.drumSpeedTarget = 2 * Math.PI * this.drumFreqTarget;
   }
 });

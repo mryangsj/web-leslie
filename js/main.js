@@ -17,7 +17,7 @@ const drumRate = document.getElementById('drumRate');
 
 //-----------------------------------------------------------------------------------------
 // create audio context
-const audioContext = new AudioContext();
+const audioContext = new (window.AudioContext || window.webkitAudioContext);
 audioContext.suspend();
 
 //-----------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 })().then(() => {
   //---------------------------------------------------
   // input block
-  const inputGainNode = new GainNode(audioContext, { gain: dB2value(knobInputGainObj.defaultValue) });
+  const inputGainNode = new GainNode(audioContext, { gain: dB2value(knobInputGainObj.getDefaultValue()) });
 
   //---------------------------------------------------
   // leslie block
@@ -45,18 +45,18 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 
   //---------------------------------------------------
   // mic block
-  const hornPannerNode_L = new StereoPannerNode(audioContext, { pan: knobHornMicPanObj_L.defaultValue / 100 });
-  const hornPannerNode_R = new StereoPannerNode(audioContext, { pan: knobHornMicPanObj_R.defaultValue / 100 });
-  const drumPannerNode_L = new StereoPannerNode(audioContext, { pan: knobDrumMicPanObj_L.defaultValue / 100 });
-  const drumPannerNode_R = new StereoPannerNode(audioContext, { pan: knobDrumMicPanObj_R.defaultValue / 100 });
+  const hornPannerNode_L = new StereoPannerNode(audioContext, { pan: knobHornMicPanObj_L.getDefaultValue() / 100 });
+  const hornPannerNode_R = new StereoPannerNode(audioContext, { pan: knobHornMicPanObj_R.getDefaultValue() / 100 });
+  const drumPannerNode_L = new StereoPannerNode(audioContext, { pan: knobDrumMicPanObj_L.getDefaultValue() / 100 });
+  const drumPannerNode_R = new StereoPannerNode(audioContext, { pan: knobDrumMicPanObj_R.getDefaultValue() / 100 });
 
   //---------------------------------------------------
   // mixing panal
-  const hornGainNode_L = new GainNode(audioContext, { gain: dB2value(sliderHornMicLevelObj_L.defaultValue) });
-  const hornGainNode_R = new GainNode(audioContext, { gain: dB2value(sliderHornMicLevelObj_R.defaultValue) });
-  const drumGainNode_L = new GainNode(audioContext, { gain: dB2value(sliderDrumMicLevelObj_L.defaultValue) });
-  const drumGainNode_R = new GainNode(audioContext, { gain: dB2value(sliderDrumMicLevelObj_R.defaultValue) });
-  const outputGainNode = new GainNode(audioContext, { gain: dB2value(knobOutputGainObj.defaultValue) });
+  const hornGainNode_L = new GainNode(audioContext, { gain: dB2value(sliderHornMicLevelObj_L.getDefaultValue()) });
+  const hornGainNode_R = new GainNode(audioContext, { gain: dB2value(sliderHornMicLevelObj_R.getDefaultValue()) });
+  const drumGainNode_L = new GainNode(audioContext, { gain: dB2value(sliderDrumMicLevelObj_L.getDefaultValue()) });
+  const drumGainNode_R = new GainNode(audioContext, { gain: dB2value(sliderDrumMicLevelObj_R.getDefaultValue()) });
+  const outputGainNode = new GainNode(audioContext, { gain: dB2value(knobOutputGainObj.getDefaultValue()) });
 
   //---------------------------------------------------
   // 连接
