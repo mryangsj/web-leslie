@@ -2,7 +2,8 @@ import { switchPowerObj } from "/js/switchInit.js";
 import { knobInputGainObj } from "/js/knobInit.js";
 import { wheelHornSpeedObj, wheelDrumSpeedObj } from "/js/wheelInit.js";
 import { knobHornAccelerationObj, knobHornDecelerationObj, knobDrumAccelerationObj, knobDrumDecelerationObj } from "/js/knobInit.js";
-import { leslieHornObj } from "/js/meterInit.js";
+import { buttonSlowObj, buttonFastObj, buttonBrakeObj } from "/js/switchInit.js";
+import { leslieHornObj, leslieDrumObj } from "/js/meterInit.js";
 import { ledHornCorrelationObj, ledDrumCorrelationObj } from "/js/meterInit.js";
 import { knobDrumMicPanObj_L, knobDrumMicPanObj_R, knobHornMicPanObj_L, knobHornMicPanObj_R } from "/js/knobInit.js";
 import { sliderHornMicWidthObj, sliderDrumMicWidthObj } from "/js/sliderInit.js";
@@ -59,7 +60,7 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
   const outputGainNode = new GainNode(audioContext, { gain: dB2value(knobOutputGainObj.defaultValue) });
 
   //---------------------------------------------------
-  // 连接
+  // connect nodes
   mp3Node.connect(inputGainNode);
 
   inputGainNode.connect(hpfNode);
@@ -101,6 +102,9 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
   knobHornDecelerationObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setHornDecelerationFineTune', value: knobHornDecelerationObj.currentValue }); });
   knobDrumDecelerationObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setDrumDecelerationFineTune', value: knobDrumDecelerationObj.currentValue }); });
 
+  buttonSlowObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setRotorMode', value: buttonSlowObj.currentValue === 1 ? 0 : 1 }); });
+  buttonBrakeObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setRotorBrake', value: buttonBrakeObj.currentValue === 1 ? true : false }); });
+
   sliderHornMicWidthObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setHornMicWidth', value: degree2radian(sliderHornMicWidthObj.currentValue) }); });
   sliderDrumMicWidthObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setDrumMicWidth', value: degree2radian(sliderDrumMicWidthObj.currentValue) }); });
 
@@ -114,46 +118,6 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
   sliderDrumMicLevelObj_L.addEventListener('changed', () => { drumGainNode_L.gain.value = dB2value(sliderDrumMicLevelObj_L.currentValue); });
   sliderDrumMicLevelObj_R.addEventListener('changed', () => { drumGainNode_R.gain.value = dB2value(sliderDrumMicLevelObj_R.currentValue); });
   knobOutputGainObj.addEventListener('changed', () => { outputGainNode.gain.value = dB2value(knobOutputGainObj.currentValue) });
-
-  // //-----------------------------------------------------------------------------------------
-  // // 注册模式切换按钮点击事件
-  // btnMode.addEventListener('click', () => {
-  //   // 响应按钮点击事件
-  //   if (btnMode.getAttribute('aria-checked') === 'slow') {
-  //     // 更新信号量
-  //     btnMode.setAttribute('aria-checked', 'fast');
-  //     // 更新按钮状态
-  //     btnMode.querySelector('span').innerText = 'FAST';
-  //     // 更新leslie效果器的参数
-  //     leslieNode.port.postMessage({ type: 'setRotorMode', value: 1 });
-  //   } else {
-  //     btnMode.setAttribute('aria-checked', 'slow');
-  //     // 更新按钮状态
-  //     btnMode.querySelector('span').innerText = 'SLOW';
-  //     // 更新leslie效果器的参数
-  //     leslieNode.port.postMessage({ type: 'setRotorMode', value: 0 });
-  //   }
-  // });
-
-  // //-----------------------------------------------------------------------------------------
-  // // 注册刹车按钮点击事件
-  // btnBrake.addEventListener('click', () => {
-  //   // 响应按钮点击事件
-  //   if (btnBrake.getAttribute('aria-checked') === 'false') {
-  //     // 更新信号量
-  //     btnBrake.setAttribute('aria-checked', 'true');
-  //     // 更新按钮状态
-  //     btnBrake.querySelector('span').innerText = 'Brake-ON';
-  //     // 更新leslie效果器的参数
-  //     leslieNode.port.postMessage({ type: 'setRotorBrake', value: true });
-  //   } else {
-  //     btnBrake.setAttribute('aria-checked', 'false');
-  //     // 更新按钮状态
-  //     btnBrake.querySelector('span').innerText = 'Brake-OFF';
-  //     // 更新leslie效果器的参数
-  //     leslieNode.port.postMessage({ type: 'setRotorBrake', value: false });
-  //   }
-  // });
 
   //-----------------------------------------------------------------------------------------
   // 控制rotor转动
@@ -171,6 +135,7 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
     switch (event.data.type) {
       case 'rotorInstantDegree':
         leslieHornObj.setIndicatorByValue(event.data.value[0]);
+        leslieDrumObj.setIndicatorByValue(event.data.value[1]);
         break;
       case 'rotorInstantRate':
         hornRate.innerText = `${event.data.value[0].toFixed(2)}Hz`;
@@ -185,7 +150,6 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 }).catch((err) => {
   console.log(err);
 });
-
 
 
 function value2dB(value) { return 20 * Math.log10(value); }

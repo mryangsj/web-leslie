@@ -3,6 +3,7 @@ import Knob from '/js/Knob.js';
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 const containerLeslieHorn = document.getElementById('meter-container-leslieHorn');
+const containerLeslieDrum = document.getElementById('meter-container-leslieDrum');
 
 const containerHornMicCorrelation = document.getElementById('meter-container-hornCorrelation');
 const containerDrumMicCorrelation = document.getElementById('meter-container-drumCorrelation');
@@ -15,6 +16,7 @@ const devMode = false;
 //-----------------------------------------------------------------------------------------
 const sizeRatioLeslieHorn = 1;
 const spritePathLeslieHorn = '/resources/image/leslie/leslie_horn.png';
+const spritePathLeslieDrum = '/resources/image/leslie/leslie_drum.png';
 const spriteFillDirectionLeslieHorn = 'width';
 
 
@@ -29,6 +31,10 @@ const labelCSSWheel = 'led-correlation-label';
 export const leslieHornObj = new Knob(containerLeslieHorn, sizeRatioLeslieHorn, 'leslieHorn', devMode);
 leslieHornObj.setIndicatorSprite(spritePathLeslieHorn, spriteFillDirectionLeslieHorn);
 leslieHornObj.setValueConfig(0, 179, 0);
+//-----------------------------------------------------------------------------------------
+export const leslieDrumObj = new Knob(containerLeslieDrum, sizeRatioLeslieHorn, 'leslieDrum', devMode);
+leslieDrumObj.setIndicatorSprite(spritePathLeslieDrum, spriteFillDirectionLeslieHorn);
+leslieDrumObj.setValueConfig(0, 359, 0);
 //-----------------------------------------------------------------------------------------
 export const ledHornCorrelationObj = new Knob(containerHornMicCorrelation, sizeRatioLED, 'hornCorrelation', devMode);
 ledHornCorrelationObj.setIndicatorSprite(spritePathLED, spriteFillDirectionLED, positionTopLeftFinetuneLEDCorrelation);

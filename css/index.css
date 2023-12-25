@@ -107,7 +107,7 @@ audio {
     font-size: 0.8vw;
     font-family: "Azoft Sans Bold", sans-serif;
     font-weight: bold;
-    color: rgb(255, 255, 255, 0.7)
+    color: rgb(255, 255, 255, 0.55)
 }
 
 /* ----------------------------------------------------------------------------------------- */
@@ -320,8 +320,44 @@ audio {
 /* ----------------------------------------------- */
 #block-mode {
     grid-row: 8 / span 1;
-    grid-column: 6 / span 5;
+    grid-column: 7 / span 4;
     /* background-color: green; */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#button-frame-mode {
+    width: 100%;
+    height: 100%;
+    background-image: url(/resources/image/button/button_frame.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    display: grid;
+    grid-template-rows: [start] 22.5% [controls-start] repeat(1, 1fr) [controls-end] 22.5% [end];
+    grid-template-columns: [start] 1.5% [controls-start] repeat(3, 1fr) [controls-end] 0.7% [end];
+}
+
+#button-container-buttonSlow {
+    grid-row: 2 / span 1;
+    grid-column: 2 / span 1;
+}
+
+#button-container-buttonFast {
+    grid-row: 2 / span 1;
+    grid-column: 3 / span 1;
+}
+
+#button-container-buttonBrake {
+    grid-row: 2 / span 1;
+    grid-column: 4 / span 1;
+}
+
+.button-label_center {
+    top: 26%;
 }
 
 
@@ -359,6 +395,14 @@ audio {
     aspect-ratio: 620 / 181;
     position: absolute;
     top: 20%;
+    z-index: 1;
+}
+
+#leslie-drum {
+    width: 100%;
+    aspect-ratio: 620 / 181;
+    position: absolute;
+    top: 60%;
     z-index: 1;
 }
 

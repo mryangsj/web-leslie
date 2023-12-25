@@ -30,21 +30,21 @@ const containerOutputGain = document.getElementById('knob-container-outputGain')
 const devMode = false
 //-----------------------------------------------------------------------------------------
 const sizeRatioKnobSamll = 0.8;
-const spritePathKnobSmall = '/resources/image/knob/knob_small.png';
+const pathSpriteKnobSmall = '/resources/image/knob/knob_small.png';
 const pathScaleKnobSmall = '/resources/image/knob/knob_small_scale.png'
 const sizeRatioScaleKnobSmall = 0.85;
 const positionTopAndLeftFinetuneScaleKnobSmall = [-0.05, 0];
 const labelCSSSmall = 'small-knob-label'
 //-----------------------------------------------------------------------------------------
 const sizeRatioKnobMid = 1.15;
-const spritePathKnobMid = 'resources/image/knob/knob_mid.png';
+const pathSpriteKnobMid = 'resources/image/knob/knob_mid.png';
 const pathScaleKnobMid = 'resources/image/knob/knob_mid_scale.png'
 const sizeRatioScaleKnobMid = 0.85;
 const positionTopAndLeftFinetuneScaleKnobMid = [-0.055, 0];
 const labelCSSMid = 'mid-knob-label'
 //-----------------------------------------------------------------------------------------
 const sizeRatioKnobBig = 0.65;
-const spritePathKnobBig = 'resources/image/knob/knob_big.png';
+const pathSpriteKnobBig = 'resources/image/knob/knob_big.png';
 const pathScaleKnobBig = 'resources/image/knob/knob_mid_scale.png'
 const sizeRatioScaleKnobBig = 0.95;
 const positionTopandLeftFinetuneScaleKnobBig = [-0.06, 0];
@@ -54,7 +54,7 @@ const labelCSSBig = 'big-knob-label'
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 export const knobInputGainObj = new Knob(containerInputGain, sizeRatioKnobBig, 'inputGain', devMode);
-knobInputGainObj.setIndicatorSprite(spritePathKnobBig);
+knobInputGainObj.setIndicatorSprite(pathSpriteKnobBig);
 knobInputGainObj.setScale(pathScaleKnobBig, sizeRatioScaleKnobBig, positionTopandLeftFinetuneScaleKnobBig);
 knobInputGainObj.setValueConfig(1.0, 10, 4.4);
 knobInputGainObj.setCursorResponsive(true);
@@ -63,152 +63,169 @@ knobInputGainObj.setLabelResponsive(true, 1);
 knobInputGainObj.setLabelEditable(true);
 //-----------------------------------------------------------------------------------------
 export const knobInputHPFObj = new Knob(containerInputHPF, sizeRatioKnobSamll, 'inputHPF', devMode);
+knobInputHPFObj.setIndicatorSprite(pathSpriteKnobSmall);
+knobInputHPFObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobInputHPFObj.setValueConfig(20, 200, 20);
+knobInputHPFObj.setCursorResponsive(true);
 knobInputHPFObj.setLabel('LOW CUT', labelCSSSmall);
 knobInputHPFObj.setLabelResponsive(true, 0, 'Hz');
 knobInputHPFObj.setLabelEditable(true);
-knobInputHPFObj.setIndicatorSprite(spritePathKnobSmall);
-knobInputHPFObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobInputLPFObj = new Knob(containerInputLPF, sizeRatioKnobSamll, 'inputLPF', devMode);
+knobInputLPFObj.setIndicatorSprite(pathSpriteKnobSmall);
+knobInputLPFObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobInputLPFObj.setValueConfig(5, 20, 18);
 knobInputLPFObj.setSkewForCenter(10);
+knobInputLPFObj.setCursorResponsive(true);
 knobInputLPFObj.setLabel('HIGH CUT', labelCSSSmall);
 knobInputLPFObj.setLabelResponsive(true, 1, 'kHz');
 knobInputLPFObj.setLabelEditable(true);
-knobInputLPFObj.setIndicatorSprite(spritePathKnobSmall);
-knobInputLPFObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobHighFreqObj = new Knob(containerHighFreq, sizeRatioKnobSamll, 'highShelfFreq', devMode);
+knobHighFreqObj.setIndicatorSprite(pathSpriteKnobSmall);
+knobHighFreqObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobHighFreqObj.setValueConfig(2, 18, 8);
 knobHighFreqObj.setSkewForCenter(6);
+knobHighFreqObj.setCursorResponsive(true);
 knobHighFreqObj.setLabel('HIGH SHELF<br>FREQ', labelCSSSmall);
 knobHighFreqObj.setLabelResponsive(true, 1, 'kHz');
 knobHighFreqObj.setLabelEditable(true);
-knobHighFreqObj.setIndicatorSprite(spritePathKnobSmall);
-knobHighFreqObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobHighGainObj = new Knob(containerHighGain, sizeRatioKnobSamll, 'highShelfGain', devMode);
+knobHighGainObj.setIndicatorSprite(pathSpriteKnobSmall);
+knobHighGainObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobHighGainObj.setValueConfig(-15, 15, 0);
+knobHighGainObj.setCursorResponsive(true);
 knobHighGainObj.setLabel('HIGH SHELF<br>GAIN', labelCSSSmall);
 knobHighGainObj.setLabelResponsive(true, 1, 'dB');
 knobHighGainObj.setLabelEditable(true);
-knobHighGainObj.setIndicatorSprite(spritePathKnobSmall);
-knobHighGainObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobMidFreqObj = new Knob(containerMidFreq, sizeRatioKnobSamll, 'midFreq', devMode);
+knobMidFreqObj.setIndicatorSprite(pathSpriteKnobSmall);
+knobMidFreqObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobMidFreqObj.setValueConfig(400, 8000, 1000);
 knobMidFreqObj.setSkewForCenter(2000);
+knobMidFreqObj.setCursorResponsive(true);
 knobMidFreqObj.setLabel('MID FREQ', labelCSSSmall);
 knobMidFreqObj.setLabelResponsive(true, 0, 'Hz');
 knobMidFreqObj.setLabelEditable(true);
-knobMidFreqObj.setIndicatorSprite(spritePathKnobSmall);
-knobMidFreqObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobMidGainObj = new Knob(containerMidGain, sizeRatioKnobSamll, 'midGain', devMode);
+knobMidGainObj.setIndicatorSprite(pathSpriteKnobSmall);
+knobMidGainObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobMidGainObj.setValueConfig(-15, 15, 0);
+knobMidGainObj.setCursorResponsive(true);
 knobMidGainObj.setLabel('MID GAIN', labelCSSSmall);
 knobMidGainObj.setLabelResponsive(true, 1, 'dB');
 knobMidGainObj.setLabelEditable(true);
-knobMidGainObj.setIndicatorSprite(spritePathKnobSmall);
-knobMidGainObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobLowFreqObj = new Knob(containerLowFreq, sizeRatioKnobSamll, 'lowShelfFreq', devMode);
+knobLowFreqObj.setIndicatorSprite(pathSpriteKnobSmall);
+knobLowFreqObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobLowFreqObj.setValueConfig(50, 400, 100);
 knobLowFreqObj.setSkewForCenter(120);
+knobLowFreqObj.setCursorResponsive(true);
 knobLowFreqObj.setLabel('LOW SHELF<br>FREQ', labelCSSSmall);
 knobLowFreqObj.setLabelResponsive(true, 0, 'Hz');
 knobLowFreqObj.setLabelEditable(true);
-knobLowFreqObj.setIndicatorSprite(spritePathKnobSmall);
-knobLowFreqObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobLowGainObj = new Knob(containerLowGain, sizeRatioKnobSamll, 'lowShlfGain', devMode);
+knobLowGainObj.setIndicatorSprite(pathSpriteKnobSmall);
+knobLowGainObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobLowGainObj.setValueConfig(-15, 15, 0);
+knobLowGainObj.setCursorResponsive(true);
 knobLowGainObj.setLabel('LOW SHELF<br>GAIN', labelCSSSmall);
 knobLowGainObj.setLabelResponsive(true, 1, 'dB');
 knobLowGainObj.setLabelEditable(true);
-knobLowGainObj.setIndicatorSprite(spritePathKnobSmall);
-knobLowGainObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 
 
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 export const knobHornAccelerationObj = new Knob(containerHornAcceleration, sizeRatioKnobMid, 'hornAcceleration', devMode);
+knobHornAccelerationObj.setIndicatorSprite(pathSpriteKnobMid);
+knobHornAccelerationObj.setScale(pathScaleKnobMid, sizeRatioScaleKnobMid, positionTopAndLeftFinetuneScaleKnobMid);
 knobHornAccelerationObj.setValueConfig(0.25, 4, 1);
 knobHornAccelerationObj.setSkewForCenter(1);
+knobHornAccelerationObj.setCursorResponsive(true);
 knobHornAccelerationObj.setLabel('HORN<br>ACCELERATION', labelCSSMid);
 knobHornAccelerationObj.setLabelResponsive(true, 2, 'x');
 knobHornAccelerationObj.setLabelEditable(true);
-knobHornAccelerationObj.setIndicatorSprite(spritePathKnobMid);
-knobHornAccelerationObj.setScale(pathScaleKnobMid, sizeRatioScaleKnobMid, positionTopAndLeftFinetuneScaleKnobMid);
 //-----------------------------------------------------------------------------------------
 export const knobHornDecelerationObj = new Knob(containerHornDeceleration, sizeRatioKnobMid, 'hornDeceleration', devMode);
+knobHornDecelerationObj.setIndicatorSprite(pathSpriteKnobMid);
+knobHornDecelerationObj.setScale(pathScaleKnobMid, sizeRatioScaleKnobMid, positionTopAndLeftFinetuneScaleKnobMid);
 knobHornDecelerationObj.setValueConfig(0.25, 4, 1);
 knobHornDecelerationObj.setSkewForCenter(1);
+knobHornDecelerationObj.setCursorResponsive(true);
 knobHornDecelerationObj.setLabel('HORN<br>DECELERATION', labelCSSMid);
 knobHornDecelerationObj.setLabelResponsive(true, 2, 'x');
 knobHornDecelerationObj.setLabelEditable(true);
-knobHornDecelerationObj.setIndicatorSprite(spritePathKnobMid);
-knobHornDecelerationObj.setScale(pathScaleKnobMid, sizeRatioScaleKnobMid, positionTopAndLeftFinetuneScaleKnobMid);
 //-----------------------------------------------------------------------------------------
 export const knobDrumAccelerationObj = new Knob(containerDrumAcceleration, sizeRatioKnobMid, 'drumAcceleration', devMode);
+knobDrumAccelerationObj.setIndicatorSprite(pathSpriteKnobMid);
+knobDrumAccelerationObj.setScale(pathScaleKnobMid, sizeRatioScaleKnobMid, positionTopAndLeftFinetuneScaleKnobMid);
 knobDrumAccelerationObj.setValueConfig(0.25, 4, 1);
 knobDrumAccelerationObj.setSkewForCenter(1);
+knobDrumAccelerationObj.setCursorResponsive(true);
 knobDrumAccelerationObj.setLabel('DRUM<br>ACCELERATION', labelCSSMid);
 knobDrumAccelerationObj.setLabelResponsive(true, 2, 'x');
 knobDrumAccelerationObj.setLabelEditable(true);
-knobDrumAccelerationObj.setIndicatorSprite(spritePathKnobMid);
-knobDrumAccelerationObj.setScale(pathScaleKnobMid, sizeRatioScaleKnobMid, positionTopAndLeftFinetuneScaleKnobMid);
 //-----------------------------------------------------------------------------------------
 export const knobDrumDecelerationObj = new Knob(containerDrumDeceleration, sizeRatioKnobMid, 'drumDeceleration', devMode);
+knobDrumDecelerationObj.setIndicatorSprite(pathSpriteKnobMid);
+knobDrumDecelerationObj.setScale(pathScaleKnobMid, sizeRatioScaleKnobMid, positionTopAndLeftFinetuneScaleKnobMid);
 knobDrumDecelerationObj.setValueConfig(0.25, 4, 1);
 knobDrumDecelerationObj.setSkewForCenter(1);
+knobDrumDecelerationObj.setCursorResponsive(true);
 knobDrumDecelerationObj.setLabel('DRUM<br>DECELERATION', labelCSSMid);
 knobDrumDecelerationObj.setLabelResponsive(true, 2, 'x');
 knobDrumDecelerationObj.setLabelEditable(true);
-knobDrumDecelerationObj.setIndicatorSprite(spritePathKnobMid);
-knobDrumDecelerationObj.setScale(pathScaleKnobMid, sizeRatioScaleKnobMid, positionTopAndLeftFinetuneScaleKnobMid);
 
 
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 export const knobHornMicPanObj_L = new Knob(containerHornMicPan_L, sizeRatioKnobSamll, 'hornMicPan_L', devMode);
+knobHornMicPanObj_L.setIndicatorSprite(pathSpriteKnobSmall);
+knobHornMicPanObj_L.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobHornMicPanObj_L.setValueConfig(-100, 100, -100);
+knobHornMicPanObj_L.setCursorResponsive(true);
 knobHornMicPanObj_L.setLabel('PAN', labelCSSSmall);
 knobHornMicPanObj_L.setLabelResponsive(true, 0);
 knobHornMicPanObj_L.setLabelEditable(true);
-knobHornMicPanObj_L.setIndicatorSprite(spritePathKnobSmall);
-knobHornMicPanObj_L.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobHornMicPanObj_R = new Knob(containerHornMicPan_R, sizeRatioKnobSamll, 'hornMicPan_R', devMode);
+knobHornMicPanObj_R.setIndicatorSprite(pathSpriteKnobSmall);
+knobHornMicPanObj_R.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobHornMicPanObj_R.setValueConfig(-100, 100, 100);
+knobHornMicPanObj_R.setCursorResponsive(true);
 knobHornMicPanObj_R.setLabel('PAN', labelCSSSmall);
 knobHornMicPanObj_R.setLabelResponsive(true, 0);
 knobHornMicPanObj_R.setLabelEditable(true);
-knobHornMicPanObj_R.setIndicatorSprite(spritePathKnobSmall);
-knobHornMicPanObj_R.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobDrumMicPanObj_L = new Knob(containerDrumMicPan_L, sizeRatioKnobSamll, 'drumMicPan_L', devMode);
+knobDrumMicPanObj_L.setIndicatorSprite(pathSpriteKnobSmall);
+knobDrumMicPanObj_L.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobDrumMicPanObj_L.setValueConfig(-100, 100, -100);
+knobDrumMicPanObj_L.setCursorResponsive(true);
 knobDrumMicPanObj_L.setLabel('PAN', labelCSSSmall);
 knobDrumMicPanObj_L.setLabelResponsive(true, 0);
 knobDrumMicPanObj_L.setLabelEditable(true);
-knobDrumMicPanObj_L.setIndicatorSprite(spritePathKnobSmall);
-knobDrumMicPanObj_L.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobDrumMicPanObj_R = new Knob(containerDrumMicPan_R, sizeRatioKnobSamll, 'drumMicPan_R', devMode);
+knobDrumMicPanObj_R.setIndicatorSprite(pathSpriteKnobSmall);
+knobDrumMicPanObj_R.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 knobDrumMicPanObj_R.setValueConfig(-100, 100, 100);
+knobDrumMicPanObj_R.setCursorResponsive(true);
 knobDrumMicPanObj_R.setLabel('PAN', labelCSSSmall);
 knobDrumMicPanObj_R.setLabelResponsive(true, 0);
 knobDrumMicPanObj_R.setLabelEditable(true);
-knobDrumMicPanObj_R.setIndicatorSprite(spritePathKnobSmall);
-knobDrumMicPanObj_R.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
 //-----------------------------------------------------------------------------------------
 export const knobOutputGainObj = new Knob(containerOutputGain, sizeRatioKnobBig, 'outputGain', devMode);
+knobOutputGainObj.setIndicatorSprite(pathSpriteKnobBig);
+knobOutputGainObj.setScale(pathScaleKnobBig, sizeRatioScaleKnobBig, positionTopandLeftFinetuneScaleKnobBig);
 knobOutputGainObj.setValueConfig(-120, 6, 0);
 knobOutputGainObj.setSkewForCenter(-6);
+knobOutputGainObj.setCursorResponsive(true);
 knobOutputGainObj.setLabel('OUTPUT GAIN', labelCSSBig);
 knobOutputGainObj.setLabelResponsive(true, 1, 'dB');
 knobOutputGainObj.setLabelEditable(true);
-knobOutputGainObj.setIndicatorSprite(spritePathKnobBig);
-knobOutputGainObj.setScale(pathScaleKnobBig, sizeRatioScaleKnobBig, positionTopandLeftFinetuneScaleKnobBig);

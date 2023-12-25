@@ -28,6 +28,8 @@ export default class Switch {
     this.isMouseDownOnIndicator = false;
     this.isIndicatorDragging = false;
 
+    this.inverseComponent = null;
+
     this.eventTarget = new EventTarget();
 
     this.devMode = devMode;
@@ -104,7 +106,8 @@ export default class Switch {
     this.domLabelBox.style.transform = 'translate(-50%, -50%)';
 
     // 设置labelBox样式
-    this.domLabelBox.style.zIndex = 1;
+    this.domLabelBox.style.zIndex = 2;
+    this.domLabelBox.style.pointerEvents = 'none';
     this.devMode ? this.domLabelBox.style.border = '1px solid yellow' : null;
 
 
@@ -210,8 +213,6 @@ export default class Switch {
   mouseDownHandler() {
     // 更新信号量
     this.isMouseDownOnIndicator = true;
-    // 更新鼠标样式
-    document.body.style.cursor = this.cursorDraging;
     // 触发start-interacting事件
     document.body.dispatchEvent(new CustomEvent('start-interacting'));
   }
@@ -220,6 +221,8 @@ export default class Switch {
   mouseDraggingHandler(event, directionResponseToMouse) {
     // 更新信号量
     this.isIndicatorDragging = true;
+    // 更新鼠标样式
+    document.body.style.cursor = this.cursorDraging;
     // 计算增量：indicator的增量与鼠标Y轴移动速度关联
     let mouseSpeed;
     let sign;
@@ -376,8 +379,15 @@ export default class Switch {
       });
       this.domContainer.dispatchEvent(eventChanged);
       this.eventTarget.dispatchEvent(eventChanged);
+
+      this.inverseComponent ? this.inverseComponent.setIndicatorByValue(-targetValue + 1) : null;
     }
   }
+
+  //-----------------------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------
+  setInverseComponent(targetObj) { this.inverseComponent = targetObj; }
+
 
   //-----------------------------------------------------------------------------------------
   // 通过目标状态值来旋转indicator
@@ -405,6 +415,8 @@ export default class Switch {
       this.domContainer.dispatchEvent(eventChanged);
       this.eventTarget.dispatchEvent(eventChanged);
     }
+
+    this.inverseComponent ? this.inverseComponent.setIndicatorByState(-targetState + 1) : null;
   }
 
   //-----------------------------------------------------------------------------------------

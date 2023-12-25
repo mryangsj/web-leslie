@@ -40,19 +40,21 @@ export const sliderHornMicWidthObj = new Slider(containerHornMicWidth, sizeRatio
 sliderHornMicWidthObj.setIndicatorSprite(spritePathSliderHor, spriteFillDirectionHor, positionTopLeftFinetuneSiliderHor);
 sliderHornMicWidthObj.setScale(spritePathScaleSliderHor, sizeRatioScaleSliderHor, positionTopLeftFinetuneScaleSiliderHor);
 sliderHornMicWidthObj.setValueConfig(0, 90, 45);
+sliderHornMicWidthObj.setDerectionResponseToMouse('horizontal');
+sliderHornMicWidthObj.setCursorResponsive(true);
 sliderHornMicWidthObj.setLabel('HORN MIC WIDTH', labelCSSSlider);
 sliderHornMicWidthObj.setLabelResponsive(true, 1, '°');
 sliderHornMicWidthObj.setLabelEditable(true);
-sliderHornMicWidthObj.setDerectionResponseToMouse('horizontal');
 //-----------------------------------------------------------------------------------------
 export const sliderDrumMicWidthObj = new Slider(containerDrumMicWidth, sizeRatioSliderHor, 'drumMicWidth', devMode);
 sliderDrumMicWidthObj.setIndicatorSprite(spritePathSliderHor, spriteFillDirectionHor, positionTopLeftFinetuneSiliderHor);
 sliderDrumMicWidthObj.setScale(spritePathScaleSliderHor, sizeRatioScaleSliderHor, positionTopLeftFinetuneScaleSiliderHor);
 sliderDrumMicWidthObj.setValueConfig(0, 90, 45);
+sliderDrumMicWidthObj.setDerectionResponseToMouse('horizontal');
+sliderDrumMicWidthObj.setCursorResponsive(true);
 sliderDrumMicWidthObj.setLabel('DRUM MIC WIDTH', labelCSSSlider);
 sliderDrumMicWidthObj.setLabelResponsive(true, 1, '°');
 sliderDrumMicWidthObj.setLabelEditable(true);
-sliderDrumMicWidthObj.setDerectionResponseToMouse('horizontal');
 
 
 //-----------------------------------------------------------------------------------------
@@ -62,6 +64,7 @@ sliderHornMicLevelObj_L.setIndicatorSprite(spritePathSliderVer, spriteFillDirect
 sliderHornMicLevelObj_L.setScale(spritePathScaleSliderVer, sizeRatioScaleSliderVer, positionTopLeftFinetuneScaleSiliderVer);
 sliderHornMicLevelObj_L.setValueConfig(-120, 6, 0);
 sliderHornMicLevelObj_L.setSkewForCenter(-12);
+sliderHornMicLevelObj_L.setCursorResponsive(true);
 sliderHornMicLevelObj_L.setLabel('L', labelCSSSlider);
 sliderHornMicLevelObj_L.setLabelResponsive(true, 1, 'dB');
 sliderHornMicLevelObj_L.setLabelEditable(true);
@@ -71,6 +74,7 @@ sliderHornMicLevelObj_R.setIndicatorSprite(spritePathSliderVer, spriteFillDirect
 sliderHornMicLevelObj_R.setScale(spritePathScaleSliderVer, sizeRatioScaleSliderVer, positionTopLeftFinetuneScaleSiliderVer);
 sliderHornMicLevelObj_R.setValueConfig(-120, 6, 0);
 sliderHornMicLevelObj_R.setSkewForCenter(-12);
+sliderHornMicLevelObj_R.setCursorResponsive(true);
 sliderHornMicLevelObj_R.setLabel('R', labelCSSSlider);
 sliderHornMicLevelObj_R.setLabelResponsive(true, 1, 'dB');
 sliderHornMicLevelObj_R.setLabelEditable(true);
@@ -80,6 +84,7 @@ sliderDrumMicLevelObj_L.setIndicatorSprite(spritePathSliderVer, spriteFillDirect
 sliderDrumMicLevelObj_L.setScale(spritePathScaleSliderVer, sizeRatioScaleSliderVer, positionTopLeftFinetuneScaleSiliderVer);
 sliderDrumMicLevelObj_L.setValueConfig(-120, 6, 0);
 sliderDrumMicLevelObj_L.setSkewForCenter(-12);
+sliderDrumMicLevelObj_L.setCursorResponsive(true);
 sliderDrumMicLevelObj_L.setLabel('L', labelCSSSlider);
 sliderDrumMicLevelObj_L.setLabelResponsive(true, 1, 'dB');
 sliderDrumMicLevelObj_L.setLabelEditable(true);
@@ -89,6 +94,7 @@ sliderDrumMicLevelObj_R.setIndicatorSprite(spritePathSliderVer, spriteFillDirect
 sliderDrumMicLevelObj_R.setScale(spritePathScaleSliderVer, sizeRatioScaleSliderVer, positionTopLeftFinetuneScaleSiliderVer);
 sliderDrumMicLevelObj_R.setValueConfig(-120, 6, 0);
 sliderDrumMicLevelObj_R.setSkewForCenter(-12);
+sliderDrumMicLevelObj_R.setCursorResponsive(true);
 sliderDrumMicLevelObj_R.setLabel('R', labelCSSSlider);
 sliderDrumMicLevelObj_R.setLabelResponsive(true, 1, 'dB');
 sliderDrumMicLevelObj_R.setLabelEditable(true);
