@@ -93,11 +93,6 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     this.drumMicDotProduct = 0;
     this.drumMicCorrelation = 1;
 
-    //-----------------------------------------------------------------------------------------
-    // output level参数
-    this.outputLevel_L = 0;
-    this.outputLevel_R = 0;
-
 
 
     //-----------------------------------------------------------------------------------------
@@ -112,9 +107,6 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
           break;
         case 'getMicCorrelation':
           this.port.postMessage({ type: 'micCorrelation', value: [this.hornMicCorrelation, this.drumMicCorrelation] });
-          break;
-        case 'getOutputLevel':
-          this.port.postMessage({ type: 'outputLevel', value: [this.outputLevel_L, this.outputLevel_R] });
           break;
         case 'setRotorMode':
           this.rotorMode = event.data.value;

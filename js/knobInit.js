@@ -2,7 +2,7 @@ import Knob from '/js/Knob.js';
 
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
-const containerInputGain = document.getElementById('knob-container-inputGain');
+const containerInputDrive = document.getElementById('knob-container-inputGain');
 const containerInputHPF = document.getElementById('knob-container-inputHPF');
 const containerInputLPF = document.getElementById('knob-container-inputLPF');
 const containerHighFreq = document.getElementById('knob-container-highFreq');
@@ -53,19 +53,19 @@ const labelCSSBig = 'big-knob-label'
 
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
-export const knobInputGainObj = new Knob(containerInputGain, sizeRatioKnobBig, 'inputGain', devMode);
-knobInputGainObj.setIndicatorSprite(pathSpriteKnobBig);
-knobInputGainObj.setScale(pathScaleKnobBig, sizeRatioScaleKnobBig, positionTopandLeftFinetuneScaleKnobBig);
-knobInputGainObj.setValueConfig(1.0, 10, 4.4);
-knobInputGainObj.setCursorResponsive(true);
-knobInputGainObj.setLabel('INPUT GAIN', labelCSSBig);
-knobInputGainObj.setLabelResponsive(true, 1);
-knobInputGainObj.setLabelEditable(true);
+export const knobInputDriveObj = new Knob(containerInputDrive, sizeRatioKnobBig, 'inputDrive', devMode);
+knobInputDriveObj.setIndicatorSprite(pathSpriteKnobBig);
+knobInputDriveObj.setScale(pathScaleKnobBig, sizeRatioScaleKnobBig, positionTopandLeftFinetuneScaleKnobBig);
+knobInputDriveObj.setValueConfig(0, 20, 3.0);
+knobInputDriveObj.setCursorResponsive(true);
+knobInputDriveObj.setLabel('DRIVE', labelCSSBig);
+knobInputDriveObj.setLabelResponsive(true, 1, 'dB');
+knobInputDriveObj.setLabelEditable(true);
 //-----------------------------------------------------------------------------------------
 export const knobInputHPFObj = new Knob(containerInputHPF, sizeRatioKnobSamll, 'inputHPF', devMode);
 knobInputHPFObj.setIndicatorSprite(pathSpriteKnobSmall);
 knobInputHPFObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
-knobInputHPFObj.setValueConfig(20, 200, 20);
+knobInputHPFObj.setValueConfig(20, 800, 100);
 knobInputHPFObj.setCursorResponsive(true);
 knobInputHPFObj.setLabel('LOW CUT', labelCSSSmall);
 knobInputHPFObj.setLabelResponsive(true, 0, 'Hz');
@@ -74,7 +74,7 @@ knobInputHPFObj.setLabelEditable(true);
 export const knobInputLPFObj = new Knob(containerInputLPF, sizeRatioKnobSamll, 'inputLPF', devMode);
 knobInputLPFObj.setIndicatorSprite(pathSpriteKnobSmall);
 knobInputLPFObj.setScale(pathScaleKnobSmall, sizeRatioScaleKnobSmall, positionTopAndLeftFinetuneScaleKnobSmall);
-knobInputLPFObj.setValueConfig(5, 20, 18);
+knobInputLPFObj.setValueConfig(3, 20, 10);
 knobInputLPFObj.setSkewForCenter(10);
 knobInputLPFObj.setCursorResponsive(true);
 knobInputLPFObj.setLabel('HIGH CUT', labelCSSSmall);

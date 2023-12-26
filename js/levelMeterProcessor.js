@@ -3,7 +3,7 @@ registerProcessor("level-meter-processor", class extends AudioWorkletProcessor {
     super();
 
     this.T = 1 / sampleRate;
-    this.bufferTime = 0.05; // s
+    this.bufferTime = 0.1; // s
     this.bufferLength = Math.floor(this.bufferTime / this.T);
     this.buffer_L = new Float32Array(this.bufferLength);
     this.buffer_R = new Float32Array(this.bufferLength);
@@ -19,6 +19,8 @@ registerProcessor("level-meter-processor", class extends AudioWorkletProcessor {
     this.meanSquare_R = 0;
     this.rms_L = 0;
     this.rms_R = 0;
+    this.rms_plus_L = 0;
+    this.rms_plus_R = 0;
 
     this.port.onmessage = (event) => {
       switch (event.data.type) {
@@ -27,6 +29,12 @@ registerProcessor("level-meter-processor", class extends AudioWorkletProcessor {
           break;
         case 'getRMS':
           this.port.postMessage({ type: 'RMS', value: [this.rms_L, this.rms_R] });
+          break;
+        case 'getTP_RMS':
+          this.port.postMessage({ type: 'TP_RMS', value: [this.truePeak_L, this.truePeak_R, this.rms_L, this.rms_R] });
+          break;
+        case 'getRMS+':
+          this.port.postMessage({ type: 'RMS+', value: [this.rms_plus_L, this.rms_plus_R] });
           break;
         default:
           break;
@@ -49,10 +57,6 @@ registerProcessor("level-meter-processor", class extends AudioWorkletProcessor {
       this.buffer_R[this.bufferPtrHead] = abs_R;
 
       // compute true peak
-      // if (abs_L > this.truePeak_L) { this.truePeak_L = abs_L; }
-      // else if (this.truePeak_L === old_L) { this.truePeak_L = Math.max(...this.buffer_L); }
-      // if (abs_R > this.truePeak_R) { this.truePeak_R = abs_R; }
-      // else if (this.truePeak_R === old_R) { this.truePeak_R = Math.max(...this.buffer_R); }
       this.truePeak_L = abs_L;
       this.truePeak_R = abs_R;
 
@@ -63,6 +67,10 @@ registerProcessor("level-meter-processor", class extends AudioWorkletProcessor {
       this.meanSquare_R = this.squareSum_R / this.bufferLength;
       this.rms_L = Math.sqrt(this.meanSquare_L);
       this.rms_R = Math.sqrt(this.meanSquare_R);
+
+      // compute rms+
+      this.rms_plus_L = Math.max(this.truePeak_L, this.rms_L);
+      this.rms_plus_R = Math.max(this.truePeak_R, this.rms_R);
 
       // update pointer
       this.bufferPtrHead++;

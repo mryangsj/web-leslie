@@ -12,8 +12,8 @@ const containerLeslieDrumMic = document.getElementById('meter-container-leslieDr
 const containerHornMicCorrelation = document.getElementById('meter-container-hornCorrelation');
 const containerDrumMicCorrelation = document.getElementById('meter-container-drumCorrelation');
 
-const containerOutput_L = document.getElementById('meter-container-output_L');
-const containerOutput_R = document.getElementById('meter-container-output_R');
+const containerRMS_L = document.getElementById('meter-container-rms_L');
+const containerRMS_R = document.getElementById('meter-container-rms_R');
 
 
 //-----------------------------------------------------------------------------------------
@@ -74,11 +74,11 @@ ledDrumCorrelationObj.setValueConfig(-1, 1, 0);
 const sizeRatioLEDVol = 1.23;
 const spritePathLEDVol = '/resources/image/led/led_volume.png';
 //-----------------------------------------------------------------------------------------
-export const meterOutput_L_Obj = new Meter(containerOutput_L, sizeRatioLEDVol, 'output_L', devMode);
-meterOutput_L_Obj.setIndicatorSprite(spritePathLEDVol, spriteFillDirectionLED);
-meterOutput_L_Obj.setLabel('OUTPUT RMS', labelCSSWheel);
-meterOutput_L_Obj.setValueConfig(-60, 0, -60);
+export const meterRMS_L_Obj = new Meter(containerRMS_L, sizeRatioLEDVol, 'rms_L', devMode);
+meterRMS_L_Obj.setIndicatorSprite(spritePathLEDVol, spriteFillDirectionLED);
+meterRMS_L_Obj.setLabel('OUT RMS+', labelCSSWheel);
+meterRMS_L_Obj.setValueConfig(-60, 0, -60);
 //-----------------------------------------------------------------------------------------
-export const meterOutput_R_Obj = new Meter(containerOutput_R, sizeRatioLEDVol, 'output_R', devMode);
-meterOutput_R_Obj.setIndicatorSprite(spritePathLEDVol, spriteFillDirectionLED);
-meterOutput_R_Obj.setValueConfig(-60, 0, -60);
+export const meterRMS_R_Obj = new Meter(containerRMS_R, sizeRatioLEDVol, 'rms_R', devMode);
+meterRMS_R_Obj.setIndicatorSprite(spritePathLEDVol, spriteFillDirectionLED);
+meterRMS_R_Obj.setValueConfig(-60, 0, -60);

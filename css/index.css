@@ -567,13 +567,13 @@ audio {
     grid-template-rows: repeat(2, 1fr);
 }
 
-#meter-container-output_L {
+#meter-container-rms_L {
     grid-row: 1 / span 1;
     grid-column: 1 / span 1;
     top: 35%;
 }
 
-#meter-container-output_R {
+#meter-container-rms_R {
     grid-row: 2 / span 1;
     grid-column: 1 / span 1;
     bottom: 35%;

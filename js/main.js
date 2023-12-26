@@ -1,5 +1,6 @@
 import { switchPowerObj } from "/js/switchInit.js";
-import { knobInputGainObj } from "/js/knobInit.js";
+import { knobInputHPFObj, knobInputLPFObj, knobHighFreqObj, knobHighGainObj, knobMidFreqObj, knobMidGainObj, knobLowFreqObj, knobLowGainObj } from "/js/knobInit.js";
+import { knobInputDriveObj } from "/js/knobInit.js";
 import { wheelHornSpeedObj, wheelDrumSpeedObj } from "/js/wheelInit.js";
 import { knobHornAccelerationObj, knobHornDecelerationObj, knobDrumAccelerationObj, knobDrumDecelerationObj } from "/js/knobInit.js";
 import { buttonSlowObj, buttonFastObj, buttonBrakeObj } from "/js/switchInit.js";
@@ -11,7 +12,7 @@ import { sliderHornMicWidthObj, sliderDrumMicWidthObj } from "/js/sliderInit.js"
 import { sliderHornMicLevelObj_L, sliderHornMicLevelObj_R, sliderDrumMicLevelObj_L, sliderDrumMicLevelObj_R } from "/js/sliderInit.js";
 import { switchHornLevelLinkObj, switchDrumLevelLinkObj } from "/js/switchInit.js";
 import { knobOutputGainObj } from "/js/knobInit.js";
-import { meterOutput_L_Obj, meterOutput_R_Obj } from "/js/meterInit.js";
+import { meterRMS_L_Obj, meterRMS_R_Obj } from "/js/meterInit.js";
 
 //-----------------------------------------------------------------------------------------
 // get elements
@@ -36,7 +37,12 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 })().then(() => {
   //---------------------------------------------------
   // input block
-  const inputGainNode = new GainNode(audioContext, { gain: dB2value(knobInputGainObj.defaultValue) });
+  const lowCutNode = new BiquadFilterNode(audioContext, { type: 'highpass', frequency: knobInputHPFObj.currentValue });
+  const highCutNode = new BiquadFilterNode(audioContext, { type: 'lowpass', frequency: knobInputLPFObj.currentValue * 1e3 });
+  const distortionNode = new WaveShaperNode(audioContext, { curve: makeDistortionCurve(dB2value(knobInputDriveObj.currentValue)), oversample: '4x' });
+  const highShelfNode = new BiquadFilterNode(audioContext, { type: 'highshelf', frequency: knobHighFreqObj.currentValue * 1e3, gain: dB2value(knobHighGainObj.currentValue) });
+  const midNode = new BiquadFilterNode(audioContext, { type: 'peaking', frequency: knobMidFreqObj.currentValue, gain: dB2value(knobMidGainObj.currentValue) });
+  const lowShelfNode = new BiquadFilterNode(audioContext, { type: 'lowshelf', frequency: knobLowFreqObj.currentValue, gain: dB2value(knobLowGainObj.currentValue) });
 
   //---------------------------------------------------
   // leslie block
@@ -71,10 +77,15 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 
   //---------------------------------------------------
   // connect nodes
-  mp3Node.connect(inputGainNode);
+  mp3Node.connect(lowCutNode);
+  lowCutNode.connect(highCutNode);
+  highCutNode.connect(distortionNode);
+  distortionNode.connect(highShelfNode);
+  highShelfNode.connect(midNode);
+  midNode.connect(lowShelfNode);
 
-  inputGainNode.connect(hpfNode);
-  inputGainNode.connect(lpfNode);
+  lowShelfNode.connect(hpfNode);
+  lowShelfNode.connect(lpfNode);
 
   hpfNode.connect(leslieNode, 0, 0);
   lpfNode.connect(leslieNode, 0, 1);
@@ -98,13 +109,18 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
   //-----------------------------------------------------------------------------------------
   // 注册控件状态changed事件
   switchPowerObj.addEventListener('changed', event => {
-    if (event.detail.value === 1) {
-      audioContext.resume();
-    } else {
-      audioContext.suspend();
-    }
+    if (event.detail.value === 1) { audioContext.resume(); }
+    else { audioContext.suspend(); }
   });
-  knobInputGainObj.addEventListener('changed', () => { inputGainNode.gain.value = dB2value(knobInputGainObj.currentValue); });
+  knobInputHPFObj.addEventListener('changed', () => { lowCutNode.frequency.value = knobInputHPFObj.currentValue; });
+  knobInputLPFObj.addEventListener('changed', () => { highCutNode.frequency.value = knobInputLPFObj.currentValue * 1e3; });
+  knobInputDriveObj.addEventListener('changed', () => { distortionNode.curve = makeDistortionCurve(dB2value(knobInputDriveObj.currentValue)); });
+  knobHighFreqObj.addEventListener('changed', () => { highShelfNode.frequency.value = knobHighFreqObj.currentValue * 1e3; });
+  knobHighGainObj.addEventListener('changed', () => { highShelfNode.gain.value = dB2value(knobHighGainObj.currentValue); });
+  knobMidFreqObj.addEventListener('changed', () => { midNode.frequency.value = knobMidFreqObj.currentValue; });
+  knobMidGainObj.addEventListener('changed', () => { midNode.gain.value = dB2value(knobMidGainObj.currentValue); });
+  knobLowFreqObj.addEventListener('changed', () => { lowShelfNode.frequency.value = knobLowFreqObj.currentValue; });
+  knobLowGainObj.addEventListener('changed', () => { lowShelfNode.gain.value = dB2value(knobLowGainObj.currentValue); });
 
   wheelHornSpeedObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setHornSpeedFineTune', value: wheelHornSpeedObj.currentValue }); });
   wheelDrumSpeedObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setDrumSpeedFineTune', value: wheelDrumSpeedObj.currentValue }); });
@@ -156,7 +172,7 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
       leslieNode.port.postMessage({ type: 'getRotorInstantDegree' });
       leslieNode.port.postMessage({ type: 'getRotorInstantRate' });
       leslieNode.port.postMessage({ type: 'getMicCorrelation' });
-      levelMeterNode.port.postMessage({ type: 'getRMS' });
+      levelMeterNode.port.postMessage({ type: 'getRMS+' });
     }
     leslieHornMicObj.setIndicatorByValue(sliderHornMicWidthObj.currentValue);
     leslieDrumMicObj.setIndicatorByValue(sliderDrumMicWidthObj.currentValue);
@@ -193,8 +209,8 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
         if (truePeak_L < 1e-3) truePeak_L = 1e-3;
         if (truePeak_R > 1) truePeak_R = 1;
         if (truePeak_R < 1e-3) truePeak_R = 1e-3;
-        meterOutput_L_Obj.setIndicatorByValue(value2dB(truePeak_L));
-        meterOutput_R_Obj.setIndicatorByValue(value2dB(truePeak_R));
+        meterTP_L_Obj.setIndicatorByValue(value2dB(truePeak_L));
+        meterTP_L_Obj.setIndicatorByValue(value2dB(truePeak_R));
         break;
       case 'RMS':
         let rms_L = event.data.value[0];
@@ -203,8 +219,35 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
         if (rms_L < 1e-3) rms_L = 1e-3;
         if (rms_R > 1) rms_R = 1;
         if (rms_R < 1e-3) rms_R = 1e-3;
-        meterOutput_L_Obj.setIndicatorByValue(value2dB(rms_L));
-        meterOutput_R_Obj.setIndicatorByValue(value2dB(rms_R));
+        meterRMS_L_Obj.setIndicatorByValue(value2dB(rms_L));
+        meterRMS_R_Obj.setIndicatorByValue(value2dB(rms_R));
+      case 'TP_RMS':
+        let tp_L = event.data.value[0];
+        let tp_R = event.data.value[1];
+        let RMS_L = event.data.value[2];
+        let RMS_R = event.data.value[3];
+        if (tp_L > 1) tp_L = 1;
+        if (tp_L < 1e-3) tp_L = 1e-3;
+        if (tp_R > 1) tp_R = 1;
+        if (tp_R < 1e-3) tp_R = 1e-3;
+        if (RMS_L > 1) RMS_L = 1;
+        if (RMS_L < 1e-3) RMS_L = 1e-3;
+        if (RMS_R > 1) RMS_R = 1;
+        if (RMS_R < 1e-3) RMS_R = 1e-3;
+        meterTP_L_Obj.setIndicatorByValue(value2dB(tp_L));
+        meterTP_R_Obj.setIndicatorByValue(value2dB(tp_R));
+        meterRMS_L_Obj.setIndicatorByValue(value2dB(RMS_L));
+        meterRMS_R_Obj.setIndicatorByValue(value2dB(RMS_R));
+        break;
+      case 'RMS+':
+        let rms_L_ = event.data.value[0];
+        let rms_R_ = event.data.value[1];
+        if (rms_L_ > 1) rms_L_ = 1;
+        if (rms_L_ < 1e-3) rms_L_ = 1e-3;
+        if (rms_R_ > 1) rms_R_ = 1;
+        if (rms_R_ < 1e-3) rms_R_ = 1e-3;
+        meterRMS_L_Obj.setIndicatorByValue(value2dB(rms_L_));
+        meterRMS_R_Obj.setIndicatorByValue(value2dB(rms_R_));
       default:
         break;
     }
@@ -217,3 +260,13 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
 function value2dB(value) { return 20 * Math.log10(value); }
 function dB2value(dB) { return Math.pow(10, dB / 20); }
 function degree2radian(degree) { return degree / 180 * Math.PI; }
+function makeDistortionCurve(amp) {
+  const samples = 44100;
+  const curve = new Float32Array(samples);
+  const deg = Math.PI / 180;
+  for (let i = 0; i < samples; ++i) {
+    const x = i * 2 / samples - 1;
+    curve[i] = (1 + amp) * x / (1 + amp * Math.abs(x));
+  }
+  return curve;
+}
