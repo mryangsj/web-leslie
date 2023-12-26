@@ -83,7 +83,7 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     this.drumCorrelationBuffer_L = new Float32Array(this.correlationBufferLength);
     this.drumCorrelationBuffer_R = new Float32Array(this.correlationBufferLength);
     this.correlationBufferPointerHead = 0;
-    this.correlationBufferPointerEnd = 1;
+    this.correlationBufferPointerTail = 1;
     this.hornMicNormSquare_L = 0;
     this.hornMicNormSquare_R = 0;
     this.hornMicDotProduct = 0;
@@ -92,6 +92,11 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
     this.drumMicNormSquare_R = 0;
     this.drumMicDotProduct = 0;
     this.drumMicCorrelation = 1;
+
+    //-----------------------------------------------------------------------------------------
+    // output level参数
+    this.outputLevel_L = 0;
+    this.outputLevel_R = 0;
 
 
 
@@ -107,6 +112,9 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
           break;
         case 'getMicCorrelation':
           this.port.postMessage({ type: 'micCorrelation', value: [this.hornMicCorrelation, this.drumMicCorrelation] });
+          break;
+        case 'getOutputLevel':
+          this.port.postMessage({ type: 'outputLevel', value: [this.outputLevel_L, this.outputLevel_R] });
           break;
         case 'setRotorMode':
           this.rotorMode = event.data.value;
@@ -147,6 +155,8 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
           break;
         case 'setDrumMicWidth':
           this.drumMicWidth = event.data.value;
+          break;
+        default:
           break;
       }
     };
@@ -352,21 +362,21 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
       this.drumCorrelationBuffer_L[this.correlationBufferPointerHead] = inputDrum_L;
       this.drumCorrelationBuffer_R[this.correlationBufferPointerHead] = inputDrum_R;
 
-      this.hornMicNormSquare_L = this.hornMicNormSquare_L + inputHorn_L ** 2 - this.hornCorrelationBuffer_L[this.correlationBufferPointerEnd] ** 2;
-      this.hornMicNormSquare_R = this.hornMicNormSquare_R + inputHorn_R ** 2 - this.hornCorrelationBuffer_R[this.correlationBufferPointerEnd] ** 2;
+      this.hornMicNormSquare_L = this.hornMicNormSquare_L + inputHorn_L ** 2 - this.hornCorrelationBuffer_L[this.correlationBufferPointerTail] ** 2;
+      this.hornMicNormSquare_R = this.hornMicNormSquare_R + inputHorn_R ** 2 - this.hornCorrelationBuffer_R[this.correlationBufferPointerTail] ** 2;
       this.hornMicNorm_L = Math.sqrt(this.hornMicNormSquare_L);
       this.hornMicNorm_R = Math.sqrt(this.hornMicNormSquare_R);
-      this.hornMicDotProduct = this.hornMicDotProduct + inputHorn_L * inputHorn_R - this.hornCorrelationBuffer_L[this.correlationBufferPointerEnd] * this.hornCorrelationBuffer_R[this.correlationBufferPointerEnd];
+      this.hornMicDotProduct = this.hornMicDotProduct + inputHorn_L * inputHorn_R - this.hornCorrelationBuffer_L[this.correlationBufferPointerTail] * this.hornCorrelationBuffer_R[this.correlationBufferPointerTail];
       this.hornMicCorrelation = this.hornMicDotProduct / (this.hornMicNorm_L * this.hornMicNorm_R);
       if (this.hornMicCorrelation > 1) this.hornMicCorrelation = 1;
       else if (this.hornMicCorrelation < -1) this.hornMicCorrelation = -1;
       else if (isNaN(this.hornMicCorrelation)) this.hornMicCorrelation = 0;
 
-      this.drumMicNormSquare_L = this.drumMicNormSquare_L + inputDrum_L ** 2 - this.drumCorrelationBuffer_L[this.correlationBufferPointerEnd] ** 2;
-      this.drumMicNormSquare_R = this.drumMicNormSquare_R + inputDrum_R ** 2 - this.drumCorrelationBuffer_R[this.correlationBufferPointerEnd] ** 2;
+      this.drumMicNormSquare_L = this.drumMicNormSquare_L + inputDrum_L ** 2 - this.drumCorrelationBuffer_L[this.correlationBufferPointerTail] ** 2;
+      this.drumMicNormSquare_R = this.drumMicNormSquare_R + inputDrum_R ** 2 - this.drumCorrelationBuffer_R[this.correlationBufferPointerTail] ** 2;
       this.drumMicNorm_L = Math.sqrt(this.drumMicNormSquare_L);
       this.drumMicNorm_R = Math.sqrt(this.drumMicNormSquare_R);
-      this.drumMicDotProduct = this.drumMicDotProduct + inputDrum_L * inputDrum_R - this.drumCorrelationBuffer_L[this.correlationBufferPointerEnd] * this.drumCorrelationBuffer_R[this.correlationBufferPointerEnd];
+      this.drumMicDotProduct = this.drumMicDotProduct + inputDrum_L * inputDrum_R - this.drumCorrelationBuffer_L[this.correlationBufferPointerTail] * this.drumCorrelationBuffer_R[this.correlationBufferPointerTail];
       if (Math.abs(this.drumMicNorm_L) < 1e-6 || Math.abs(this.drumMicNorm_R) < 1e-6) {
         this.drumMicCorrelation = 0;
       } else {
@@ -376,16 +386,13 @@ registerProcessor("leslie-processor", class extends AudioWorkletProcessor {
         else if (isNaN(this.drumMicCorrelation)) this.drumMicCorrelation = 0;
       }
 
-      if (this.correlationBufferPointerHead === this.correlationBufferLength - 1) {
-        this.correlationBufferPointerHead = 0;
-        this.correlationBufferPointerEnd++;
-      } else if (this.correlationBufferPointerEnd === this.correlationBufferLength - 1) {
-        this.correlationBufferPointerEnd = 0;
-        this.correlationBufferPointerHead++;
-      } else {
-        this.correlationBufferPointerHead++;
-        this.correlationBufferPointerEnd++;
-      }
+      this.correlationBufferPointerHead++;
+      this.correlationBufferPointerTail++;
+      if (this.correlationBufferPointerHead >= this.correlationBufferLength) { this.correlationBufferPointerHead = 0; }
+      if (this.correlationBufferPointerTail >= this.correlationBufferLength) { this.correlationBufferPointerTail = 0; }
+
+      //-----------------------------------------------------------------------------------------
+      // 计算输出level
 
 
       //-----------------------------------------------------------------------------------------

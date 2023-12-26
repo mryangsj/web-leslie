@@ -13,8 +13,8 @@
 <body>
   <!-- header -->
   <div class="header">
-    <!-- 'Load Preset' button -->
-    <input type="text" id="textInput" onclick="openFileUploader()" readonly placeholder="Load Preset">
+    <!-- 'Load audio file' button -->
+    <input type="text" id="textInput" onclick="openFileUploader()" readonly placeholder="Load Audio File">
     <input type="file" id="fileInput" accept=".mp3, .wav, .ogg, .aac" onchange="handleFileSelect(event)">
     <audio controls id="audioPlayer" src="/resources/audio/test-audio.mp3">
       Your browser does not support the audio element.
@@ -83,12 +83,20 @@
     <!-- middle(leslie) panel -->
     <div class="panal" id="panal-mid">
       <div id="leslie-frame"></div>
-      <div id="leslie-background"></div>
+      <div id="leslie-background">
+        <div id="meter-container-leslieBackground"></div>
+      </div>
       <div id="leslie-horn">
         <div id="meter-container-leslieHorn"></div>
       </div>
+      <div id="leslie-hornMic">
+        <div id="meter-container-leslieHornMic"></div>
+      </div>
       <div id="leslie-drum">
         <div id="meter-container-leslieDrum"></div>
+      </div>
+      <div id="leslie-drumMic">
+        <div id="meter-container-leslieDrumMic"></div>
       </div>
       <!-- <div class="rotor"></div> -->
     </div>
@@ -129,7 +137,8 @@
       </div>
 
       <div class="block" id="block-vu">
-        <div id="meter-container-outputVU"></div>
+        <div id="meter-container-output_L"></div>
+        <div id="meter-container-output_R"></div>
       </div>
 
     </div>

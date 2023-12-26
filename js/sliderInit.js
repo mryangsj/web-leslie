@@ -49,7 +49,7 @@ sliderHornMicWidthObj.setLabelEditable(true);
 export const sliderDrumMicWidthObj = new Slider(containerDrumMicWidth, sizeRatioSliderHor, 'drumMicWidth', devMode);
 sliderDrumMicWidthObj.setIndicatorSprite(spritePathSliderHor, spriteFillDirectionHor, positionTopLeftFinetuneSiliderHor);
 sliderDrumMicWidthObj.setScale(spritePathScaleSliderHor, sizeRatioScaleSliderHor, positionTopLeftFinetuneScaleSiliderHor);
-sliderDrumMicWidthObj.setValueConfig(0, 90, 45);
+sliderDrumMicWidthObj.setValueConfig(0, 90, 30);
 sliderDrumMicWidthObj.setDerectionResponseToMouse('horizontal');
 sliderDrumMicWidthObj.setCursorResponsive(true);
 sliderDrumMicWidthObj.setLabel('DRUM MIC WIDTH', labelCSSSlider);

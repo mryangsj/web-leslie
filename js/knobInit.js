@@ -223,7 +223,7 @@ knobDrumMicPanObj_R.setLabelEditable(true);
 export const knobOutputGainObj = new Knob(containerOutputGain, sizeRatioKnobBig, 'outputGain', devMode);
 knobOutputGainObj.setIndicatorSprite(pathSpriteKnobBig);
 knobOutputGainObj.setScale(pathScaleKnobBig, sizeRatioScaleKnobBig, positionTopandLeftFinetuneScaleKnobBig);
-knobOutputGainObj.setValueConfig(-120, 6, 0);
+knobOutputGainObj.setValueConfig(-120, 6, -6);
 knobOutputGainObj.setSkewForCenter(-6);
 knobOutputGainObj.setCursorResponsive(true);
 knobOutputGainObj.setLabel('OUTPUT GAIN', labelCSSBig);

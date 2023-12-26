@@ -382,11 +382,10 @@ audio {
 }
 
 #leslie-background {
-    position: absolute;
     width: 100%;
-    height: 100%;
-    background-image: url(/resources/image/leslie/leslie_background.png);
-    background-size: cover;
+    aspect-ratio: 620 / 900;
+    position: absolute;
+    top: 0%;
     z-index: 0;
 }
 
@@ -398,7 +397,23 @@ audio {
     z-index: 1;
 }
 
+#leslie-hornMic {
+    width: 100%;
+    aspect-ratio: 620 / 181;
+    position: absolute;
+    top: 20%;
+    z-index: 1;
+}
+
 #leslie-drum {
+    width: 100%;
+    aspect-ratio: 620 / 181;
+    position: absolute;
+    top: 60%;
+    z-index: 1;
+}
+
+#leslie-drumMic {
     width: 100%;
     aspect-ratio: 620 / 181;
     position: absolute;
@@ -489,7 +504,14 @@ audio {
 #switch-container-hornMicLevelLink {
     grid-row: 3 / span 1;
     grid-column: 2 / span 2;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
     /* background-color: green; */
+}
+
+.button-label_bottom {
+    top: 110%;
 }
 
 /* ----------------------------------------------- */
@@ -525,7 +547,9 @@ audio {
 #switch-container-drumMicLevelLink {
     grid-row: 3 / span 1;
     grid-column: 2 / span 2;
-    /* background-color: green; */
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 
 /* ----------------------------------------------- */
@@ -538,10 +562,25 @@ audio {
 #block-vu {
     grid-row: 12 / span 3;
     grid-column: 7 / span 4;
-    background-color: #aaa;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+#meter-container-output_L {
+    grid-row: 1 / span 1;
+    grid-column: 1 / span 1;
+    top: 35%;
+}
+
+#meter-container-output_R {
+    grid-row: 2 / span 1;
+    grid-column: 1 / span 1;
+    bottom: 35%;
 }
 
 
+/* ----------------------------------------------------------------------------------------- */
 .footer-text {
     position: absolute;
     left: -55%;

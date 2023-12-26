@@ -28,8 +28,6 @@ export default class Switch {
     this.isMouseDownOnIndicator = false;
     this.isIndicatorDragging = false;
 
-    this.inverseComponent = null;
-
     this.eventTarget = new EventTarget();
 
     this.devMode = devMode;
@@ -379,8 +377,6 @@ export default class Switch {
       });
       this.domContainer.dispatchEvent(eventChanged);
       this.eventTarget.dispatchEvent(eventChanged);
-
-      this.inverseComponent ? this.inverseComponent.setIndicatorByValue(-targetValue + 1) : null;
     }
   }
 
@@ -415,8 +411,6 @@ export default class Switch {
       this.domContainer.dispatchEvent(eventChanged);
       this.eventTarget.dispatchEvent(eventChanged);
     }
-
-    this.inverseComponent ? this.inverseComponent.setIndicatorByState(-targetState + 1) : null;
   }
 
   //-----------------------------------------------------------------------------------------
