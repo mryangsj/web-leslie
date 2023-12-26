@@ -49,10 +49,6 @@ registerProcessor("level-meter-processor", class extends AudioWorkletProcessor {
     for (let i = 0; i < input_L.length; i++) {
       const abs_L = Math.abs(input_L[i]);
       const abs_R = Math.abs(input_R[i]);
-
-      // 更新缓冲区
-      const old_L = this.buffer_L[this.bufferPtrHead];
-      const old_R = this.buffer_R[this.bufferPtrHead];
       this.buffer_L[this.bufferPtrHead] = abs_L;
       this.buffer_R[this.bufferPtrHead] = abs_R;
 

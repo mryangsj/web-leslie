@@ -23,8 +23,8 @@ const devMode = false;
 //-----------------------------------------------------------------------------------------
 const sizeRatioLeslieHorn = 1;
 const spritePathLeslieBackground = '/resources/image/leslie/leslie_background.png';
-const spritePathLeslieHorn = '/resources/image/leslie/leslie_horn.png';
-const spritePathLeslieDrum = '/resources/image/leslie/leslie_drum.png';
+const spritePathLeslieHorn = '/resources/image/leslie/leslie_horn.jpg';
+const spritePathLeslieDrum = '/resources/image/leslie/leslie_drum.jpg';
 const spritePathLeslieHornMic = '/resources/image/leslie/leslie_hornMic.png';
 const spritePathLeslieDrumMic = '/resources/image/leslie/leslie_drumMic.png';
 const spriteFillDirectionLeslieHorn = 'width';
@@ -76,7 +76,7 @@ const spritePathLEDVol = '/resources/image/led/led_volume.png';
 //-----------------------------------------------------------------------------------------
 export const meterRMS_L_Obj = new Meter(containerRMS_L, sizeRatioLEDVol, 'rms_L', devMode);
 meterRMS_L_Obj.setIndicatorSprite(spritePathLEDVol, spriteFillDirectionLED);
-meterRMS_L_Obj.setLabel('OUT RMS+', labelCSSWheel);
+meterRMS_L_Obj.setLabel('RMS+', labelCSSWheel);
 meterRMS_L_Obj.setValueConfig(-60, 0, -60);
 //-----------------------------------------------------------------------------------------
 export const meterRMS_R_Obj = new Meter(containerRMS_R, sizeRatioLEDVol, 'rms_R', devMode);

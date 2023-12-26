@@ -553,6 +553,27 @@ audio {
 }
 
 /* ----------------------------------------------- */
+#block-hornLogo {
+    grid-row: 5 / span 2;
+    grid-column: 3 / span 2;
+    background-image: url(/resources/image/icon/horn.svg);
+    background-size: 60% 60%;
+    background-repeat: no-repeat;
+    background-position: 50% 45%;
+    opacity: 0.5;
+}
+
+#block-drumLogo {
+    grid-row: 5 / span 2;
+    grid-column: 8 / span 2;
+    background-image: url(/resources/image/icon/drum.svg);
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+    background-position: 50% 45%;
+    opacity: 0.5;
+}
+
+/* ----------------------------------------------- */
 #block-output {
     grid-row: 12 / span 3;
     grid-column: 2 / span 4;
