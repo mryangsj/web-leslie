@@ -1,7 +1,7 @@
 # Web-Leslie
 ## Web-based emulation of Leslie 147 Speaker
 
-![Screenshot](/resources/image/screenshots/mainWindows.jpg)
+![Screenshot](/resources/image/screenshots/mainWindow.png)
 
 ## Introduction
 Welcome to Web-Leslie, a web-based emulation of the iconic Leslie 147 Speaker. This project was developed as part of the Advanced Coding Tools and Methodologies course. We chose to emulate the Leslie 147 Speaker due to its significant impact on the sound of electronic music and its fascinating mechanical and acoustic properties.
@@ -33,10 +33,10 @@ As the horn and drum rotate, they cause the sound to be projected in different d
 
 The speed of the rotation can be controlled, allowing the musician to switch between a slow, rich chorus effect and a fast, vibrant tremolo effect. This versatility has made the Leslie speaker a favorite among musicians in a wide range of genres.
 
-## User Interface
+## User Interface Overview
 The Mini Moog is packed with features, but still has a very simple and straightforward interface, turn the Synth on, choose a preset and you're ready to play with a great sound! Otherwise you can create a sound from scratch setting up the oscillators, mixing them and finally adding some effects like tremolo or delay. In the following paragraphs we will in detail every section of the UI. 
 
-### KeyBoard - Tune & Pitch Wheel
+## Left Panel
 
 ![Screenshot](screenshots/keyboard.png)
 
@@ -46,7 +46,7 @@ The Mini Moog is packed with features, but still has a very simple and straightf
 4. **Keyboard:** standard 44-keys keyboard, you can play it clicking on the keys or by pressing the letters related to the keys as shown
 5. **Meter:** simple but useful meter to keep under control the output level in order to avoid clipping  
 
-### Oscillator Bank
+### Input block
 
 ![Screenshot](screenshots/oscillators.png)
 
@@ -54,7 +54,7 @@ The Mini Moog is packed with features, but still has a very simple and straightf
 2. **Waveform:** use this to select the waveform of the relative oscillator, you can choose among the following: Sine - Triangular - Sawthoot - Square 
 3. **Frequency:** this is a detuner, can go up or down from 1 to 8 semitones, it's useful to create armonies and chords with different oscillators (you can add a fourth below or a fifth above to your main sound for example)
 
-### Mixer
+### Rotation Speed Control Block
 
 ![Screenshot](screenshots/mixer.png)
 
@@ -65,7 +65,7 @@ The Mini Moog is packed with features, but still has a very simple and straightf
 
 Some tips: noise is great when it comes to give "life" to a synthetic sounds, but its level must be low! 
 
-### Envelope
+### Rotation Mode Block
 
 ![Screenshot](screenshots/envelope.png)
 
@@ -76,11 +76,14 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 3. **Sustain:** controls sustain time
 4. **Release:** controls release time
 
-### Effects
+
+## Right Panel
+
+### Microphone Settings Block
 
 ![Screenshot](screenshots/effects.png)
 
-#### Tremolo
+#### Mixing Block
 
 *Tremolo, in electronics, is the variation in amplitude of sound achieved through electronic means, sometimes mistakenly called vibrato, and producing a sound somewhat reminiscent of flanging, referred to as an "underwater effect".*
 
@@ -89,7 +92,7 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 3. **Depth:** controls the depth of the effect, at higher setting you will hear a more pronounced oscillation of the volume
 4. **WaveForm:** sets the waveform of the LFO, you can choose among the following: Sine - Triangular - Sawthoot - Square
 
-#### Delay
+#### Output Block
 
 *Delay is an audio effect or an effects unit which records an input signal to an audio storage medium, and then plays it back after a period of time. The delayed signal may either be played back multiple times, or played back into the recording again, to create the sound of a repeating, decaying echo.*
 
@@ -131,7 +134,7 @@ Sounds and effects of our project are powered by the modern WebAudio APIs (you c
 >The Web Audio API involves handling audio operations inside an audio context, and has been designed to allow modular routing. Basic audio operations are performed with audio nodes, which are linked together to form an audio routing graph. Several sources — with different types of channel layout — are supported even within a single context. This modular design provides the flexibility to create complex audio functions with dynamic effects.
 
 
-### MIDI
+### Blender
 
 ![Screenshot](screenshots/midi.jpg)
 
@@ -142,29 +145,6 @@ In particular we use three bytes of the message:
 3. **VELOCITY:** the value transmitted, for a note is the force applied to the key (strictly related to the volume of the resulting note played), for other messages is the new value that has to be applied to the specific control.
 
 We used standard MIDI control change messages for pitch wheel, sustain and master volume, while for the other features we otherwise preferred custom messages.
-
-### Arduino
-
-![Screenshot](screenshots/circuitB.png)
-
-We designed a custom circuit managed by an Arduino Board, that gives to the user the possibilty to control 3 parameters of the UI with 3 physical potentiometer. On the circuit there are also 3 buttons and a display, with the first and the last button (up/down buttons) you can cycle through the synth parameters, and select the one you want pressing the central one, on the display you will see the name of the parameters and, while playing, a nice animation with stylized music notes. Arduino, like a MIDI device, exchange via USB MIDI messages with the PC, the format of these messages is the same described before. If you want to use both Arduino and an external MIDI Keyboard you have to follow few simple passages to set up everything, there's a little guide below.
-
-1. **Down Button**
-2. **Confirm Button**
-3. **Up Button**
-4. **Display** 
-5. **Pot 3**
-6. **Pot 1**
-7. **Pot 2**
-
-### Android
-
-![Screenshot](screenshots/androidApp.jpg)
-
-We developed a custom Android Application that reads data from the gyroscope/accelerometer/magnetometer of the smartphone and sends them in MIDI messages via USB to the pc. In this way you can control pitch bend and sustain moving your smartphone. In "Pitch Wheel" mode the angular acceleration of the smartphone controls pitch bending on the synth, while in "Sustain" mode the angle determines if sustain is on or off (you can for example fix your smartphone on your foot and engage sustain moving it like on a real piano/synth with a dedicated pedal).
-
-1. **Pitch Wheel Button:** tap on this button to control the pitch wheel
-2. **Sustain Button:** tap on this button to control the sustain
 
 ### Surge
 
