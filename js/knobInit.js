@@ -56,7 +56,8 @@ const labelCSSBig = 'big-knob-label'
 export const knobInputDriveObj = new Knob(containerInputDrive, sizeRatioKnobBig, 'inputDrive', devMode);
 knobInputDriveObj.setIndicatorSprite(pathSpriteKnobBig);
 knobInputDriveObj.setScale(pathScaleKnobBig, sizeRatioScaleKnobBig, positionTopandLeftFinetuneScaleKnobBig);
-knobInputDriveObj.setValueConfig(0, 20, 3.0);
+knobInputDriveObj.setValueConfig(0, 30, 3.0);
+knobInputDriveObj.setSkewForCenter(12.0);
 knobInputDriveObj.setCursorResponsive(true);
 knobInputDriveObj.setLabel('DRIVE', labelCSSBig);
 knobInputDriveObj.setLabelResponsive(true, 1, 'dB');

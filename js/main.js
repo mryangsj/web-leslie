@@ -39,10 +39,10 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
   // input block
   const lowCutNode = new BiquadFilterNode(audioContext, { type: 'highpass', frequency: knobInputHPFObj.currentValue });
   const highCutNode = new BiquadFilterNode(audioContext, { type: 'lowpass', frequency: knobInputLPFObj.currentValue * 1e3 });
-  const distortionNode = new WaveShaperNode(audioContext, { curve: makeDistortionCurve(dB2value(knobInputDriveObj.currentValue)), oversample: '4x' });
-  const highShelfNode = new BiquadFilterNode(audioContext, { type: 'highshelf', frequency: knobHighFreqObj.currentValue * 1e3, gain: dB2value(knobHighGainObj.currentValue) });
-  const midNode = new BiquadFilterNode(audioContext, { type: 'peaking', frequency: knobMidFreqObj.currentValue, gain: dB2value(knobMidGainObj.currentValue) });
-  const lowShelfNode = new BiquadFilterNode(audioContext, { type: 'lowshelf', frequency: knobLowFreqObj.currentValue, gain: dB2value(knobLowGainObj.currentValue) });
+  const distortionNode = new WaveShaperNode(audioContext, { curve: makeDistortionCurve(dB2value(knobInputDriveObj.currentValue) - 1), oversample: '4x' });
+  const highShelfNode = new BiquadFilterNode(audioContext, { type: 'highshelf', frequency: knobHighFreqObj.currentValue * 1e3, gain: knobHighGainObj.currentValue });
+  const midNode = new BiquadFilterNode(audioContext, { type: 'peaking', frequency: knobMidFreqObj.currentValue, gain: knobMidGainObj.currentValue });
+  const lowShelfNode = new BiquadFilterNode(audioContext, { type: 'lowshelf', frequency: knobLowFreqObj.currentValue, gain: knobLowGainObj.currentValue });
 
   //---------------------------------------------------
   // leslie block
@@ -114,13 +114,13 @@ const mp3Node = audioContext.createMediaElementSource(audioPlayer);
   });
   knobInputHPFObj.addEventListener('changed', () => { lowCutNode.frequency.value = knobInputHPFObj.currentValue; });
   knobInputLPFObj.addEventListener('changed', () => { highCutNode.frequency.value = knobInputLPFObj.currentValue * 1e3; });
-  knobInputDriveObj.addEventListener('changed', () => { distortionNode.curve = makeDistortionCurve(dB2value(knobInputDriveObj.currentValue)); });
+  knobInputDriveObj.addEventListener('changed', () => { distortionNode.curve = makeDistortionCurve(dB2value(knobInputDriveObj.currentValue) - 1); });
   knobHighFreqObj.addEventListener('changed', () => { highShelfNode.frequency.value = knobHighFreqObj.currentValue * 1e3; });
-  knobHighGainObj.addEventListener('changed', () => { highShelfNode.gain.value = dB2value(knobHighGainObj.currentValue); });
+  knobHighGainObj.addEventListener('changed', () => { highShelfNode.gain.value = knobHighGainObj.currentValue; });
   knobMidFreqObj.addEventListener('changed', () => { midNode.frequency.value = knobMidFreqObj.currentValue; });
-  knobMidGainObj.addEventListener('changed', () => { midNode.gain.value = dB2value(knobMidGainObj.currentValue); });
+  knobMidGainObj.addEventListener('changed', () => { midNode.gain.value = knobMidGainObj.currentValue; });
   knobLowFreqObj.addEventListener('changed', () => { lowShelfNode.frequency.value = knobLowFreqObj.currentValue; });
-  knobLowGainObj.addEventListener('changed', () => { lowShelfNode.gain.value = dB2value(knobLowGainObj.currentValue); });
+  knobLowGainObj.addEventListener('changed', () => { lowShelfNode.gain.value = knobLowGainObj.currentValue; });
 
   wheelHornSpeedObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setHornSpeedFineTune', value: wheelHornSpeedObj.currentValue }); });
   wheelDrumSpeedObj.addEventListener('changed', () => { leslieNode.port.postMessage({ type: 'setDrumSpeedFineTune', value: wheelDrumSpeedObj.currentValue }); });
@@ -261,9 +261,8 @@ function value2dB(value) { return 20 * Math.log10(value); }
 function dB2value(dB) { return Math.pow(10, dB / 20); }
 function degree2radian(degree) { return degree / 180 * Math.PI; }
 function makeDistortionCurve(amp) {
-  const samples = 44100;
+  const samples = 48000;
   const curve = new Float32Array(samples);
-  const deg = Math.PI / 180;
   for (let i = 0; i < samples; ++i) {
     const x = i * 2 / samples - 1;
     curve[i] = (1 + amp) * x / (1 + amp * Math.abs(x));

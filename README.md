@@ -1,7 +1,7 @@
 # Web-Leslie
 ## Web-based emulation of Leslie 147 Speaker
 
-![Screenshot](/resources/image/screenshots/mainWindow.png)
+![Screenshot](/resources/image/markdown/mainWindow.png)
 
 ## Introduction
 Welcome to Web-Leslie, a web-based emulation of the iconic Leslie 147 Speaker. This project was developed as part of the Advanced Coding Tools and Methodologies course. We chose to emulate the Leslie 147 Speaker due to its significant impact on the sound of electronic music and its fascinating mechanical and acoustic properties.
@@ -12,7 +12,7 @@ Whether you're a music enthusiast wanting to explore the unique sound of the Les
 
 ## Leslie Speaker History
 
-![Screenshot](/resources/image/screenshots/leslie.jpg)
+![Screenshot](/resources/image/markdown/leslie.jpg)
 
 The Leslie speaker, named after its inventor Donald Leslie, is a combined amplifier and loudspeaker that projects the signal from an electric or electronic instrument and modifies the sound by rotating a baffle chamber ("drum") in front of the loudspeakers. 
 
@@ -25,6 +25,9 @@ The Leslie speaker was initially rejected by the Hammond Organ Company, but it q
 Among the various models of Leslie speakers, the Leslie 147 is particularly noteworthy. Introduced in the 1960s, the Leslie 147 is renowned for its rich, warm sound and its robust construction. It features a two-speed horn and bass rotor, and its amplifier is capable of delivering 40 watts of power. The Leslie 147 quickly became a favorite among professional musicians and is still highly sought after today for its iconic sound.
 
 ## Inside the Leslie Speaker
+
+![Screenshot](/resources/image/markdown/leslie_inside.jpg)
+
 At the heart of the Leslie speaker is an amplifier that drives a pair of loudspeakers. One speaker handles the treble (high) frequencies, and the other handles the bass (low) frequencies. 
 
 The treble speaker is coupled to a horn, a kind of acoustic megaphone, which is designed to direct the sound in a specific direction. The bass speaker, on the other hand, is attached to a rotating drum. Both the horn and the drum are designed to rotate, which is what gives the Leslie speaker its unique sound.
@@ -34,42 +37,65 @@ As the horn and drum rotate, they cause the sound to be projected in different d
 The speed of the rotation can be controlled, allowing the musician to switch between a slow, rich chorus effect and a fast, vibrant tremolo effect. This versatility has made the Leslie speaker a favorite among musicians in a wide range of genres.
 
 ## User Interface Overview
-The Mini Moog is packed with features, but still has a very simple and straightforward interface, turn the Synth on, choose a preset and you're ready to play with a great sound! Otherwise you can create a sound from scratch setting up the oscillators, mixing them and finally adding some effects like tremolo or delay. In the following paragraphs we will in detail every section of the UI. 
+
+The user interface of Web-Leslie is designed to be intuitive and easy to use, while still offering a high level of control over the sound.
+
+Upon launching the application, you will be presented with a graphical representation of the Leslie 147 speaker. The speaker's rotating horn and drum are animated to give a visual indication of their current speed.
+
+On the right side of the screen, you will find a control panel with a variety of knobs and switches. These controls allow you to adjust various aspects of the sound, including the speed of the horn and drum rotation, the balance between the treble and bass frequencies, and the overall volume.
+
+The 'Chorale' and 'Tremolo' switches control the speed of the horn and drum rotation. 'Chorale' sets the rotation speed to slow, creating a rich, swirling sound. 'Tremolo' sets the rotation speed to fast, creating a vibrant, pulsating sound.
+
+The 'Treble' and 'Bass' knobs allow you to adjust the balance between the high and low frequencies. Turning the knobs clockwise increases the volume of the respective frequencies.
+
+The 'Volume' knob controls the overall volume of the sound. Turning it clockwise increases the volume.
+
+We hope you enjoy exploring the unique sound of the Leslie 147 speaker with Web-Leslie!
 
 ## Left Panel
 
-![Screenshot](screenshots/keyboard.png)
+![Screenshot](/resources/image/markdown/left_panal.png)
 
-1. **Preset Button:** click here to see the list of available presets
-2. **Tune:** this knob let you transpose the keyboard up to a fourth interval, up or down, one semitone for each step 
-3. **Pitch:** the classic pitch wheel, with this slider you can "bend" in a continuos way the note you're playing up or down
-4. **Keyboard:** standard 44-keys keyboard, you can play it clicking on the keys or by pressing the letters related to the keys as shown
-5. **Meter:** simple but useful meter to keep under control the output level in order to avoid clipping  
+1. **Power Switch:** turn on and off the lesie speaker
+ 
 
-### Input block
+### Drive Block - Soft Overdrive
 
-![Screenshot](screenshots/oscillators.png)
+2. **Drive:** controls the amount of distortion
+$$
+f(x) = \frac{(1 + \alpha) x}{1 + \alpha|x|}
+$$
 
-1. **Range:** this 6-step knob let you choose the octave of the oscillator, on OFF position you have the standard octave, then for every step from 2' to 32' the sound goes down one octave
-2. **Waveform:** use this to select the waveform of the relative oscillator, you can choose among the following: Sine - Triangular - Sawthoot - Square 
-3. **Frequency:** this is a detuner, can go up or down from 1 to 8 semitones, it's useful to create armonies and chords with different oscillators (you can add a fourth below or a fifth above to your main sound for example)
+![Screenshot](/resources/image/markdown/waveshaper.png)
 
-### Rotation Speed Control Block
+$$
+10^{\frac{gain}{20}} = A = f'(0) = 1 + \alpha \Rightarrow \alpha = 10^{\frac{gain}{20}} - 1
+$$
 
-![Screenshot](screenshots/mixer.png)
+![Screenshot](/resources/image/markdown/waveshaper_gain.png)
 
-1. **Oscillators Volume:** use this knobs to control the level of the oscillators
+
+### EQ Block
+
+3. **Low Cut:** adjust the low cut frequency
+4. **High Cut:** adjust the high cut frequency
+5. **High Shelf Frequency:** adjust the high shelf frequency
+6. **High Shelf Gain:** adjust the high shelf gain
+7. **Mid Frequency:** adjust the mid frequency
+8. **Mid Gain:** adjust the mid gain
+9. **Low Shelf Frequency:** adjust the low shelf frequency
+10. **Low Shelf Gain:** adjust the low shelf gain
+
+### Speed Control Block
+
+11. **Oscillators Volume:** use this knobs to control the level of the oscillators
 2. **On/Off Switch:** turn on or off the relativa oscillator
 3. **White/Pink Noise:** with this switch you can choose between white and pink noise, while the first has a spectrum constant in magnitude, the magnitude of the second decreases above a certain frequency
 4. **Noise Level:** adjusts the noise level
 
 Some tips: noise is great when it comes to give "life" to a synthetic sounds, but its level must be low! 
 
-### Rotation Mode Block
-
-![Screenshot](screenshots/envelope.png)
-
-![Screenshot](screenshots/ADSR.png)
+### Mode Control Block
 
 1. **Attack:** controls attack time
 2. **Decay:** controls decay time
@@ -79,18 +105,14 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 
 ## Right Panel
 
+![Screenshot](/resources/image/markdown/right_panal.png)
+
 ### Microphone Settings Block
 
 ![Screenshot](screenshots/effects.png)
 
 #### Mixing Block
 
-*Tremolo, in electronics, is the variation in amplitude of sound achieved through electronic means, sometimes mistakenly called vibrato, and producing a sound somewhat reminiscent of flanging, referred to as an "underwater effect".*
-
-1. **On/Off Switch:** turn on and off the tremolo
-2. **Rate:** controls the frequency of the LFO, so the "speed" at which the volume oscillates (the LFO operates at frequencies beetween 1 and 10 Hz)
-3. **Depth:** controls the depth of the effect, at higher setting you will hear a more pronounced oscillation of the volume
-4. **WaveForm:** sets the waveform of the LFO, you can choose among the following: Sine - Triangular - Sawthoot - Square
 
 #### Output Block
 
@@ -109,17 +131,6 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 2. **A-440:** this switch let you play a simple sinusoid at 440 Hz (A), it's used to test the output level
 3. **On/Off Switch:** master power switch, you have to turn this switch on in order to use the synth
 
-### Presets
-
-![Screenshot](screenshots/preset.png)
-
-1. **Church:** the sound of a classic church organ, full and round
-2. **Hammond:** one of the most famous organs of all time: the Hammond! It has a very smooth and rich sound, ideal for blues and jazz
-3. **Sub Bass:** ideal for bass lines in disco/electronic music, this sound has powerful and thight bass frequencies
-4. **Jump:** Van Halen in 1984 released "Jump", with a synth riff that became instantly a classic. This preset aims at recreating that iconic sound from the 80s 
-5. **Videogame:** a very "retrò" and "8-bit" style sound, inspired by the videogames of the 80s like pac-man
-6. **Star Wars:** *"A long time ago in a galaxy far, far away..."* this sound is inspired by the opening music of "Star Wars"
-7. **UFO:** a very strange and weird sound, like the ones you ususally hear in films about aliens
 
 ## Technologies Used
 
@@ -127,24 +138,34 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 
 Ous synth is a web application, so it's based on HTLM,CSS and JS code. With HTML we manage the structure of the interface, while the CSS files contain the information about the style of every section of the UI, starting from the background to the fonts and the colours. All the knobs are made with JKnobman, a simple program that let you design your custom knob and export it in PNG (then we rotate them from -135° to 135° with a CSS transformation). Javascrip play an important role, mainly with the WebAudio APIs described below, but also for all the functions related to clicks, drags and rotations made by the user with the mouse/trackpad.
 
+#### Flexbox
+
+#### Grid
+
 ### Web Audio API
 
 Sounds and effects of our project are powered by the modern WebAudio APIs (you can learn more about them [here](https://developer.mozilla.org/it/docs/Web/API/Web_Audio_API)). In detail we used the libraries related to oscillators, gains and delays. Here's a brief description on how this APIs works:
 
 >The Web Audio API involves handling audio operations inside an audio context, and has been designed to allow modular routing. Basic audio operations are performed with audio nodes, which are linked together to form an audio routing graph. Several sources — with different types of channel layout — are supported even within a single context. This modular design provides the flexibility to create complex audio functions with dynamic effects.
 
+#### AudioWorklet
+
 
 ### Blender
 
-![Screenshot](screenshots/midi.jpg)
+![Screenshot](/resources/image/markdown/blender.jpg)
 
-Playing a synth with a PC keyboard is a bit uncomfortable, for this reason our synth can work with any external MIDI keyboard, and it's extremely simple! All you have to do is to connect your MIDI Keyboard with a USB cable to your PC (only Google Chrome support this feature). Any MIDI device sends MIDI messages in a specific format (you can learn more about it [here](www.midi.org)), and we interpret each message in JS, in order to perform the related action (play a note, bend the pitch, change volume etc...). 
-In particular we use three bytes of the message:
-1. **STATUS BYTE:** indicates the type of message, for example "note on", "note off", "control change" etc...
-2. **NOTE:** the note that has to be played or the control that has to changed (for example pitch wheel, master volume etc...)
-3. **VELOCITY:** the value transmitted, for a note is the force applied to the key (strictly related to the volume of the resulting note played), for other messages is the new value that has to be applied to the specific control.
+Blender, an open-source 3D computer graphics software, played a crucial role in the development of Web-Leslie. We used Blender to create a detailed 3D model of the Leslie 147 speaker. This model serves as the centerpiece of our user interface, providing users with a visually engaging way to interact with the emulator.
 
-We used standard MIDI control change messages for pitch wheel, sustain and master volume, while for the other features we otherwise preferred custom messages.
+Blender's comprehensive suite of modeling tools allowed us to accurately replicate the unique design of the Leslie 147, from the rotating horn and drum to the control panel with its various knobs and switches. We also used Blender's animation tools to create the rotating effect of the horn and drum, which is synchronized with the actual sound produced by the emulator.
+
+The use of Blender not only enhanced the visual appeal of Web-Leslie but also helped us better understand the mechanics of the Leslie 147 speaker. By building and animating the 3D model, we gained valuable insights into how the speaker's unique sound is produced.
+
+### Photoshop
+
+![Screenshot](/resources/image/markdown/photoshop.png)
+
+### Sprite Sheet
 
 ### Surge
 
@@ -152,7 +173,7 @@ Our project is availabe to everyone thanks to Surge. Surge is a platform that le
 
 >Surge: Static web publishing for Front-End Developers. Simple, single-command web publishing. Publish HTML, CSS, and JS for free, without leaving the command line.
 
-Try out our web synth! Link: --> [Web-Synth](http://websynth.surge.sh/) <--  
+Try out our web leslie! Link: --> [Web-Leslie](web-leslie.surge.sh/) <--  
 
 ## How to Use
 
