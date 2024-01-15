@@ -109,8 +109,6 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 
 ### Microphone Settings Block
 
-![Screenshot](screenshots/effects.png)
-
 1. **Horn Mic Width:** 
 2. **Drum Mic Width:** controls decay time
 3. **Horn Mic Correlation:** controls sustain time
@@ -142,14 +140,40 @@ our project is a web-based application which is built using HTML, CSS, and JavaS
 
 The structure of the application is managed by HTML, providing a solid foundation for our user interface. The aesthetic aspects, including the background, fonts, and colors, are handled by CSS, ensuring a visually pleasing and intuitive user experience.
 
-JavaScript plays a crucial role in our project. It not only interacts with the WebAudio APIs for sound manipulation.
+JavaScript plays a crucial role in our project. It interacts with the WebAudio APIs for sound manipulation.
 
 One of the unique features of our application is the custom knob function. This function, which we will introduce in detail later, allows users to control various aspects of the sound output, providing a more immersive and personalized user experience.
 
 #### Flexbox & Grid
 
+In the Leslie Speaker project, we utilize two powerful CSS layout models: Flexbox and Grid. These models provide a more efficient way to lay out, align, and distribute space among items in our user interface, even when their size is unknown or dynamic.
 
-#### Grid
+We use Flexbox to divide the whole page into three panels. This forms the basic layout of our project, providing a structured and organized interface for users to interact with.
+
+For the layout of knobs and sliders, we introduce Grid. This two-dimensional layout system allows us to achieve a flexible layout, making it easier to position these elements in a way that is both aesthetically pleasing and user-friendly.
+
+By combining Flexbox and Grid, we can create complex designs that are flexible and responsive, ensuring our Leslie Speaker application looks great on all devices and screen sizes.
+
+#### Knob function
+
+In our Leslie Speaker project, we have a dedicated file `knobInit.js` for initializing the knobs. This file contains the configuration for each knob, including its scale, value range, label, and other settings.
+
+We create a new knob by calling the `new Knob()` constructor, which takes several parameters including the container for the knob, the size ratio, the knob's ID, and a development mode flag.
+
+After creating a knob, we set its properties using various methods:
+
+- `setIndicatorSprite()`: Sets the path to the sprite image for the knob.
+- `setScale()`: Sets the path to the scale image, the size ratio of the scale, and the fine-tune position of the scale.
+- `setValueConfig()`: Configures the minimum, maximum, and default values for the knob.
+- `setSkewForCenter()`: Adjusts the skew of the knob for centering purposes.
+- `setCursorResponsive()`: Determines whether the knob responds to cursor movements.
+- `setLabel()`: Sets the label for the knob and the CSS for the label.
+- `setLabelResponsive()`: Sets whether the label is responsive, the decimal places for the label value, and the unit for the label.
+- `setLabelEditable()`: Sets whether the label is editable by the user.
+
+This initialization process ensures that each knob is fully configured and ready for user interaction, providing a more immersive and personalized user experience.
+
+so as other function: `meterInit.js` `sliderInit.js` 
 
 ### Web Audio API
 
