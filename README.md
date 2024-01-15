@@ -110,8 +110,13 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 ### Microphone Settings Block
 
 ![Screenshot](screenshots/effects.png)
+1. **Horn Mic Width:** controls attack time
+2. **Drum Mic Width:** controls decay time
+3. **Horn Mic Correlation:** controls sustain time
+4. **Drum Mic Correlation:** controls release time
 
 #### Mixing Block
+
 
 
 #### Output Block
@@ -228,5 +233,3 @@ In order to use your Android Smartphone as a controller for pitch bending and su
 
 ## Video Demo
 Here's a short demo of our project --> [Demo](https://youtu.be/8V7RUzdDKRA)
-
-
