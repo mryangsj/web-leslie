@@ -110,7 +110,8 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 ### Microphone Settings Block
 
 ![Screenshot](screenshots/effects.png)
-1. **Horn Mic Width:** controls attack time
+
+1. **Horn Mic Width:** 
 2. **Drum Mic Width:** controls decay time
 3. **Horn Mic Correlation:** controls sustain time
 4. **Drum Mic Correlation:** controls release time
@@ -121,12 +122,8 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 
 #### Output Block
 
-*Delay is an audio effect or an effects unit which records an input signal to an audio storage medium, and then plays it back after a period of time. The delayed signal may either be played back multiple times, or played back into the recording again, to create the sound of a repeating, decaying echo.*
-
-5. **On/Off Switch:** turn on and off the delay
-6. **Time:** controls the time between the repetitions, set low for a "slapback" kind of sound, or high for a fuller sound
-7. **Feedback:** controls the number of repetitions, use a short feedback and a high level to get the "slapback" sound mentioned before
-8. **Level:** controls the volume of the first repetition, then the decay is controlled by the feedback level
+15. **Output Gain:** 
+16. **RMS:** 
 
 ### Output
 
@@ -141,9 +138,16 @@ Some tips: noise is great when it comes to give "life" to a synthetic sounds, bu
 
 ### HTML, CSS & JS
 
-Ous synth is a web application, so it's based on HTLM,CSS and JS code. With HTML we manage the structure of the interface, while the CSS files contain the information about the style of every section of the UI, starting from the background to the fonts and the colours. All the knobs are made with JKnobman, a simple program that let you design your custom knob and export it in PNG (then we rotate them from -135° to 135° with a CSS transformation). Javascrip play an important role, mainly with the WebAudio APIs described below, but also for all the functions related to clicks, drags and rotations made by the user with the mouse/trackpad.
+our project is a web-based application which is built using HTML, CSS, and JavaScript, forming a robust and interactive user interface.
 
-#### Flexbox
+The structure of the application is managed by HTML, providing a solid foundation for our user interface. The aesthetic aspects, including the background, fonts, and colors, are handled by CSS, ensuring a visually pleasing and intuitive user experience.
+
+JavaScript plays a crucial role in our project. It not only interacts with the WebAudio APIs for sound manipulation.
+
+One of the unique features of our application is the custom knob function. This function, which we will introduce in detail later, allows users to control various aspects of the sound output, providing a more immersive and personalized user experience.
+
+#### Flexbox & Grid
+
 
 #### Grid
 
