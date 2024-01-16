@@ -212,7 +212,7 @@ Our project is availabe to everyone thanks to Surge. Surge is a platform that le
 
 >Surge: Static web publishing for Front-End Developers. Simple, single-command web publishing. Publish HTML, CSS, and JS for free, without leaving the command line.
 
-Try out our web leslie! Link: --> [Web-Leslie](web-leslie.surge.sh/) <--  
+Try out our web leslie! Link: --> [Web-Leslie](https://web-leslie.surge.sh) <--  
 
 
 ## Video Demo
