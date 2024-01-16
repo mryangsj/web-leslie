@@ -88,20 +88,24 @@ $$
 
 ### Speed Control Block
 
-11. **Oscillators Volume:** use this knobs to control the level of the oscillators
-2. **On/Off Switch:** turn on or off the relativa oscillator
-3. **White/Pink Noise:** with this switch you can choose between white and pink noise, while the first has a spectrum constant in magnitude, the magnitude of the second decreases above a certain frequency
-4. **Noise Level:** adjusts the noise level
+##  Horn Speed Control Block
+11. **Horn speed:**  control the rotational speed of the Horn
+12. **Horn Acceleration:** control how quickly the Horn accelerates from a standstill to its maximum speed.
+13. **Horn Deceleration:** control how quickly the Horn slows down from its maximum speed to a standstill.
+14. **Hz adjustment:** click and adjusts the Hz by user
 
-Some tips: noise is great when it comes to give "life" to a synthetic sounds, but its level must be low! 
+##  Drum Speed Control Block
+15. **Drum Speed:**  control the rotational speed of the Drum.
+16. **Drum Acceleration:** control how quickly the Drum accelerates from a standstill to its maximum speed.
+17. **Drum Deceleration:** control how quickly the Drum slows down from its maximum speed to a standstill.
+18. **Hz adjustment:** click and adjusts the Hz by user
 
+These functions provide a high level of control over the behavior of the Hron and Drum, allowing users to create a wide range of sounds and effects with the Leslie Speaker application.
 ### Mode Control Block
 
-1. **Attack:** controls attack time
-2. **Decay:** controls decay time
-3. **Sustain:** controls sustain time
-4. **Release:** controls release time
-
+19. **Slow:** in this mode, both the Drum and the Horn rotate at a slower speed
+20. **Fast:** In Fast mode, both the Drum and the Horn rotate at a higher speed
+21. **Brake:** In Brake mode, both the Drum and the Horn are brought to a standstill.
 
 ## Right Panel
 
