@@ -196,13 +196,17 @@ Blender, an open-source 3D computer graphics software, played a crucial role in 
 
 Blender's comprehensive suite of modeling tools allowed us to accurately replicate the unique design of the Leslie 147, from the rotating horn and drum to the control panel with its various knobs and switches. We also used Blender's animation tools to create the rotating effect of the horn and drum, which is synchronized with the actual sound produced by the emulator.
 
+#### Sprite Sheet
+
+In this project, we choose to render a sprite sheet from Blender instead of directly importing the 3D model to the webpage to showcase the working animation of our Leslie speaker. A sprite sheet is a single image containing multiple smaller images or frames used in animation or graphics. Each frame represents 1 degree's rotation of the horn, drum, or mics. Using sprite sheets reduces draw calls, improves memory efficiency, ensures consistent texture filtering, and simplifies the loading and display of images.
+
 The use of Blender not only enhanced the visual appeal of Web-Leslie but also helped us better understand the mechanics of the Leslie 147 speaker. By building and animating the 3D model, we gained valuable insights into how the speaker's unique sound is produced.
+
 
 ### Photoshop
 
 ![Screenshot](/resources/image/markdown/photoshop.png)
 
-### Sprite Sheet
 
 ### Surge
 
