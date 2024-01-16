@@ -88,13 +88,13 @@ $$
 
 ### Speed Control Block
 
-##  Horn Speed Control Block
+####  Horn Speed Control Block
 11. **Horn speed:**  control the rotational speed of the Horn
 12. **Horn Acceleration:** control how quickly the Horn accelerates from a standstill to its maximum speed.
 13. **Horn Deceleration:** control how quickly the Horn slows down from its maximum speed to a standstill.
 14. **Hz adjustment:** click and adjusts the Hz by user
 
-##  Drum Speed Control Block
+####  Drum Speed Control Block
 15. **Drum Speed:**  control the rotational speed of the Drum.
 16. **Drum Acceleration:** control how quickly the Drum accelerates from a standstill to its maximum speed.
 17. **Drum Deceleration:** control how quickly the Drum slows down from its maximum speed to a standstill.
