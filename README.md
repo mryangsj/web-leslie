@@ -4,7 +4,7 @@
 ![Screenshot](/resources/image/markdown/mainWindow.png)
 
 ## Introduction
-Welcome to Web-Leslie, a web-based emulation of the iconic Leslie 147 Speaker. This project was developed as part of the Advanced Coding Tools and Methodologies course. We chose to emulate the Leslie 147 Speaker due to its significant impact on the sound of electronic music and its fascinating mechanical and acoustic properties.
+Welcome to Web-Leslie, a web-based emulation of the iconic Leslie 147 Speaker. This project was developed as part of the *Advanced Coding Tools and Methodologies* course. We chose to emulate the Leslie 147 Speaker due to its significant impact on the sound of electronic music and its fascinating mechanical and acoustic properties.
 
 Web-Leslie is a JavaScript-powered application that runs entirely in your browser, making it a truly cross-platform solution. It leverages the latest WebAudio APIs to deliver a rich and interactive user experience. You can control our emulator using your PC's mouse and keyboard. 
 
@@ -38,30 +38,88 @@ The speed of the rotation can be controlled, allowing the musician to switch bet
 
 ## User Interface Overview
 
-The user interface of Web-Leslie is designed to be intuitive and easy to use, while still offering a high level of control over the sound.
+Web-Leslie is designed to be intuitive and easy to use, while still offering a high level of control over the sound. Upon launching the application, you will be presented with a graphical representation of the Leslie 147 speaker. The speaker's rotating horn and drum are animated to give a visual indication of their current speed.
 
-Upon launching the application, you will be presented with a graphical representation of the Leslie 147 speaker. The speaker's rotating horn and drum are animated to give a visual indication of their current speed.
-
-On the right side of the screen, you will find a control panel with a variety of knobs and switches. These controls allow you to adjust various aspects of the sound, including the speed of the horn and drum rotation, the balance between the treble and bass frequencies, and the overall volume.
-
-The 'Chorale' and 'Tremolo' switches control the speed of the horn and drum rotation. 'Chorale' sets the rotation speed to slow, creating a rich, swirling sound. 'Tremolo' sets the rotation speed to fast, creating a vibrant, pulsating sound.
-
-The 'Treble' and 'Bass' knobs allow you to adjust the balance between the high and low frequencies. Turning the knobs clockwise increases the volume of the respective frequencies.
-
-The 'Volume' knob controls the overall volume of the sound. Turning it clockwise increases the volume.
-
-We hope you enjoy exploring the unique sound of the Leslie 147 speaker with Web-Leslie!
+On the left and right side of the screen, you will find a control panel with a variety of knobs and switches. These controls allow you to adjust various aspects of the sound, including the speed of the horn and drum rotation, the balance between the treble and bass frequencies, and the overall volume.
 
 ## Left Panel
 
 ![Screenshot](/resources/image/markdown/left_panal.png)
 
-1. **Power Switch:** turn on and off the lesie speaker
- 
+The left panel primarily serves two functions: 
+* Controlling the tonality of the sound (left side)
+* Managing the motion state of the horn and drum (right side)
 
-### Drive Block - Soft Overdrive
+The left section of left panel comprises three blocks:
+* **Power Block**: Turn on or off the lesie speaker.
+* **Drive Block**: Distort the input sound.
+* **EQ Block**: Adjust the tonality of the input sound.
 
-2. **Drive:** controls the amount of distortion
+The right section of left panel consists of the:
+* **Horn Speed Control Block**: Control the rotational speed, acceleration, and deceleration of the horn.
+* **Drum Speed Control Block**: Control the rotational speed, acceleration, and deceleration of the drum.
+* **Mode Control Block**: Switch between `Slow`, `Fast`, and `Brake` modes.
+
+Now, let's take a closer look at each of knobs and switches of the left panel.
+1. **Power Switch:** turn on or off the lesie speaker.
+2. **Drive:** adjust the amount of distortion applied to the input sound. Range from 0dB to 20dB, using soft clipping.
+3. **Low Cut:** adjust the low cut frequency. Range from 20Hz to 800Hz.
+4. **High Cut:** adjust the high cut frequency. Range from 3kHz to 20kHz.
+5. **High Shelf Frequency:** adjust the high shelf frequency. Range from 2kHz to 18kHz.
+6. **High Shelf Gain:** adjust the high shelf gain. Range from -15dB to 15dB.
+7. **Mid Frequency:** adjust the mid frequency. Range from 400Hz to 8kHz.
+8. **Mid Gain:** adjust the mid gain. Range from -15dB to 15dB.
+9. **Low Shelf Frequency:** adjust the low shelf frequency. Range from 50Hz to 400Hz.
+10. **Low Shelf Gain:** adjust the low shelf gain. Range from -15dB to 15dB.
+11. **Horn speed:** fine-tune the speed of the horn rotation. Range from -30% to 30%. Usually, the weight of the horn is slighter than the drum, so the horn speed is slightly faster than the drum speed.
+12. **Horn Acceleration:** fine-tune the acceleration of the horn rotation. Range from 0.25x to 4.0x. Same weight reason as above, the horn acceleration is slightly faster than the drum acceleration.
+13. **Horn Deceleration:** fine-tune the deceleration of the horn rotation. Range from 0.25x to 4.0x. Same, the horn deceleration is slightly faster than the drum deceleration.
+14. **Horn Speed Meter:** display the current speed of the horn rotation.
+15. **Drum Speed:** fine-tune the speed of the drum rotation. Range from -30% to 30%.
+16. **Drum Acceleration:** fine-tune the acceleration of the drum rotation. Range from 0.25x to 4.0x.
+17. **Drum Deceleration:** fine-tune the deceleration of the drum rotation. Range from 0.25x to 4.0x.
+18. **Drum Speed Meter:** display the current speed of the drum rotation.
+19. **Slow:** 'Chorale' mode, set the rotation speed to slow. Speed approximately 1.0 Hz.
+20. **Fast:** 'Tremolo' mode, set the rotation speed to fast. Speed approximately 6.0 Hz.
+21. **Brake:** set the rotation speed to 0.0 Hz, stop the rotation of the horn and drum. When this mode is activated, the deceleration of the horn and drum is set to 4.0x.
+
+
+## Right Panel
+
+![Screenshot](/resources/image/markdown/right_panal.png)
+
+The right panel primarily serves three functions:
+* Set the width of the microphone. (upper section)
+* Mix the sound of the horn and drum. (middle section)
+* Control the output volume. (lower section)
+
+The right panel consists of three blocks:
+* **Microphone Control Block**: Set the width of the microphone and display the correlation of the microphone.
+* **Mixing Block**: Mix the sound of four microphones.
+* **Output Block**: Control the output volume and display the RMS+ of the output signal.
+
+Now, let's take a closer look at each of knobs and switches of the right panel.
+1. **Horn Mic Width:** adjust the width of the horn microphone. Range from 0° to 90°.
+2. **Drum Mic Width:** adjust the width of the drum microphone. Range from 0° to 90°.
+3. **Horn Mic Correlation Meter:** display the correlation of the horn microphone.
+4. **Drum Mic Correlation:** display the correlation of the drum microphone.
+5. **Left Horn Mic Pan:** adjust the pan of the left horn microphone. Range from -1.0 to 1.0.
+6. **Right Horn Mic Pan:** adjust the pan of the right horn microphone. Range from -1.0 to 1.0.
+7. **Left Drum Mic Pan:** adjust the pan of the left drum microphone. Range from -1.0 to 1.0.
+8. **Right Drum Mic Pan:** adjust the pan of the right drum microphone. Range from -1.0 to 1.0.
+9. **Left Horn Mic Level:** adjust the level of the left horn microphone. Range from -120dB to 6dB.
+10. **Right Horn Mic Level:** adjust the level of the right horn microphone. Range from -120dB to 6dB.
+11. **Left Drum Mic Level:** adjust the level of the left drum microphone. Range from -120dB to 6dB.
+12. **Right Drum Mic Level:** adjust the level of the right drum microphone. Range from -120dB to 6dB.
+13. **Link Horn Mics:** link the left and right horn microphones. When this switch is on, the left and right horn microphones will have the same level.
+14. **Link Drum Mics:** link the left and right drum microphones. When this switch is on, the left and right drum microphones will have the same level.
+15. **Master Volume:** adjust the output volume. Range from -120dB to 6dB.
+16. **RMS+ Meter:** display the RMS+TP of the output signal.
+
+
+## DSP
+### Soft Clipping
+
 $$
 f(x) = \frac{(1 + \alpha) x}{1 + \alpha|x|}
 $$
@@ -75,72 +133,11 @@ $$
 ![Screenshot](/resources/image/markdown/waveshaper_gain.png)
 
 
-### EQ Block
-
-3. **Low Cut:** adjust the low cut frequency
-4. **High Cut:** adjust the high cut frequency
-5. **High Shelf Frequency:** adjust the high shelf frequency
-6. **High Shelf Gain:** adjust the high shelf gain
-7. **Mid Frequency:** adjust the mid frequency
-8. **Mid Gain:** adjust the mid gain
-9. **Low Shelf Frequency:** adjust the low shelf frequency
-10. **Low Shelf Gain:** adjust the low shelf gain
-
-### Speed Control Block
-
-####  Horn Speed Control Block
-11. **Horn speed:**  control the rotational speed of the Horn
-12. **Horn Acceleration:** control how quickly the Horn accelerates from a standstill to its maximum speed.
-13. **Horn Deceleration:** control how quickly the Horn slows down from its maximum speed to a standstill.
-14. **Hz adjustment:** click and adjusts the Hz by user
-
-####  Drum Speed Control Block
-15. **Drum Speed:**  control the rotational speed of the Drum.
-16. **Drum Acceleration:** control how quickly the Drum accelerates from a standstill to its maximum speed.
-17. **Drum Deceleration:** control how quickly the Drum slows down from its maximum speed to a standstill.
-18. **Hz adjustment:** click and adjusts the Hz by user
-
-These functions provide a high level of control over the behavior of the Hron and Drum, allowing users to create a wide range of sounds and effects with the Leslie Speaker application.
-### Mode Control Block
-
-19. **Slow:** in this mode, both the Drum and the Horn rotate at a slower speed
-20. **Fast:** In Fast mode, both the Drum and the Horn rotate at a higher speed
-21. **Brake:** In Brake mode, both the Drum and the Horn are brought to a standstill.
-
-## Right Panel
-
-![Screenshot](/resources/image/markdown/right_panal.png)
-
-### Microphone Settings Block
-
-1. **Horn Mic Width:** 
-2. **Drum Mic Width:** controls decay time
-3. **Horn Mic Correlation:** controls sustain time
-4. **Drum Mic Correlation:** controls release time
-
-#### Mixing Block
-
-
-
-#### Output Block
-
-15. **Output Gain:** 
-16. **RMS:** 
-
-### Output
-
-![Screenshot](screenshots/output.png)
-
-1. **Master Volume:** controls the overall output level of the synth
-2. **A-440:** this switch let you play a simple sinusoid at 440 Hz (A), it's used to test the output level
-3. **On/Off Switch:** master power switch, you have to turn this switch on in order to use the synth
-
-
 ## Technologies Used
 
 ### HTML, CSS & JS
 
-our project is a web-based application which is built using HTML, CSS, and JavaScript, forming a robust and interactive user interface.
+Our project is a web-based application which is built using HTML, CSS, and JavaScript, forming a robust and interactive user interface.
 
 The structure of the application is managed by HTML, providing a solid foundation for our user interface. The aesthetic aspects, including the background, fonts, and colors, are handled by CSS, ensuring a visually pleasing and intuitive user experience.
 
@@ -148,7 +145,7 @@ JavaScript plays a crucial role in our project. It interacts with the WebAudio A
 
 One of the unique features of our application is the custom knob function. This function, which we will introduce in detail later, allows users to control various aspects of the sound output, providing a more immersive and personalized user experience.
 
-#### Flexbox & Grid
+### Flexbox & Grid
 
 In the Leslie Speaker project, we utilize two powerful CSS layout models: Flexbox and Grid. These models provide a more efficient way to lay out, align, and distribute space among items in our user interface, even when their size is unknown or dynamic.
 
@@ -158,9 +155,10 @@ For the layout of knobs and sliders, we introduce Grid. This two-dimensional lay
 
 By combining Flexbox and Grid, we can create complex designs that are flexible and responsive, ensuring our Leslie Speaker application looks great on all devices and screen sizes.
 
-#### Knob function
+### Knob API
+In our project, we designed a custom Knob class which specilizes in audio application. This class implements a variety of common functions of knobs, including the rotation of the knob, the response to the cursor movement, and the display of the knob value. It also provides a variety of configuration options, allowing users to customize the appearance and behavior of the knob.
 
-In our Leslie Speaker project, we have a dedicated file `knobInit.js` for initializing the knobs. This file contains the configuration for each knob, including its scale, value range, label, and other settings.
+For example, we have a dedicated file `knobInit.js` for initializing the knobs. This file contains the configuration for each knob, including its scale, value range, label, and other settings.
 
 We create a new knob by calling the `new Knob()` constructor, which takes several parameters including the container for the knob, the size ratio, the knob's ID, and a development mode flag.
 
@@ -177,7 +175,7 @@ After creating a knob, we set its properties using various methods:
 
 This initialization process ensures that each knob is fully configured and ready for user interaction, providing a more immersive and personalized user experience.
 
-so as other function: `meterInit.js` `sliderInit.js` 
+so as other function: `meterInit.js` `sliderInit.js` etc.
 
 ### Web Audio API
 
@@ -185,8 +183,8 @@ Sounds and effects of our project are powered by the modern WebAudio APIs (you c
 
 >The Web Audio API involves handling audio operations inside an audio context, and has been designed to allow modular routing. Basic audio operations are performed with audio nodes, which are linked together to form an audio routing graph. Several sources — with different types of channel layout — are supported even within a single context. This modular design provides the flexibility to create complex audio functions with dynamic effects.
 
-#### AudioWorklet
-
+### AudioWorklet
+The core of DSP is implemented in AudioWorklet. AudioWorklet is a JavaScript code that runs in a separate thread from the main thread. It allows developers to implement custom DSP code that runs in a separate thread, which is more efficient than the traditional approach of using ScriptProcessorNode.
 
 ### Blender
 
@@ -196,16 +194,16 @@ Blender, an open-source 3D computer graphics software, played a crucial role in 
 
 Blender's comprehensive suite of modeling tools allowed us to accurately replicate the unique design of the Leslie 147, from the rotating horn and drum to the control panel with its various knobs and switches. We also used Blender's animation tools to create the rotating effect of the horn and drum, which is synchronized with the actual sound produced by the emulator.
 
-#### Sprite Sheet
+### Photoshop
+![Screenshot](/resources/image/markdown/photoshop.png)
+We use Photoshop to design the UI of our project. Photoshop is a powerful image editing software that allows us to create and edit images with ease. We use *Guids* extensively to help us align the elements of the UI since we want to use the *Grid* layout to make our UI responsive.
+
+
+### Sprite Sheet
 
 In this project, we choose to render a sprite sheet from Blender instead of directly importing the 3D model to the webpage to showcase the working animation of our Leslie speaker. A sprite sheet is a single image containing multiple smaller images or frames used in animation or graphics. Each frame represents 1 degree's rotation of the horn, drum, or mics. Using sprite sheets reduces draw calls, improves memory efficiency, ensures consistent texture filtering, and simplifies the loading and display of images.
 
 The use of Blender not only enhanced the visual appeal of Web-Leslie but also helped us better understand the mechanics of the Leslie 147 speaker. By building and animating the 3D model, we gained valuable insights into how the speaker's unique sound is produced.
-
-
-### Photoshop
-
-![Screenshot](/resources/image/markdown/photoshop.png)
 
 
 ### Surge
@@ -216,56 +214,6 @@ Our project is availabe to everyone thanks to Surge. Surge is a platform that le
 
 Try out our web leslie! Link: --> [Web-Leslie](web-leslie.surge.sh/) <--  
 
-## How to Use
-
-### Web-Only
-
-You can use our Mini Moog directly with the PC keyboard, the keys from "A" to "ù" are mapped to the notes from A 440 Hz to to the E of the octave above, use the "Tune" knob to shift the notes range below or above.
-
-### With External MIDI KeyBoard
-
-In order to use an external MIDI Keyboard you simply have to connect it with an USB cable, it's totally plug'n play!
-
-### With ARDUINO
-
-![Screenshot](screenshots/circuit.png)
-
-You can use an Arduino Board connected to a simple circuit to control the synth parameters. Arduino sends MIDI messages to the synth, so you have to use Hairless MIDISerial to manage its MIDI messages and the ones coming from other sources like MIDI Keyboard at the same time. 
-
-#### Arduino First Set Up 
-
-1. Download and Install Arduino IDE from [here](https://www.arduino.cc/en/Main/Software)
-2. Build the circuit on a breadboard and connect it to Arduino as shown in figure
-3. Download the sketch ([sketch](https://github.com/Gioelson95/Web-Synth/blob/master/controllerArduino/controllerArduino.ino))
-4. Run the sketch and upload it on Arduino ([here](https://www.arduino.cc/en/Guide/HomePage) you can read a detailed guide about this)
-
-#### Arduino MIDI Set Up
-
-![Screenshot](screenshots/hairless.png)
-> How to set up Hairless MIDISerial
-
-1. Connect Arduino to the PC with an USB cable
-2. Run Hairless MIDISerial (download it [here](http://projectgus.github.io/hairless-midiserial/))
-3. Select the Arduino port on "Serial Port"
-4. Select other external MIDI devices (if connected) on "MIDI In"
-5. Select internal MIDI bus on "MIDI Out"
-
-#### Arduino as MIDI Controller
-    
-1. Connect Arduino, and after a while, if the setup was done correctly, a welcome message will appear
-2. Click CONFIRM button to continue
-3. Select the paramter you want to control with the first potenentiometer. Use UP and DOWN button to cycle through the list of parameters
-4. Click CONFIRM button to continue
-5. Repeat steps 3. and 4. for the other two potentiometers
-6. When the selection is over, the LED turn on and the controller is ready to work
-7. To change parameters, click CONFIRM button to exit from running mode, the LED will turn off
-8. Click CONFIRM button to restart the configuration from step 3.	
-
-### With Android App
-
-![Screenshot](screenshots/androidSetup.jpg)	
-
-In order to use your Android Smartphone as a controller for pitch bending and sustain simply connect it to your pc with a USB cable, and select "MIDI" as shown in picture above, then run our [app](https://github.com/Gioelson95/Web-Synth/blob/master/WebSynthMidiController/WebSynthController.apk) and select "Pitch" or "Sustain" (the selected option is highlighted in green, the other option, disabled, will be red).
 
 ## Video Demo
-Here's a short demo of our project --> [Demo](https://youtu.be/8V7RUzdDKRA)
+Here's a short demo of our project --> [Demo](https://www.youtube.com/watch?v=-8PRpm4uVY8)
